@@ -1,0 +1,5 @@
+sceneSetups:
+- path: Assets/Scene/DemoScene-V1.2 FULL.unity
+  isLoaded: 1
+  isActive: 1
+  isSubScene: 0
