@@ -30,7 +30,8 @@ public class Button : MonoBehaviour {
     public enum TypeAction
     {
         moveAction,      
-        appearAction      
+        appearAction,
+        disappearAction
     }
 
     public HowWork WorkType = HowWork.OnlyPress;
@@ -291,9 +292,13 @@ public class Button : MonoBehaviour {
         DoorPlatform SetWork;
         for (i = 0; i < GameObjects.Length; i++)
         {
-                if (typeAction == TypeAction.appearAction)
+            if (typeAction == TypeAction.disappearAction)
             {
                 GameObjects[i].SetActive(!Active);
+            }
+            else if (typeAction == TypeAction.appearAction)
+            {
+                GameObjects[i].SetActive(Active);
             }
             else {
  
@@ -309,10 +314,20 @@ public class Button : MonoBehaviour {
         if (Active)
         {
             gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+            // Screenshake
+            if (PixelCameraController.instance != null)
+            {
+                PixelCameraController.instance.DirectionalShake(Vector2.right, 0.1f);
+            }
         }
         else
         {
             gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+            // Screenshake
+            if (PixelCameraController.instance != null)
+            {
+                PixelCameraController.instance.DirectionalShake(Vector2.right, 0.1f);
+            }
         }
     }
 }

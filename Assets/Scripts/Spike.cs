@@ -87,10 +87,35 @@ public class Spike : MonoBehaviour {
 				OnPlayerTrigger (playercomponent);
 			}
 		}
-	}
+        if (other.CompareTag("Enemy"))
+        {
+            // try to find the Player component
+            var playercomponent = other.GetComponent<WormEnemy>();
+            if (playercomponent != null)
+            {
+                // Trigget the OnPlayerTrigger Function
+                other.GetComponent<WormEnemy>().Die();
+            }
+        }
+    }
 
-	// Function to check the direction of the spike and the speed of the player and kill the player if the requirements are met
-	void OnPlayerTrigger (Player player) {
+    void OnTriggerStay2D(Collider2D other)
+    {
+        // Check if the tag of the object is Player
+        if (other.CompareTag("Player"))
+        {
+            // try to find the Player component
+            var playercomponent = other.GetComponent<Player>();
+            if (playercomponent != null)
+            {
+                // Trigget the OnPlayerTrigger Function
+                OnPlayerTrigger(playercomponent);
+            }
+        }
+    }
+
+    // Function to check the direction of the spike and the speed of the player and kill the player if the requirements are met
+    void OnPlayerTrigger (Player player) {
 		switch (direction)
 		{
 		case Directions.Up:

@@ -93,6 +93,7 @@ public class Player : Actor {
 	private float ledgeClimbTime = 1f; // Total time it takes to climb a wall
 	private float ledgeClimbTimer = 0f; // Timer to store the current time passed in the ledgeClimb state
 	private Vector2 extraPosOnClimb = new Vector2(10, 16); // Extra position to add to the current position to the end position of the climb animation matches the start position in idle state
+    private ResetState ResetObj;
 
 	// Check if we should duck (on the ground and moveY is pointing down and moveX is 0)
 	public bool CanDuck
@@ -160,10 +161,10 @@ public class Player : Actor {
     new void Awake () {
 		base.Awake ();
 		fsm = StateMachine<States>.Initialize(this);
-
-		// This code piece is only neccesary for the ducking functionality
-		//Ducking & Normal Colliders Assignment
-		if (myNormalCollider == null && myDuckingCollider != null) {
+        ResetObj = FindObjectOfType<ResetState>();
+        // This code piece is only neccesary for the ducking functionality
+        //Ducking & Normal Colliders Assignment
+        if (myNormalCollider == null && myDuckingCollider != null) {
 			Debug.Log ("The player has no Collider attached to it for the normal state");
 		} else if (myDuckingCollider != null && myNormalCollider != null) {
 			// Only assign the collider if the ducking collider has been assigned hence only do it if you're planning to use the ducking functionality
@@ -391,20 +392,6 @@ public class Player : Actor {
 			}
 		}
 
-		// Ledge grab
-		if (!onGround && Speed.y <= 0 && moveX != 0 && moveY != -1 && CheckColAtPlace(Vector2.right * moveX * 2, solid_layer)) {
-			var myY = myCollider.bounds.center.y;
-			var myExtentY = myCollider.bounds.extents.y;
-			var extraDistanceY = 2; // 2-4 recommended when tile size is 16 pixels, adjust accordinly
-            Debug.Log("Ledge Grab");
-	
-			for (int i = 0; i < myExtentY + extraDistanceY; i++) {
-				if (CanGrabLedge((int)myY + i, moveX)) {
-					GrabLedge((int)myY + i, moveX);
-					return;
-				}
-			}
-		}
 
 		// Wall Slide
 		if (!onGround) {
@@ -878,14 +865,7 @@ public class Player : Actor {
 	}
 
 	// This function checks wether or not there is a ledge to grab in the target Y position and in the target horizontal direction (right or left)
-	private bool CanGrabLedge(int targetY, int direction)
-	{		
-		// This is just in case the game manager hasn't been assigned we use a default tilesize value of 16
-		var tileSize = GameManager.instance != null ? GameManager.instance.TileSize : Vector2.one * 16; 
 
-		return !CollisionAtPlace (new Vector2(transform.position.x + (direction * (tileSize.x / 2)), targetY + 1), solid_layer) && 
-			CollisionAtPlace (new Vector2(transform.position.x + (direction * (tileSize.x / 2)), targetY), solid_layer);
-	}
 
 	private void GrabLedge(int targetY, int direction)
 	{
@@ -1066,8 +1046,9 @@ public class Player : Actor {
 
 	// Die Function
 	public void Die () {
-		// Set the speed to 0
-		Speed = Vector2.zero;
+        ResetObj.ResetPosition();
+        // Set the speed to 0
+        Speed = Vector2.zero;
 		// Trigget the respawn state
 		fsm.ChangeState (States.Respawn, StateTransition.Overwrite);
 		// Trigger the Dead Events on the gamemanager

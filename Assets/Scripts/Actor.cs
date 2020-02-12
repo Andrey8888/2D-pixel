@@ -140,17 +140,17 @@ public class Actor : MonoBehaviour {
 		Vector2 rightcorner = Vector2.zero;
 			
 		if (dir.x > 0) {
-			leftcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x, myCollider.bounds.center.y + myCollider.bounds.extents.y - .1f);
-			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x + .5f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .1f);
+			leftcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x, myCollider.bounds.center.y + myCollider.bounds.extents.y - .6f);
+			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x + 1f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .6f);
 		} else if (dir.x < 0) {
-			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x - .5f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .1f);
-			rightcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x, myCollider.bounds.center.y - myCollider.bounds.extents.y + .1f);
+			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x - 1f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .6f);
+			rightcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x, myCollider.bounds.center.y - myCollider.bounds.extents.y + .6f);
 		} else if (dir.y > 0) {
-			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .1f, myCollider.bounds.center.y + myCollider.bounds.extents.y + .5f);
-			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .1f, myCollider.bounds.center.y + myCollider.bounds.extents.y);
+			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .6f, myCollider.bounds.center.y + myCollider.bounds.extents.y + 1f);
+			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .6f, myCollider.bounds.center.y + myCollider.bounds.extents.y);
 		} else if (dir.y < 0) {
-			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .1f, myCollider.bounds.center.y - myCollider.bounds.extents.y);
-			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .1f, myCollider.bounds.center.y - myCollider.bounds.extents.y - .5f);
+			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .6f, myCollider.bounds.center.y - myCollider.bounds.extents.y);
+			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .6f, myCollider.bounds.center.y - myCollider.bounds.extents.y - 1f);
 		}
 
 		return Physics2D.OverlapArea(leftcorner, rightcorner, layer);
@@ -162,17 +162,17 @@ public class Actor : MonoBehaviour {
 		Vector2 rightcorner = Vector2.zero;
 
 		if (dir.x > 0) {
-			leftcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x, myCollider.bounds.center.y + myCollider.bounds.extents.y - .1f);
-			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x + .5f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .1f);
+			leftcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x, myCollider.bounds.center.y + myCollider.bounds.extents.y - .6f);
+			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x + 1f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .6f);
 		} else if (dir.x < 0) {
-			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x - .5f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .1f);
-			rightcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x, myCollider.bounds.center.y - myCollider.bounds.extents.y + .1f);
+			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x - 1f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .6f);
+			rightcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x, myCollider.bounds.center.y - myCollider.bounds.extents.y + .6f);
 		} else if (dir.y > 0) {
-			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .1f, myCollider.bounds.center.y + myCollider.bounds.extents.y + .5f);
-			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .1f, myCollider.bounds.center.y + myCollider.bounds.extents.y);
+			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .6f, myCollider.bounds.center.y + myCollider.bounds.extents.y + 1f);
+			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .6f, myCollider.bounds.center.y + myCollider.bounds.extents.y);
 		} else if (dir.y < 0) {
-			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .1f, myCollider.bounds.center.y - myCollider.bounds.extents.y);
-			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .1f, myCollider.bounds.center.y - myCollider.bounds.extents.y - .5f);
+			leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .6f, myCollider.bounds.center.y - myCollider.bounds.extents.y);
+			rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .6f, myCollider.bounds.center.y - myCollider.bounds.extents.y - 1f);
 		}
 
 		return Physics2D.OverlapAreaAll(leftcorner, rightcorner, layer);
@@ -180,8 +180,8 @@ public class Actor : MonoBehaviour {
 
 	// Checks if there is a collision on top of the actor in a given layer (specially good to check if your are on top of a oneway/fallthrough platform or going through it)
 	public bool CollisionSelf (LayerMask layer) {
-		Vector2 leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .1f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .1f);
-		Vector2 rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .1f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .1f);
+		Vector2 leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .6f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .6f);
+		Vector2 rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .6f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .6f);
 		return Physics2D.OverlapArea(leftcorner, rightcorner, layer);
 	}
 
@@ -190,8 +190,8 @@ public class Actor : MonoBehaviour {
 		Vector2 leftcorner = Vector2.zero; 
 		Vector2 rightcorner = Vector2.zero;
 
-		leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .1f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .1f) + extraPos;
-		rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .1f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .1f) + extraPos;
+		leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .6f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .6f) + extraPos;
+		rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .6f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .6f) + extraPos;
 
 		return Physics2D.OverlapArea(leftcorner, rightcorner, layer);
 	}
@@ -202,8 +202,8 @@ public class Actor : MonoBehaviour {
 		Vector2 leftcorner = Vector2.zero; 
 		Vector2 rightcorner = Vector2.zero;
 
-		leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .1f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .1f) + extraPos;
-		rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .1f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .1f) + extraPos;
+		leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .6f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .6f) + extraPos;
+		rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .6f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .6f) + extraPos;
 
 		if (Physics2D.OverlapArea (leftcorner, rightcorner, layer)) {
 			var cols = Physics2D.OverlapAreaAll (leftcorner, rightcorner, layer);
@@ -226,8 +226,8 @@ public class Actor : MonoBehaviour {
 		Vector2 leftcorner = Vector2.zero; 
 		Vector2 rightcorner = Vector2.zero;
 
-		leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .1f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .1f) + extraPos;
-		rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .1f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .1f) + extraPos;
+		leftcorner = new Vector2 (myCollider.bounds.center.x - myCollider.bounds.extents.x + .6f, myCollider.bounds.center.y + myCollider.bounds.extents.y - .6f) + extraPos;
+		rightcorner = new Vector2 (myCollider.bounds.center.x + myCollider.bounds.extents.x - .6f, myCollider.bounds.center.y - myCollider.bounds.extents.y + .6f) + extraPos;
 
 		return Physics2D.OverlapAreaAll (leftcorner, rightcorner, layer);
 	}

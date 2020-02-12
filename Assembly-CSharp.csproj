@@ -71,6 +71,10 @@
     <Compile Include="Assets\Scripts\Button\DoorPlatform.cs" />
     <Compile Include="Assets\Scripts\Calc.cs" />
     <Compile Include="Assets\Scripts\Checkpoint.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyImpact.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemyVisibility.cs" />
+    <Compile Include="Assets\Scripts\Enemy\WallCrawlerEnemy.cs" />
+    <Compile Include="Assets\Scripts\Enemy\WormEnemy.cs" />
     <Compile Include="Assets\Scripts\Facings.cs" />
     <Compile Include="Assets\Scripts\FallingPlatform.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
@@ -87,13 +91,12 @@
     <Compile Include="Assets\Scripts\ProjectileSpawner.cs" />
     <Compile Include="Assets\Scripts\PushBlock.cs" />
     <Compile Include="Assets\Scripts\Refill.cs" />
+    <Compile Include="Assets\Scripts\ResetState.cs" />
     <Compile Include="Assets\Scripts\ScreenFader.cs" />
     <Compile Include="Assets\Scripts\Spike.cs" />
     <Compile Include="Assets\Scripts\Spring.cs" />
     <Compile Include="Assets\Scripts\SpriteFlasher.cs" />
     <Compile Include="Assets\Scripts\UIHealthBar.cs" />
-    <Compile Include="Assets\Scripts\WallCrawlerEnemy.cs" />
-    <Compile Include="Assets\Scripts\WormEnemy.cs" />
     <Compile Include="Assets\Tilemap\Brushes\Tint Brush Smooth\Scripts\TintTextureGenerator.cs" />
     <Compile Include="Assets\Tilemap\GridInformation\Scripts\GridInformation.cs" />
     <Compile Include="Assets\Tilemap\Tiles\Animated Tile\Scripts\AnimatedTile.cs" />
