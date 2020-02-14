@@ -177,7 +177,7 @@ public class WormEnemy : Actor
     {
         // This is just in case the game manager hasn't been assigned we use a default tilesize value of 16
         var tileSize =  Vector2.one * 32;
-        var extraXToCheck = 2; // This depends on the size of your enemy sprite so it doesn't turn around when half or more of the sprite is beyond the platform
+        //var extraXToCheck = 2; // This depends on the size of your enemy sprite so it doesn't turn around when half or more of the sprite is beyond the platform
 
         if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
         {
