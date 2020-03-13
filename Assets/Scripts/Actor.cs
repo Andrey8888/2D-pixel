@@ -97,7 +97,7 @@ public class Actor : MonoBehaviour {
 							if (!moved && !pushing)
 								pushing = true;
 						}
-					}
+                    }
 				}
 			} 
 

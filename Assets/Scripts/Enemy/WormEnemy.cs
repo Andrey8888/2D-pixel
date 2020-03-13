@@ -10,55 +10,55 @@ public class WormEnemy : Actor
 {
     [Header("Movement Variables")]
     // Gravity, Maximun fall speed & fastfall Speed
-    public float Gravity = 900f; // Speed at which you are pushed down when you are on the air
-    public float MaxFall = -160f; // Maximun common speed at which you can fall
-    public float RunReduce = 400f; // Horizontal Acceleration when you're already when your horizontal speed is higher or equal to the maximun
-                                   // Run Speed & Acceleration
-    public float MaxRun = 90f; // Maximun Horizontal Run Speed
-    public float RunAccel = 1000f; // Horizontal Acceleration Speed
-                                   // Air value multiplier
-    public float AirMult = 0.65f; // Multiplier for the air horizontal movement (friction) the higher the more air control you'll have
+    public float Gravity = 900f;                // Speed at which you are pushed down when you are on the air
+    public float MaxFall = -160f;               // Maximun common speed at which you can fall
+    public float RunReduce = 400f;              // Horizontal Acceleration when you're already when your horizontal speed is higher or equal to the maximun
+    public float MaxRun = 90f;                  // Maximun Horizontal Run Speed
+    public float RunAccel = 1000f;              // Horizontal Acceleration Speed
+    public float AirMult = 0.65f;               // Multiplier for the air horizontal movement (friction) the higher the more air control you'll have
 
-    public GameObject PointParent;          // Объект предок всех точек патрулирования
-    private Transform[] PointMassive;       // Массив точек обхода для режима патруль
-    private float[] PointDelayMassive;      // Массив задержек на точке
-    public int PointID = 1;                 // № точки, к которой идет враг
-    public float MinDist = 0.5f;            // Допустимое расстояние, при котором враг переключается на следующую точку
+    public GameObject PointParent;              // Объект предок всех точек патрулирования
+    private Transform[] PointMassive;           // Массив точек обхода для режима патруль
+    private float[] PointDelayMassive;          // Массив задержек на точке
+    public int PointID = 1;                     // № точки, к которой идет враг
+    public float MinDist = 0.5f;                // Допустимое расстояние, при котором враг переключается на следующую точку
 
     // Helper private Variables
-    private int moveX; // Variable to store the horizontal Input each frame
+    private int moveX;                          // Variable to store the horizontal Input each frame
 
     //[Header("Facing Direction")]
     //public Facings Facing;  // Facing Direction
 
     //[Header("HealthBar")]
-    //public Canvas MyGUI;                    // UI на котором будем отображать  
-    //public Slider EnemyHP;                  // полоска здоровья врага на экране
+    //public Canvas MyGUI;                      // UI на котором будем отображать  
+    //public Slider EnemyHP;                    // полоска здоровья врага на экране
     //public Transform metka;
     //public Camera Mycamera;
 
     [Header("Squash & Stretch")]
-    public Transform SpriteHolder; // Reference to the transform of the child object which holds the sprite renderer of the player
-    public Vector2 SpriteScale = Vector2.one; // The current X and Y scale of the sprite holder (used for Squash & Stretch)
+    public Transform SpriteHolder;              // Reference to the transform of the child object which holds the sprite renderer of the player
+    public Vector2 SpriteScale = Vector2.one;   // The current X and Y scale of the sprite holder (used for Squash & Stretch)
 
     [Header("Animator")]
-    public Animator animator; // Reference to the animator
+    public Animator animator;                   // Reference to the animator
+    public Animator bowAnimator;
 
     [Header("Стрельба")]
     public float angle;
-    public Projectile projectile;           // Стрела
-    public Transform GunBarrel;             // Позиция точки выстрела
-    private bool InVisibilityZone = false;  // Проверка на нахождение в зоне видимости
-    private bool InImpactArea = false;      // Проверка на нахождение в зоне поражения
-    public float ArrowVel = 50;             // Начальная скорость арбалетного болта
-    public float AttackDelay = 5;           // Задержка по атаке
-    public float AttackTimer = 5;           // Таймер до атаки
-    private Vector3 PlayerPos;              // Позиция игрока, необходима для расчета угла стрельбы
-    public Vector3 PlayerPosGlobal;         // Позиция игрока на карте
+    public GameObject bow;                      // Лук
+    public Transform GunBarrel;                 // Позиция точки выстрела
+    private bool InVisibilityZone = false;      // Проверка на нахождение в зоне видимости
+    private bool InImpactArea = false;          // Проверка на нахождение в зоне поражения
+    public float ArrowVel = 50;                 // Начальная скорость арбалетного болта         
+    public float BowAttackCooldownTime = 4f;    // Задержка по атаке      
+    private float bowAttackCooldownTimer = 0f;  // Таймер до атаки
+    private Vector3 PlayerPos;                  // Позиция игрока, необходима для расчета угла стрельбы
+    public Vector3 PlayerPosGlobal;             // Позиция игрока на карте
     // States for the state machine
     public enum States
     {
         Normal,
+        BowAttack,
         Death
     }
 
@@ -83,6 +83,14 @@ public class WormEnemy : Actor
     private EnemyVisibility EnemyVisibility;// Скрипт видимости
     private EnemyImpact EnemyImpact;        // Скрипт зоны нападения
     public float PatrolTimer = 0;
+
+    public bool CanShoot
+    {
+        get
+        {
+            return AttackType == Attack.Outfighting && EnemyVisibility.InVisibilityZone && bowAttackCooldownTimer <= 0f;
+        }
+    }
 
     // State Machine
     public StateMachine<States> fsm;
@@ -139,6 +147,12 @@ public class WormEnemy : Actor
         PlayerPos = EnemyVisibility.PlayerPos;
         EnemyImpact = ImpactZone.GetComponentInChildren<EnemyImpact>();
         InImpactArea = EnemyImpact.InImpactZone;
+
+        //Bow Attack timer
+        if (bowAttackCooldownTimer > 0f)
+        {
+            bowAttackCooldownTimer -= Time.deltaTime;
+        }
     }
 
     void LateUpdate()
@@ -170,20 +184,28 @@ public class WormEnemy : Actor
                 health.TakeDamage(9999);
             }
         }
-        Assault();
     }
 
     void Normal_Update()
     {
+
+        // Bow Attack over here
+        if (CanShoot)
+        {
+            bowAttackCooldownTimer = BowAttackCooldownTime;
+            fsm.ChangeState(States.BowAttack, StateTransition.Overwrite);
+            return;
+        }
+
         // This is just in case the game manager hasn't been assigned we use a default tilesize value of 16
-        var tileSize =  Vector2.one * 32;
+        var tileSize = Vector2.one * 32;
         //var extraXToCheck = 2; // This depends on the size of your enemy sprite so it doesn't turn around when half or more of the sprite is beyond the platform
 
         if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
         {
             moveX *= -1;
+            SpriteScale = new Vector2(-SpriteScale.x, SpriteScale.y);
         }
-
 
         //// Horizontal Speed Update Section
         float num = onGround ? 1f : 0.65f;
@@ -250,46 +272,9 @@ public class WormEnemy : Actor
 
         }
     }
-    public void Assault()
+    void BowAttack_Update()
     {
-        if (fsm.State != States.Death)
-        {
-            if ((EnemyVisibility.InVisibilityZone) && (AttackTimer >= AttackDelay))
-            {
-                // Рукопашный бой с игроком
-                if (AttackType == Attack.Infighting)
-                {
-                    //Unit unit = EnemyImpact.col.GetComponent<Unit>();
 
-                    //int damage = UnityEngine.Random.Range(10, 25);
-                    //if (unit && unit is Player)
-                    //{
-                    //    unit.ReceiveDamage(damage);
-                    //}
-                }
-                // Стрельба по игроку
-                if (AttackType == Attack.Outfighting)
-                {
-                    //angle = Vector3.Angle(Vector3.right, (-transform.position + EnemyVisibility.PlayerPos));
-                    if ((EnemyVisibility.PlayerPos.y - transform.position.y) < 0)
-                    {
-                        angle = -angle;
-                    }
-                    //Instantiate the projectile prefab
-                    var p = Instantiate(projectile, GunBarrel.position, Quaternion.identity) as Projectile;
-
-                    var parentXScale = Mathf.Sign(transform.parent.localScale.x);
-
-                    // Set the localscale so the projectiles faces the right direction based on the parent object (base)
-                    p.transform.localScale = new Vector3(parentXScale * p.transform.localScale.x, p.transform.localScale.y, p.transform.localScale.z);
-
-                    // Change the X speed based on the facing of the parent object
-                    p.Speed.x *= parentXScale;
-                }
-                AttackTimer = 0;
-            }
-            AttackTimer += Time.deltaTime;
-        }
     }
 
     void Death_Update()
@@ -315,7 +300,6 @@ public class WormEnemy : Actor
 
         // //Set the x scale to the current facing direction
 
-        //убрал
         //var targetLocalScale = new Vector3(((int)Facing) * -1f, transform.localScale.y, transform.localScale.z);
         // if (transform.localScale != targetLocalScale)
         // {
@@ -329,15 +313,20 @@ public class WormEnemy : Actor
             SpriteHolder.localScale = targetSpriteHolderScale;
         }
 
-
         if (fsm.State == States.Death)
         {
             if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
             {
                 animator.Play("Death");
-            }
-            // If on the ground
+            } 
         }
+        else if (fsm.State == States.BowAttack)
+        {
+            if (!bowAnimator.GetCurrentAnimatorStateInfo(0).IsName("Shoot"))
+            {
+                bowAnimator.Play("Shoot");
+            }
+        } // If on the ground
         else if (onGround)
         {
             // If the is nohorizontal movement input
@@ -363,6 +352,7 @@ public class WormEnemy : Actor
 
     public void Die()
     {
+        bow.SetActive(false);
         fsm.ChangeState(States.Death, StateTransition.Overwrite);
     }
 }

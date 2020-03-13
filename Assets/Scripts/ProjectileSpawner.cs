@@ -13,8 +13,9 @@ public class ProjectileSpawner : MonoBehaviour {
 
 	[Header ("Place to spawn the projectile at")]
 	public Transform gunBarrel;
+    public GameObject AimLine;
 
-	void Awake () {
+    void Awake () {
 		if (owner == null) {
 			owner = GetComponentInParent<Health> ();
 
@@ -26,7 +27,7 @@ public class ProjectileSpawner : MonoBehaviour {
 
 	public void InstantiateProjectile () {
 		//Instantiate the projectile prefab
-		var p = Instantiate (projectile, gunBarrel.position, Quaternion.identity) as Projectile;
+		var p = Instantiate(projectile, AimLine.transform.position, AimLine.transform.rotation) as Projectile;
 
 		// Shoot based on the X scale of our parent object (base facing), which should be 1 for right and -1 for left 
 		var parentXScale = Mathf.Sign (transform.parent.localScale.x);

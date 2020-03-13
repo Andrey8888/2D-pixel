@@ -73,8 +73,10 @@
     <Compile Include="Assets\Scripts\Checkpoint.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyImpact.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyVisibility.cs" />
+    <Compile Include="Assets\Scripts\Enemy\ProjectileEnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Enemy\WallCrawlerEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\WormEnemy.cs" />
+    <Compile Include="Assets\Scripts\EnemyProjectile.cs" />
     <Compile Include="Assets\Scripts\Facings.cs" />
     <Compile Include="Assets\Scripts\FallingPlatform.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />

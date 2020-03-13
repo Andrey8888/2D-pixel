@@ -103,6 +103,17 @@ public class Spike : MonoBehaviour
                 OnPlayerTrigger(playercomponent);
             }
         }
+        // Check if the tag of the object is WormEnemy
+        if (other.CompareTag("Enemy"))
+        {
+            // try to find the Player component
+            var enemycomponent = other.GetComponent<WormEnemy>();
+            if (enemycomponent != null)
+            {
+                // Trigget the OnPlayerTrigger Function
+                OnEnemyTrigger(enemycomponent);
+            }
+        }
     }
 
     // Function to check the direction of the spike and the speed of the player and kill the player if the requirements are met
@@ -143,7 +154,48 @@ public class Spike : MonoBehaviour
                 break;
             case Directions.All:
                 player.Die();
+                break;
+            default:
                 return;
+        }
+    }
+    void OnEnemyTrigger(WormEnemy enemy)
+    {
+        switch (direction)
+        {
+            case Directions.Up:
+                // If the spike is facing Up and the player is falling
+                if (enemy.Speed.y < 0f)
+                {
+                    enemy.Die();
+                    return;
+                }
+                break;
+            case Directions.Down:
+                // If the spike is facing Down and the player is going up
+                if (enemy.Speed.y > 0f)
+                {
+                    enemy.Die();
+                    return;
+                }
+                break;
+            case Directions.Left:
+                // If the spike is facing Left and the player is going right
+                if (enemy.Speed.x > 0f)
+                {
+                    enemy.Die();
+                    return;
+                }
+                break;
+            case Directions.Right:
+                // If the spike is facing Right and the player is going left
+                if (enemy.Speed.x < 0f)
+                {
+                    enemy.Die();
+                }
+                break;
+            case Directions.All:
+                enemy.Die();
                 break;
             default:
                 return;

@@ -56,7 +56,7 @@ namespace UnityEditor
 			BoxFill(gridLayout, brushTarget, bounds);
 		}
 
-		private void PaintCell(GridLayout grid, Vector3Int position, Transform parent, BrushCell cell)
+        private void PaintCell(GridLayout grid, Vector3Int position, Transform parent, BrushCell cell)
 		{
 			if (cell.gameObject != null)
 			{
@@ -80,7 +80,7 @@ namespace UnityEditor
 			ClearSceneCell(grid, parent, position);
 		}
 
-		public override void BoxFill(GridLayout gridLayout, GameObject brushTarget, BoundsInt position)
+        public override void BoxFill(GridLayout gridLayout, GameObject brushTarget, BoundsInt position)
 		{
 			// Do not allow editing palettes
 			if (brushTarget.layer == 31)
@@ -154,7 +154,7 @@ namespace UnityEditor
 				FlipY();
 		}
 
-		public override void Pick(GridLayout gridLayout, GameObject brushTarget, BoundsInt position, Vector3Int pickStart)
+        public override void Pick(GridLayout gridLayout, GameObject brushTarget, BoundsInt position, Vector3Int pickStart)
 		{
 			// Do not allow editing palettes
 			if (brushTarget.layer == 31)
@@ -170,7 +170,7 @@ namespace UnityEditor
 			}
 		}
 
-		private void PickCell(Vector3Int position, Vector3Int brushPosition, GridLayout grid, Transform parent)
+        private void PickCell(Vector3Int position, Vector3Int brushPosition, GridLayout grid, Transform parent)
 		{
 			if (parent != null)
 			{
@@ -199,7 +199,7 @@ namespace UnityEditor
 			}
 		}
 
-		public override void MoveStart(GridLayout gridLayout, GameObject brushTarget, BoundsInt position)
+        public override void MoveStart(GridLayout gridLayout, GameObject brushTarget, BoundsInt position)
 		{
 			// Do not allow editing palettes
 			if (brushTarget.layer == 31)
@@ -385,24 +385,24 @@ namespace UnityEditor
 			}
 		}
 
-		private static void SetSceneCell(GridLayout grid, Transform parent, Vector3Int position, GameObject go, Vector3 offset, Vector3 scale, Quaternion orientation)
+        private static void SetSceneCell(GridLayout grid, Transform parent, Vector3Int position, GameObject go, Vector3 offset, Vector3 scale, Quaternion orientation)
 		{
 			if (parent == null || go == null)
 				return;
 
 			GameObject instance = null;
-			if (PrefabUtility.GetPrefabType(go) == PrefabType.Prefab)
-			{
-				instance = (GameObject) PrefabUtility.InstantiatePrefab(go);
-			}
-			else
-			{
-				instance = Instantiate(go);
-				instance.hideFlags = HideFlags.None;
-				instance.name = go.name;
-			}
+            if (PrefabUtility.GetPrefabType(go) == PrefabType.Prefab)
+            {
+                instance = (GameObject)PrefabUtility.InstantiatePrefab(go);
+            }
+            else
+            {
+                instance = Instantiate(go);
+                instance.hideFlags = HideFlags.None;
+                instance.name = go.name;
+            }
 
-			Undo.RegisterCreatedObjectUndo(instance, "Paint GameObject");
+            Undo.RegisterCreatedObjectUndo(instance, "Paint GameObject");
 			instance.transform.SetParent(parent);
 			instance.transform.position = grid.LocalToWorld(grid.CellToLocalInterpolated(new Vector3Int(position.x, position.y, position.z) + new Vector3(.5f, .5f, .5f)));
 			instance.transform.localRotation = orientation;

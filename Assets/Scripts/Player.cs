@@ -44,14 +44,18 @@ public class Player : Actor {
 	// Ladder Variables 
 	public float LadderClimbSpeed = 60f;
 
-
-
 	[Header ("Attacks")]
 	public int MeleeAttackDamage = 1; // The damage done by the sword attack
 	public float MeleeAttackCooldownTime = 1f;
-	public float BowAttackCooldownTime = 1f;
+	public float BowAttackCooldownTime = 3f;
+    public enum ActiveWeapon
+    {
+        Bow,          // Лук 
+        Sword          // Меч
+    }
+    public ActiveWeapon activeWeapon;            // Активное оружие
 
-	[Header ("Facing Direction")]
+    [Header ("Facing Direction")]
 	public Facings Facing; 	// Facing Direction
 	[Header ("Wall Slide Direction")]
 	public int wallSlideDir; 	// Wall Slide Direction
@@ -87,7 +91,7 @@ public class Player : Actor {
 	private float jumpBufferTimer = 0f; // Timer to store the time left in the JumpBuffer timer
 	private bool jumpIsInsideBuffer = false;
 	private float meleeAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
-	private float bowAttackCooldownTimer = 0f; // Timer to store cooldown left on the bow attak
+	private float bowAttackCooldownTimer = 3f; // Timer to store cooldown left on the bow attak
 	private float moveToRespawnPositionAfter = .5f; // Time to wait before moving to the respawn position
 	private float moveToRespawnPosTimer = 0f; // Timer to store how much time is left before moving to the respawn position
 	private float ledgeClimbTime = 1f; // Total time it takes to climb a wall
@@ -95,8 +99,36 @@ public class Player : Actor {
 	private Vector2 extraPosOnClimb = new Vector2(10, 16); // Extra position to add to the current position to the end position of the climb animation matches the start position in idle state
     private ResetState ResetObj;
 
-	// Check if we should duck (on the ground and moveY is pointing down and moveX is 0)
-	public bool CanDuck
+    [Header("Objects")]
+    // public GameObject Arrow;         // Стрела, которую наш герой выпускает
+    public GameObject AimLine;          // Линия прицеливания
+    public GameObject Bow;
+    public GameObject Sword;            // Объект меча
+
+    [Header("Parameters")]
+    public float Velocity;              // Скорость с которой будет лететь стрела (пересылается в ArrowMovement)    
+    public float deltaVel = 10.0f;      // Приращение скорости
+    public Vector2 mouseMotion;         // Направление мыши
+    public float mouseSens = 5.0f;      // Чувствиельность мыши
+    public float delayTimer = 5.0f;     // Счетчик времени между выстрелами
+    public Vector2 AimAngleDiap =       // Диапазон минимального и максимального 
+                new Vector2(55, 90);    //          значения угла прицеливания
+    private Vector2[] AimPoints;        // Пара точек для определения угла стрельбы
+    public float curAngle;              // Текущий угол
+    private Vector3 Forward;            // Вектор, смотрящий вперед (нужен для расчета направления прицела)
+    bool ChangeDirection = false;       // Проверка на смену направления
+    public Vector2 Len2Vel =
+                new Vector2(1, 11);     // значение, при котором скорость стрелы будет максимальной
+
+    [Range(1, 20)] public float minVel = 1;         // Минимальная скорость пуска стрелы
+    [Range(1, 20)] public float maxVel = 20;        // Максимальная скорость пуска стрелы
+    [Range(5, 15)] public float delVel = 10;        // Скорость изменения скорости пуска стрелы (Скорость натяжения)
+    [Range(1, 15)] public float AttackDelay = 5.0f; // Время перезарядки  
+    private float bowSpriteAngle = 135;
+    public bool isShoot = false;
+
+    // Check if we should duck (on the ground and moveY is pointing down and moveX is 0)
+    public bool CanDuck
 	{
 		get
 		{
@@ -117,26 +149,28 @@ public class Player : Actor {
 	{
 		get
 		{
-			return Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+			return meleeAttackCooldownTimer <= 0f && Input.GetButtonDown("Attack")  && activeWeapon == ActiveWeapon.Sword && onGround;
 		}
 	}
 
-	public bool CanShoot
-	{
-		get
-		{
-			return Input.GetButtonDown("Shoot") && bowAttackCooldownTimer <= 0f;
-		}
-	}
+    public bool CanPrepare
+    {
+        get
+        {
+            // return Input.GetButtonDown("Shoot") && bowAttackCooldownTimer <= 0f;
+            return Input.GetMouseButton(1) && delayTimer >= AttackDelay && activeWeapon == ActiveWeapon.Bow;
+        }
+    }
 
-	[Header ("Squash & Stretch")]
+    [Header ("Squash & Stretch")]
 	public Transform SpriteHolder; // Reference to the transform of the child object which holds the sprite renderer of the player
 	public Vector2 SpriteScale = Vector2.one; // The current X and Y scale of the sprite holder (used for Squash & Stretch)
 
 	[Header ("Animator")]
 	public Animator animator; // Reference to the animator
+    public Animator bowAnimator;
 
-	[Header ("Particles")]
+    [Header ("Particles")]
 	public GameObject DustParticle;
 	public GameObject DashDustParticle;
 
@@ -150,7 +184,9 @@ public class Player : Actor {
 		LedgeGrab,
 		LedgeClimb,
 		Attack,
-		BowAttack
+        BowPrepare,
+        BowTension,
+        BowAttack
 	}
 
 	// State Machine
@@ -176,13 +212,41 @@ public class Player : Actor {
 	// Use this for initialization
 	void Start () {
 		fsm.ChangeState(States.LadderClimb);
-	}
-	
-	// Update is called once per frame
-	new void Update () {
+        ChangeWeapon(activeWeapon);
+    }
+
+    private void ChangeWeapon(ActiveWeapon activeWeapon)
+    {
+        if (activeWeapon == ActiveWeapon.Bow)
+        {
+            Sword.SetActive(false);
+            Bow.SetActive(true);
+            AimLine.SetActive(true);
+        }
+        if (activeWeapon == ActiveWeapon.Sword)
+        {
+            Sword.SetActive(true);
+            Bow.SetActive(false);
+            AimLine.SetActive(false);
+        }
+    }
+
+    // Update is called once per frame
+    new void Update () {
 		base.Update ();
 
-		if (fsm.State == States.Respawn)
+        //transform.localPosition += new Vector3(Input.GetAxis("Horizontal"), 0, 0) * Time.deltaTime;
+        AimLine.transform.localPosition = new Vector3(transform.position.x, transform.position.y + 25.5f, transform.position.z);
+        if (Input.GetMouseButtonDown(1))
+        {// Если идет нажатие пр. кнопки мыши, то генерируются точки для определения направления
+            AimPoints = new Vector2[2];
+            AimPoints[0] = Vector2.zero;
+            AimPoints[1] = Forward;
+        }
+        ChargeAndFire();
+        SelectWeapon();
+
+        if (fsm.State == States.Respawn)
 			return;
 
 		// Update all collisions here
@@ -273,10 +337,25 @@ public class Player : Actor {
 		if (bowAttackCooldownTimer > 0f) {
 			bowAttackCooldownTimer -= Time.deltaTime;
 		}
-
 	}
 
-	void LateUpdate () {
+    private void SelectWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            switch (activeWeapon)
+            {
+                case ActiveWeapon.Sword:
+                    activeWeapon = ActiveWeapon.Bow;
+                    break;
+                case ActiveWeapon.Bow:
+                    activeWeapon = ActiveWeapon.Sword;
+                    break;
+            }
+            ChangeWeapon(activeWeapon);
+        }
+    }
+    void LateUpdate () {
 		if (fsm.State == States.Respawn)
 			return;
 
@@ -313,9 +392,9 @@ public class Player : Actor {
 		}
 	}
 
-	void Normal_Update () {
-		// Ducking over here
-		if (CanDuck) {
+    void Normal_Update() {
+        // Ducking over here
+        if (CanDuck) {
 			fsm.ChangeState(States.Ducking, StateTransition.Overwrite);
 			return;
 		}
@@ -333,15 +412,15 @@ public class Player : Actor {
 			return;
 		}
 
-		// Bow Attack over here
-		if (CanShoot) {
-			bowAttackCooldownTimer = BowAttackCooldownTime;
-			fsm.ChangeState(States.BowAttack, StateTransition.Overwrite);
-			return;
-		}
-			
-		// Cling to wall
-		if (((moveX > 0 && CheckColInDir (Vector2.right * -1f, solid_layer)) || (moveX < 0 && CheckColInDir (Vector2.right, solid_layer))) && canStick && !onGround) {
+        // Bow Attack over here
+        if (CanPrepare)
+        {
+            fsm.ChangeState(States.BowPrepare, StateTransition.Overwrite);
+            return;
+        }
+
+        // Cling to wall
+        if (((moveX > 0 && CheckColInDir (Vector2.right * -1f, solid_layer)) || (moveX < 0 && CheckColInDir (Vector2.right, solid_layer))) && canStick && !onGround) {
 			stickTimer = clingTime;
 			sticking = true;
 			canStick = false;
@@ -398,7 +477,7 @@ public class Player : Actor {
 			float target = maxFall;
 			// Wall Slide
 			if ((moveX == (int)Facing) && moveY != -1) {
-				if (Speed.y <= 0f && wallSlideTimer > 0f && CheckColInDir (Vector2.right * (int)Facing, solid_layer)) {
+                if (Speed.y <= 0f && wallSlideTimer > 0f && CheckColInDir (Vector2.right * (int)Facing, solid_layer)) {
 					wallSlideDir = (int)Facing;
 				}
 				if (wallSlideDir != 0) {
@@ -695,8 +774,8 @@ public class Player : Actor {
 	void Attack_Update () {
 		// Horizontal Speed Update Section
 		float num = onGround ? 1f : AirMult;
-
-		Speed.x = Calc.Approach (Speed.x, 0f, RunReduce * num * Time.deltaTime);
+        Sword.SetActive(false);
+        Speed.x = Calc.Approach (Speed.x, 0f, RunReduce * num * Time.deltaTime);
 
 		if (!onGround) {
 			float target = MaxFall;
@@ -704,7 +783,13 @@ public class Player : Actor {
 		}
 	}
 
-	void BowAttack_Update () {
+    void Attack_Exit()
+    {
+        Sword.SetActive(true);
+        Debug.Log("Attack");
+    }
+
+    void BowAttack_Update () {
 		// Horizontal Speed Update Section
 		float num = onGround ? 1f : AirMult;
 
@@ -785,7 +870,8 @@ public class Player : Actor {
 			fsm.ChangeState (States.Normal, StateTransition.Overwrite);
 			return;
 		}
-	}
+
+    }
 
 	// Jump Function
 	public void Jump () {
@@ -883,7 +969,6 @@ public class Player : Actor {
 		{
 			transform.position = new Vector2 (transform.position.x + direction, transform.position.y);
 		}
-
 		// Change the sprite scale to add extra feel
 		SpriteScale = new Vector2(1.3f, 0.7f);
 		// Change the state to the ledge grabbing state
@@ -917,8 +1002,128 @@ public class Player : Actor {
 		fsm.ChangeState (States.LadderClimb, StateTransition.Overwrite);
 	}
 
-	// Dash Refill Function
-	public bool UseRefillDash()
+    void BowTension_Update()
+    {
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {
+            animator.Play("Idle");
+        }
+
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+    }
+    void BowPrepare_Update()
+    {
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {
+            animator.Play("Idle");
+        }
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+    }
+
+private void ChargeAndFire()
+    {
+        if (Input.GetMouseButtonUp(1))
+        {
+            fsm.ChangeState(States.Normal, StateTransition.Overwrite);
+            if (!bowAnimator.GetCurrentAnimatorStateInfo(0).IsName("BowIdle"))
+            {
+                bowAnimator.Play("BowIdle");
+            }
+            Bow.transform.rotation = Quaternion.Euler(0, 0, -45 * (int)Facing);
+        }
+        //AimPosition = new Vector3(transform.position.x, transform.position.y);
+        if (activeWeapon == ActiveWeapon.Bow && Input.GetMouseButton(1))
+        {
+            AimLine.gameObject.SetActive(true);
+            mouseMotion.x += Input.GetAxis("Mouse X") * mouseSens;
+            mouseMotion.y += Input.GetAxis("Mouse Y") * mouseSens;
+            AimPoints[0] += mouseMotion;
+
+            var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
+            var aimAngle2 = aimAngle * Mathf.Rad2Deg;
+            //Debug.Log(aimAngle2);
+            if (aimAngle < 0f)
+            {
+                aimAngle = Mathf.PI * 2 + aimAngle;
+            }
+            bool Flip = ((Mathf.Abs(aimAngle2) > 91) && (transform.localScale.x > 0) || (Mathf.Abs(aimAngle2) < 89) && (transform.localScale.x < 0));
+            if (Flip)
+            {
+                if (Facing != (Facings)(-1))
+                Facing = (Facings)(-1);
+                else
+                    Facing = (Facings)(1);
+            }
+            AimLine.transform.rotation = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg);
+            var aimAngle3 = aimAngle - 89.6f;
+            var aimAngle4 = 180;
+            Bow.transform.rotation = Quaternion.Euler(aimAngle4, aimAngle4, aimAngle3 * Mathf.Rad2Deg - bowSpriteAngle);
+
+            bool prepareFire = Input.GetMouseButton(0);
+            if (delayTimer >= AttackDelay && fsm.State == States.BowTension)
+            {
+                
+                if (prepareFire)
+                {
+                    if (Velocity < maxVel)
+                    {
+                        Velocity += delVel * Time.deltaTime;
+                        //Debug.Log("Скорость: " + Velocity);
+                    }
+                    else
+                    {
+                        Velocity = maxVel;
+                    }
+                }
+                if (Input.GetMouseButtonUp(0))
+                {
+                    delayTimer = 0;
+                    fsm.ChangeState(States.BowAttack, StateTransition.Overwrite);
+                }
+            }
+        }
+        else
+        {
+            /*if (Input.GetMouseButtonUp(0))
+            {
+                Instantiate(Arrow, AimPosition, AimLine.transform.rotation);
+                delayTimer = 0;
+            }*/
+
+            if (ChangeDirection)
+            {
+                //AimLine.transform.localScale = new Vector3(-AimLine.transform.localScale.x, AimLine.transform.localScale.y, AimLine.transform.localScale.z);
+                //AimPoints[1] = -AimPoints[1];
+                ChangeDirection = !ChangeDirection;
+            }
+            AimLine.transform.Rotate(Vector3.forward, -AimLine.transform.localEulerAngles.z);
+            AimLine.gameObject.SetActive(false);
+        }
+        mouseMotion = Vector2.zero;
+        delayTimer += Time.deltaTime;
+    }
+
+    // Dash Refill Function
+    public bool UseRefillDash()
 	{
 		// Instantly reduce the cooldown to 0 (refill)
 		if (dashCooldownTimer > 0f)
@@ -955,11 +1160,12 @@ public class Player : Actor {
 
 		// Set the x scale to the current facing direction
 		var targetLocalScale = new Vector3 ((int)Facing, transform.localScale.y, transform.localScale.z);
-		if (transform.localScale != targetLocalScale) {
-			transform.localScale = new Vector3 ((int)Facing, transform.localScale.y, transform.localScale.z);
-		}
-
-		if (fsm.State == States.LedgeClimb) {
+        if (transform.localScale != targetLocalScale)
+        {
+            bowSpriteAngle *= -1;
+            transform.localScale = new Vector3((int)Facing, transform.localScale.y, transform.localScale.z);
+        }
+        if (fsm.State == States.LedgeClimb) {
 			if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("LedgeClimb")) {
 				//animator.Play ("LedgeClimb");
 			}
@@ -981,12 +1187,37 @@ public class Player : Actor {
 			animator.SetFloat("LadderSpeed", moveY);
 
 			// If on the attack state
-		} else if (fsm.State == States.BowAttack) {
-			if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Shoot")) {
-				animator.Play ("Shoot");
-			}
+		}
+        else if (fsm.State == States.BowTension)
+        {
+            //if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Shoot")) {
+            //	animator.Play ("Shoot");
+            if (!bowAnimator.GetCurrentAnimatorStateInfo(0).IsName("BowTension"))
+            {
+                bowAnimator.Play("BowTension");
+            }
+            // If on the attack state
+        }
+        else if (fsm.State == States.BowAttack) {
+            //if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Shoot")) {
+            //	animator.Play ("Shoot");
+            if (!bowAnimator.GetCurrentAnimatorStateInfo(0).IsName("Shoot"))
+            {
+                bowAnimator.Play("Shoot");
+        } 
 			// If on the attack state
-		} else if (fsm.State == States.Attack) {
+		}
+        else if (fsm.State == States.BowPrepare)
+        {
+            //if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Shoot")) {
+            //	animator.Play ("Shoot");
+            if (!bowAnimator.GetCurrentAnimatorStateInfo(0).IsName("Prepare"))
+            {
+                bowAnimator.Play("Prepare");
+            }
+            // If on the attack state
+        }
+        else if (fsm.State == States.Attack) {
 			if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Attack")) {
 				animator.Play ("Attack");
 			}
@@ -997,7 +1228,7 @@ public class Player : Actor {
 			}
 			// If on the ground
 		} else if (onGround) {
-			if (fsm.State == States.Ducking) {
+			if (onDucking) {
 				// Idle Animation
 				if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Ducking")) {
 					animator.Play ("Ducking");
