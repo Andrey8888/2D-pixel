@@ -32,7 +32,6 @@ public class Projectile : MonoBehaviour {
     private float colAngle;             // Угловое положение стрелы в момент удара
     public float changAngle;            //
     public Collider2D OurCollider;
-
     List<Health> healthsDamaged = new List<Health>(); // List to store healths damaged
     public enum MovementType
     {
@@ -42,6 +41,9 @@ public class Projectile : MonoBehaviour {
     public MovementType Movement = MovementType.Ballistic;
     void Start()
     {
+        Player archer = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Player>();
+        InitVelocity = archer.Velocity;
+
         startAngle = Mathf.Deg2Rad * transform.eulerAngles.z;
         if (transform.eulerAngles.z > 90)
             changAngle = 90 - (transform.eulerAngles.z - 270);
@@ -93,9 +95,9 @@ public class Projectile : MonoBehaviour {
         {// для полета стрелы используется уравнение равнопеременного движения        
             positionsMassive[0] = transform.position;
             transform.position += new Vector3((InitVelocity * (float)Math.Cos(startAngle) * timer) * Time.deltaTime,
-                                              (InitVelocity * (float)Math.Sin(startAngle) * timer - 9.8f * timer * timer / 2) * Time.deltaTime);
+                                              (InitVelocity * (float)Math.Sin(startAngle) * timer - 98f * timer * timer / 2) * Time.deltaTime);
             float Vx = (InitVelocity * (float)Math.Cos(startAngle));
-            float Vy = (InitVelocity * (float)Math.Sin(startAngle) - 9.8f * timer);
+            float Vy = (InitVelocity * (float)Math.Sin(startAngle) - 98f * timer);
             curVelocity = Mathf.Sqrt(Vx * Vx + Vy * Vy);
             positionsMassive[1] = transform.position;
         }
@@ -109,12 +111,15 @@ public class Projectile : MonoBehaviour {
     void DestroyMe () {
 		Destroy (gameObject);
 	}
-	void OnTriggerEnter2D (Collider2D col) {
-		// if the projectile hit's a solid object, destroy it
-		if (col.gameObject.layer ==  (int)Mathf.Log(solid_layer.value, 2)) {
-			DestroyMe ();
-			return;
-		}
+    void OnTriggerEnter2D(Collider2D col) {
+        // if the projectile hit's a solid object, destroy it
+        if (!col.gameObject.CompareTag("Box"))
+            { 
+            if (col.gameObject.layer == (int)Mathf.Log(solid_layer.value, 2)) {
+                    DestroyMe();
+                    return;
+                }
+            }
 		var component = col.GetComponent<Health> ();
 		// If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
 		if (component != null && component != owner && !healthsDamaged.Contains(component)) {

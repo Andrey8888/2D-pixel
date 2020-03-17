@@ -120,9 +120,9 @@ public class Player : Actor {
     public Vector2 Len2Vel =
                 new Vector2(1, 11);     // значение, при котором скорость стрелы будет максимальной
 
-    [Range(1, 20)] public float minVel = 1;         // Минимальная скорость пуска стрелы
-    [Range(1, 20)] public float maxVel = 20;        // Максимальная скорость пуска стрелы
-    [Range(5, 15)] public float delVel = 10;        // Скорость изменения скорости пуска стрелы (Скорость натяжения)
+    public float minVel = 200;         // Минимальная скорость пуска стрелы
+    public float maxVel = 2000;        // Максимальная скорость пуска стрелы
+    [Range(500, 1000)] public float delVel = 200;        // Скорость изменения скорости пуска стрелы (Скорость натяжения)
     [Range(1, 15)] public float AttackDelay = 5.0f; // Время перезарядки  
     private float bowSpriteAngle = 135;
     public bool isShoot = false;
@@ -132,7 +132,7 @@ public class Player : Actor {
 	{
 		get
 		{
-			return onGround && moveX == 0 && moveY < 0 && !jumpIsInsideBuffer;
+			return onGround && moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && onGround;
 		}
 	}
 
@@ -158,7 +158,7 @@ public class Player : Actor {
         get
         {
             // return Input.GetButtonDown("Shoot") && bowAttackCooldownTimer <= 0f;
-            return Input.GetMouseButton(1) && delayTimer >= AttackDelay && activeWeapon == ActiveWeapon.Bow;
+            return Input.GetMouseButton(1) && activeWeapon == ActiveWeapon.Bow && delayTimer >= AttackDelay;
         }
     }
 
@@ -221,7 +221,6 @@ public class Player : Actor {
         {
             Sword.SetActive(false);
             Bow.SetActive(true);
-            AimLine.SetActive(true);
         }
         if (activeWeapon == ActiveWeapon.Sword)
         {
@@ -393,6 +392,7 @@ public class Player : Actor {
 	}
 
     void Normal_Update() {
+
         // Ducking over here
         if (CanDuck) {
 			fsm.ChangeState(States.Ducking, StateTransition.Overwrite);
@@ -537,6 +537,7 @@ public class Player : Actor {
 		}
         if (OnСeiling && !CheckColAtPlace(Vector2.up * 7, solid_layer) && onGround)
         {
+            fsm.ChangeState(States.Normal);
             myNormalCollider.enabled = true;
             myDuckingCollider.enabled = false;
             myCollider = myNormalCollider;
@@ -545,6 +546,47 @@ public class Player : Actor {
             SpriteScale = new Vector2(0.7f, 1.3f);
             OnСeiling = false;
         }
+    }
+
+    private void Ducking_Update()
+    {
+        // Drop down from a one way platform
+        if (onGround && moveY < 0f && jumpIsInsideBuffer && CheckColInDir(Vector2.down, oneway_layer) && !CheckColInDir(Vector2.down, solid_layer))
+        {
+            onGround = false;
+            jumpGraceTimer = 0f;
+            jumpIsInsideBuffer = false;
+            jumpBufferTimer = 0f;
+            transform.position += new Vector3(0, -1, 0);
+            fsm.ChangeState(States.Normal, StateTransition.Overwrite);
+            return;
+        }
+
+        if (moveY != -1 || !onGround)
+        {
+            fsm.ChangeState(States.Normal, StateTransition.Overwrite);
+            return;
+        }
+
+        if (wallSlideDir == 0)
+        {
+            // Handle Facings
+            if (moveX != 0)
+            {
+                Facings facings = (Facings)moveX;
+                Facing = facings;
+            }
+        }
+        if (Mathf.Abs(Speed.x) > MaxRun && Mathf.Sign(Speed.x) == moveX)
+        {
+            Speed.x = Calc.Approach(Speed.x / 1.1f, MaxRun * moveX, RunReduce * Time.deltaTime);
+        }
+        else
+        {
+            Speed.x = Calc.Approach(Speed.x / 1.1f, MaxRun * moveX, RunAccel * Time.deltaTime);
+        }
+
+        onDucking = true;
     }
 
     private void Ducking_Enter()
@@ -573,52 +615,6 @@ public class Player : Actor {
         {
             OnСeiling = true;
         }
-    }
-
-    private void Ducking_Update()
-    {
-        // Drop down from a one way platform
-        if (onGround && moveY < 0f && jumpIsInsideBuffer && CheckColInDir(Vector2.down, oneway_layer) && !CheckColInDir(Vector2.down, solid_layer))
-        {
-            onGround = false;
-            jumpGraceTimer = 0f;
-            jumpIsInsideBuffer = false;
-            jumpBufferTimer = 0f;
-            transform.position += new Vector3(0, -1, 0);
-            fsm.ChangeState(States.Normal, StateTransition.Overwrite);
-            return;
-        }
-
-            if (moveY != -1 || !onGround)
-        {
-            fsm.ChangeState(States.Normal, StateTransition.Overwrite);
-            return;
-        }
-
-        if (wallSlideDir == 0)
-        {
-            // Handle Facings
-            if (moveX != 0)
-            {
-                Facings facings = (Facings)moveX;
-                Facing = facings;
-            }
-        }
-        if (Mathf.Abs(Speed.x) > MaxRun && Mathf.Sign(Speed.x) == moveX)
-        {
-            Speed.x = Calc.Approach(Speed.x / 1.1f, MaxRun * moveX, RunReduce * Time.deltaTime);
-        }
-        else
-        {
-            Speed.x = Calc.Approach(Speed.x / 1.1f, MaxRun * moveX, RunAccel * Time.deltaTime);
-        }
-
-        if (!onGround)
-        {
-            float target = MaxFall;
-            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
-        }
-        onDucking = true;
     }
 
     private void LadderClimb_Enter () {
@@ -800,6 +796,11 @@ public class Player : Actor {
 			Speed.y = Calc.Approach (Speed.y, target, Gravity * Time.deltaTime);
 		}
 	}
+
+    void BowAttack_Exit()
+    {
+        Velocity = minVel;
+    }
 
 	void LedgeGrab_Enter () {
 		Speed = Vector2.zero;
@@ -1020,6 +1021,12 @@ public class Player : Actor {
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
+
+    void BowPrepare_Enter()
+    {
+        Velocity = minVel;
+    }
+
     void BowPrepare_Update()
     {
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
@@ -1048,16 +1055,17 @@ private void ChargeAndFire()
                 bowAnimator.Play("BowIdle");
             }
             Bow.transform.rotation = Quaternion.Euler(0, 0, -45 * (int)Facing);
+            Velocity = minVel;
         }
         //AimPosition = new Vector3(transform.position.x, transform.position.y);
-        if (activeWeapon == ActiveWeapon.Bow && Input.GetMouseButton(1))
+        if (activeWeapon == ActiveWeapon.Bow && Input.GetMouseButton(1) )
         {
             AimLine.gameObject.SetActive(true);
-            mouseMotion.x += Input.GetAxis("Mouse X") * mouseSens;
-            mouseMotion.y += Input.GetAxis("Mouse Y") * mouseSens;
-            AimPoints[0] += mouseMotion;
+            //mouseMotion.x += Input.GetAxis("Mouse X") * mouseSens;
+            //mouseMotion.y += Input.GetAxis("Mouse Y") * mouseSens;
+            //AimPoints[0] += mouseMotion;
 
-            var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+            var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
             var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
             var aimAngle2 = aimAngle * Mathf.Rad2Deg;
             //Debug.Log(aimAngle2);
@@ -1077,23 +1085,21 @@ private void ChargeAndFire()
             var aimAngle3 = aimAngle - 89.6f;
             var aimAngle4 = 180;
             Bow.transform.rotation = Quaternion.Euler(aimAngle4, aimAngle4, aimAngle3 * Mathf.Rad2Deg - bowSpriteAngle);
-
-            bool prepareFire = Input.GetMouseButton(0);
-            if (delayTimer >= AttackDelay && fsm.State == States.BowTension)
+            if (delayTimer >= AttackDelay)
             {
-                
-                if (prepareFire)
+                if (Velocity < maxVel)
                 {
-                    if (Velocity < maxVel)
-                    {
-                        Velocity += delVel * Time.deltaTime;
-                        //Debug.Log("Скорость: " + Velocity);
-                    }
-                    else
-                    {
-                        Velocity = maxVel;
-                    }
+                    Velocity += delVel * Time.deltaTime;
+                    //Debug.Log("Скорость: " + Velocity);
                 }
+                else
+                {
+                    Velocity = maxVel;
+                }
+            }
+
+            if (fsm.State == States.BowTension ||  fsm.State == States.BowPrepare)
+            {  
                 if (Input.GetMouseButtonUp(0))
                 {
                     delayTimer = 0;
@@ -1228,7 +1234,7 @@ private void ChargeAndFire()
 			}
 			// If on the ground
 		} else if (onGround) {
-			if (onDucking) {
+			if (Speed.x != 0 && onDucking) {
 				// Idle Animation
 				if (!animator.GetCurrentAnimatorStateInfo (0).IsName ("Ducking")) {
 					animator.Play ("Ducking");

@@ -65,14 +65,17 @@ public class EnemyProjectile : MonoBehaviour
 
         void OnTriggerEnter2D(Collider2D col)
         {
-            // if the projectile hit's a solid object, destroy it
+        // if the projectile hit's a solid object, destroy it
+        if (!col.gameObject.CompareTag("Box"))
+        {
             if (col.gameObject.layer == (int)Mathf.Log(solid_layer.value, 2))
             {
                 DestroyMe();
                 return;
             }
+        }
 
-            var component = col.GetComponent<Health>();
+        var component = col.GetComponent<Health>();
             // If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
             if (component != null && component != owner && !healthsDamaged.Contains(component))
             {

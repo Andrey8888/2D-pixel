@@ -73,6 +73,7 @@ public class WormEnemy : Actor
     {
         Following,                          // Преследование
         Patroling,                          // Патрулирование
+        FreeWalking,                        // Свободное движение до преграды
         Idle                                // Покой
     }
     public Behaivour BehaivourType = Behaivour.Idle;
@@ -188,7 +189,6 @@ public class WormEnemy : Actor
 
     void Normal_Update()
     {
-
         // Bow Attack over here
         if (CanShoot)
         {
@@ -197,23 +197,21 @@ public class WormEnemy : Actor
             return;
         }
 
-        // This is just in case the game manager hasn't been assigned we use a default tilesize value of 16
-        var tileSize = Vector2.one * 32;
-        //var extraXToCheck = 2; // This depends on the size of your enemy sprite so it doesn't turn around when half or more of the sprite is beyond the platform
-
-        if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
-        {
-            moveX *= -1;
-            SpriteScale = new Vector2(-SpriteScale.x, SpriteScale.y);
-        }
-
-        //// Horizontal Speed Update Section
         float num = onGround ? 1f : 0.65f;
 
-        if (!onGround)
+        if (BehaivourType == Behaivour.FreeWalking)
         {
-            float target = MaxFall;
-            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+            if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
+            {
+                moveX *= -1;
+                SpriteScale = new Vector2(-SpriteScale.x, SpriteScale.y);
+            }
+
+            if (!onGround)
+            {
+                float target = MaxFall;
+                Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+            }
         }
 
         if (BehaivourType == Behaivour.Patroling)
@@ -222,6 +220,21 @@ public class WormEnemy : Actor
             {
                 if ((PointMassive.Length - 1) >= 1)
                 {
+                    if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
+                    {
+                        moveX *= -1;
+                        SpriteScale = new Vector2(-SpriteScale.x, SpriteScale.y);
+                        if (PointID < (PointMassive.Length - 1))
+                        {
+                            PointID++;
+                        }
+                        else
+                        {
+                            PointID = 0;
+                        }
+                        PatrolTimer = 0;
+                    }
+
                     if (Mathf.Sign(SpriteScale.x) == Mathf.Sign(transform.position.x - PointMassive[PointID].position.x))
                     {
                         moveX *= -1;
