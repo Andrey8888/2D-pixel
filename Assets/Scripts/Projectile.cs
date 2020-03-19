@@ -21,7 +21,7 @@ public class Projectile : MonoBehaviour {
 	private Vector2 movementCounter = Vector2.zero;  // Counter for subpixel movement
 	private Rigidbody2D rb2D; // Cached Rigidbody2D attached to the projectile
 
-    public float InitVelocity;         // Начальная скорость стрелы
+    public float InitVelocity;          // Начальная скорость стрелы
     private float curVelocity;          // Текущая скорость
     private float startAngle;           // Начальный угол стрельбы
     private float timer = 0;            // счетчик времени
@@ -33,6 +33,14 @@ public class Projectile : MonoBehaviour {
     public float changAngle;            //
     public Collider2D OurCollider;
     List<Health> healthsDamaged = new List<Health>(); // List to store healths damaged
+
+    public enum Owner
+    {
+        Enemy,
+        Player,
+        Cannon
+    }
+    public Owner OwnerType = Owner.Player;
     public enum MovementType
     {
         Ballistic,
@@ -41,8 +49,17 @@ public class Projectile : MonoBehaviour {
     public MovementType Movement = MovementType.Ballistic;
     void Start()
     {
-        Player archer = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Player>();
-        InitVelocity = archer.Velocity;
+        if (OwnerType == Owner.Player)
+        {
+            Player archer = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Player>();
+            InitVelocity = archer.Velocity;
+        }
+
+        if (OwnerType == Owner.Enemy)
+        {
+            WormEnemy enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponentInChildren<WormEnemy>();
+            InitVelocity = 700;
+        }
 
         startAngle = Mathf.Deg2Rad * transform.eulerAngles.z;
         if (transform.eulerAngles.z > 90)
@@ -54,6 +71,7 @@ public class Projectile : MonoBehaviour {
         OurCollider = gameObject.GetComponentInChildren<Collider2D>();
         OurCollider.isTrigger = true;
     }
+
     void Update()
     {
         timer += Time.deltaTime;
@@ -113,7 +131,7 @@ public class Projectile : MonoBehaviour {
 	}
     void OnTriggerEnter2D(Collider2D col) {
         // if the projectile hit's a solid object, destroy it
-        if (!col.gameObject.CompareTag("Box"))
+        if (!col.gameObject.CompareTag("DestructibleObjects"))
             { 
             if (col.gameObject.layer == (int)Mathf.Log(solid_layer.value, 2)) {
                     DestroyMe();

@@ -49,7 +49,7 @@ public class WormEnemy : Actor
     public Transform GunBarrel;                 // Позиция точки выстрела
     private bool InVisibilityZone = false;      // Проверка на нахождение в зоне видимости
     private bool InImpactArea = false;          // Проверка на нахождение в зоне поражения
-    public float ArrowVel = 50;                 // Начальная скорость арбалетного болта         
+    public float ArrowVel = 400;                 // Начальная скорость арбалетного болта         
     public float BowAttackCooldownTime = 4f;    // Задержка по атаке      
     private float bowAttackCooldownTimer = 0f;  // Таймер до атаки
     private Vector3 PlayerPos;                  // Позиция игрока, необходима для расчета угла стрельбы
@@ -199,18 +199,18 @@ public class WormEnemy : Actor
 
         float num = onGround ? 1f : 0.65f;
 
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+
         if (BehaivourType == Behaivour.FreeWalking)
         {
             if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
             {
                 moveX *= -1;
                 SpriteScale = new Vector2(-SpriteScale.x, SpriteScale.y);
-            }
-
-            if (!onGround)
-            {
-                float target = MaxFall;
-                Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
             }
         }
 
@@ -287,7 +287,12 @@ public class WormEnemy : Actor
     }
     void BowAttack_Update()
     {
-
+       bow.transform.rotation = (Quaternion.Euler(0, 0, angle + 45));
+       angle = Vector3.Angle(Vector3.right, (-transform.position + PlayerPos));
+       if ((PlayerPos.y - transform.position.y) < 0)
+       {
+        angle = -angle;
+       }
     }
 
     void Death_Update()

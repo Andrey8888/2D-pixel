@@ -205,6 +205,15 @@ public class Button : MonoBehaviour {
                     }
                 }
 
+                if (InteractType == Interact.ByBox)
+                {
+                    if  (col.CompareTag("Box"))
+                    {
+                        Active = true;
+                        Activation(DependObjects, Active);
+                    }
+                }
+
                 if (InteractType == Interact.ByPlayerAndBox)
                 {
                     if (col.CompareTag("Player") || col.CompareTag("Box"))
@@ -247,6 +256,15 @@ public class Button : MonoBehaviour {
                     }
                 }
 
+                if (InteractType == Interact.ByBox)
+                {
+                    if (col.CompareTag("Box"))
+                    {
+                        Active = !Active;
+                        Activation(DependObjects, Active);
+                    }
+                }
+
                 if (InteractType == Interact.ByArrow)
                 {
                     if (col.CompareTag("Arrow"))
@@ -256,6 +274,7 @@ public class Button : MonoBehaviour {
                     }
                 }
             }
+
         }
     }
 
@@ -268,6 +287,15 @@ public class Button : MonoBehaviour {
                 if (InteractType == Interact.ByPlayer)
                 {
                     if (col.CompareTag("Player"))
+                    {
+                        Active = false;
+                        Activation(DependObjects, Active);
+                    }
+                }
+
+                if (InteractType == Interact.ByBox)
+                {
+                    if (col.CompareTag("Box"))
                     {
                         Active = false;
                         Activation(DependObjects, Active);
