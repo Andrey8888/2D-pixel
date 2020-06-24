@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 2137356668581180319}
   - component: {fileID: 2137356668581180317}
   - component: {fileID: 2137356668581180318}
-  - component: {fileID: 2137356668581180312}
-  m_Layer: 8
+  - component: {fileID: 581248899566829253}
+  m_Layer: 12
   m_Name: Barrel
   m_TagString: DestructibleObjects
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
   OnTakeDamageEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2137356668581180312}
+      - m_Target: {fileID: 581248899566829253}
         m_MethodName: Hit
         m_Mode: 1
         m_Arguments:
@@ -63,11 +63,22 @@ MonoBehaviour:
         m_CallState: 2
   OnTakeHealEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 581248899566829253}
+        m_MethodName: Hit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDeathEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2137356668581180312}
+      - m_Target: {fileID: 581248899566829253}
         m_MethodName: Die
         m_Mode: 1
         m_Arguments:
@@ -98,7 +109,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.027893066, y: 0.061172485}
+  m_Offset: {x: -0.027893066, y: -0.033172607}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -109,7 +120,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 20.792908, y: 23.31195}
+  m_Size: {x: 20.792908, y: 22.930801}
   m_EdgeRadius: 0
 --- !u!50 &2137356668581180318
 Rigidbody2D:
@@ -132,7 +143,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &2137356668581180312
+--- !u!114 &581248899566829253
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,7 +152,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2137356668581180313}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b79c0c823d305c4c8eb352e1d4fd264, type: 3}
+  m_Script: {fileID: 11500000, guid: f9b81f3e49132464fb1145fed56e4dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   onGround: 1
@@ -153,6 +164,15 @@ MonoBehaviour:
   solid_layer:
     serializedVersion: 2
     m_Bits: 4352
+  bumper_layer:
+    serializedVersion: 2
+    m_Bits: 1024
+  box_layer:
+    serializedVersion: 2
+    m_Bits: 256
+  player_layer:
+    serializedVersion: 2
+    m_Bits: 8192
   oneway_layer:
     serializedVersion: 2
     m_Bits: 512
@@ -163,6 +183,7 @@ MonoBehaviour:
   Gravity: 900
   MaxFall: -240
   animator: {fileID: 6656287820248964733}
+  Dropout: {fileID: 1884471767846222, guid: 08530e980059863448a83fd5e1ef477e, type: 3}
 --- !u!1 &6656287820248964735
 GameObject:
   m_ObjectHideFlags: 0
@@ -174,7 +195,7 @@ GameObject:
   - component: {fileID: 6656287820248964734}
   - component: {fileID: 6656287820248964732}
   - component: {fileID: 6656287820248964733}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: SpriteHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

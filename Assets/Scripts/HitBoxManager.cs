@@ -5,10 +5,13 @@ using UnityEngine;
 public class HitBoxManager : MonoBehaviour {
 
 	// Set these in the editor
-	public PolygonCollider2D attack1;
+	public PolygonCollider2D attack1; // hands
 
-	// Used for organization
-	private PolygonCollider2D[] colliders;
+    // Set these in the editor
+    public PolygonCollider2D attack2; //sword
+
+    // Used for organization
+    public PolygonCollider2D[] colliders;
 
 	// Collider on this game object
 	private PolygonCollider2D localCollider;

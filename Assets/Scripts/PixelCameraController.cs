@@ -21,8 +21,9 @@ public class PixelCameraController : MonoBehaviour {
 	public int m_MinY, m_MaxY, m_MinX, m_MaxX;
 
 	public static PixelCameraController instance = null;
+    public static float pixelToUnits = 1;
 
-	void Awake () {
+    void Awake () {
 		if (instance == null) {
 			instance = this;
 		} else if (instance != this){
@@ -50,7 +51,7 @@ public class PixelCameraController : MonoBehaviour {
 		// Camera Shake
 		Position = cameraPreShake;
 
-		if (shakeTimer > 0f)
+        if (shakeTimer > 0f)
 		{
 			if (OnInterval(0.04f))
 			{
@@ -130,7 +131,15 @@ public class PixelCameraController : MonoBehaviour {
 		transform.position = new Vector3(Position.x, Position.y, -10f);
 	}
 
-	public void DirectionalShake(Vector2 dir, float time = 0.15f)
+    public static float RoundToNearestPixel(float unityUnits)
+    {
+        float valueInPixels = unityUnits * pixelToUnits;
+        valueInPixels = Mathf.Round(valueInPixels);
+        float roundedUnityUnits = valueInPixels * (1 / pixelToUnits);
+        return roundedUnityUnits;
+    }
+
+    public void DirectionalShake(Vector2 dir, float time = 0.15f)
 	{
 		shakeDirection = dir.normalized;
 		lastDirectionalShake = 0;

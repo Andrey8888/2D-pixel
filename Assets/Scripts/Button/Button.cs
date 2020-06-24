@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Button : MonoBehaviour {
-    
+public class Button : MonoBehaviour
+{
+
     public enum ButtonSort
     {
         OnWallButton,   // Настенная (на пейзаже)
@@ -29,7 +30,7 @@ public class Button : MonoBehaviour {
 
     public enum TypeAction
     {
-        moveAction,      
+        moveAction,
         appearAction,
         disappearAction
     }
@@ -44,24 +45,24 @@ public class Button : MonoBehaviour {
     public bool Active = false;
     public float Timer = 0;
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         Timer = ActiveTime;
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         if (Timer < ActiveTime)
         {
             Timer += Time.deltaTime;
         }
-	}
-    
+    }
+
     void OnTriggerStay2D(Collider2D col)
     {
         if (ButtonType == ButtonSort.OnBorderButton)
-        {            
+        {
             if (WorkType == HowWork.OnlyPress)
             {
                 if (InteractType == Interact.ByPlayer)
@@ -84,7 +85,7 @@ public class Button : MonoBehaviour {
 
                 if (InteractType == Interact.ByBox)
                 {
-                    if ( col.CompareTag("Box"))
+                    if (col.CompareTag("Box"))
                     {
                         Active = true;
                         Activation(DependObjects, Active);
@@ -99,27 +100,30 @@ public class Button : MonoBehaviour {
             {
                 if (InteractType == Interact.ByPlayer)
                 {
-                    if ((col.CompareTag("Player")) && Input.GetKey(KeyCode.E))
+                    if ((col.CompareTag("Player")) && Input.GetKey(KeyCode.E) && col.GetComponent<Player>() != null)
                     {
+                        StartCoroutine("ActivationCoroutine");
                         Active = true;
-                        Activation(DependObjects, Active);
+                        col.GetComponent<Player>().Action();
                     }
                     else
                     {
                         Active = false;
-                        Activation(DependObjects, Active);
+                        StartCoroutine("ActivationCoroutine");
+                        col.GetComponent<Player>().Action();
                     }
                 }
             }
-            
+
             if (WorkType == HowWork.OnlyPress)
             {
                 if (InteractType == Interact.ByPlayer)
                 {
-                    if ((col.CompareTag("Player")) && Input.GetKey(KeyCode.E))
+                    if ((col.CompareTag("Player")) && Input.GetKey(KeyCode.E) && col.GetComponent<Player>() != null)
                     {
+                        StartCoroutine("ActivationCoroutine");
                         Active = true;
-                        Activation(DependObjects, Active);
+                        col.GetComponent<Player>().Action();
                     }
                 }
             }
@@ -128,11 +132,12 @@ public class Button : MonoBehaviour {
             {
                 if (InteractType == Interact.ByPlayer)
                 {
-                    if ((Timer >= ActiveTime) && (col.CompareTag("Player")) && Input.GetKeyDown(KeyCode.E))
+                    if ((Timer >= ActiveTime) && (col.CompareTag("Player")) && Input.GetKeyDown(KeyCode.E) && col.GetComponent<Player>() != null)
                     {
                         Active = !Active;
                         Timer = 0;
-                        Activation(DependObjects, Active);
+                        StartCoroutine("ActivationCoroutine");
+                        col.GetComponent<Player>().Action();
                     }
                 }
             }
@@ -144,15 +149,17 @@ public class Button : MonoBehaviour {
             {
                 if (InteractType == Interact.ByPlayer)
                 {
-                    if ((col.CompareTag("Player")) && (Input.GetKey(KeyCode.E)))
+                    if ((col.CompareTag("Player")) && (Input.GetKey(KeyCode.E)) && col.GetComponent<Player>() != null)
                     {
+                        StartCoroutine("ActivationCoroutine");
                         Active = true;
-                        Activation(DependObjects, Active);
+                        col.GetComponent<Player>().Action();
                     }
                     else
                     {
                         Active = false;
-                        Activation(DependObjects, Active);
+                        StartCoroutine("ActivationCoroutine");
+                        col.GetComponent<Player>().Action();
                     }
                 }
             }
@@ -161,10 +168,11 @@ public class Button : MonoBehaviour {
             {
                 if (InteractType == Interact.ByPlayer)
                 {
-                    if ((col.CompareTag("Player")) && (Input.GetKeyDown(KeyCode.E)))
+                    if ((col.CompareTag("Player")) && (Input.GetKeyDown(KeyCode.E)) && col.GetComponent<Player>() != null)
                     {
+                        StartCoroutine("ActivationCoroutine");
                         Active = true;
-                        Activation(DependObjects, Active);
+                        col.GetComponent<Player>().Action();
                     }
                 }
             }
@@ -173,11 +181,12 @@ public class Button : MonoBehaviour {
             {
                 if (InteractType == Interact.ByPlayer)
                 {
-                    if ((Timer >= ActiveTime) && (col.CompareTag("Player")) && (Input.GetKeyDown(KeyCode.E)))
+                    if ((Timer >= ActiveTime) && (col.CompareTag("Player")) && (Input.GetKeyDown(KeyCode.E)) && col.GetComponent<Player>() != null)
                     {
                         Active = !Active;
                         Timer = 0;
-                        Activation(DependObjects, Active);
+                        StartCoroutine("ActivationCoroutine");
+                        col.GetComponent<Player>().Action();
                     }
                 }
             }
@@ -205,15 +214,6 @@ public class Button : MonoBehaviour {
                     }
                 }
 
-                if (InteractType == Interact.ByBox)
-                {
-                    if  (col.CompareTag("Box"))
-                    {
-                        Active = true;
-                        Activation(DependObjects, Active);
-                    }
-                }
-
                 if (InteractType == Interact.ByPlayerAndBox)
                 {
                     if (col.CompareTag("Player") || col.CompareTag("Box"))
@@ -256,15 +256,6 @@ public class Button : MonoBehaviour {
                     }
                 }
 
-                if (InteractType == Interact.ByBox)
-                {
-                    if (col.CompareTag("Box"))
-                    {
-                        Active = !Active;
-                        Activation(DependObjects, Active);
-                    }
-                }
-
                 if (InteractType == Interact.ByArrow)
                 {
                     if (col.CompareTag("Arrow"))
@@ -274,7 +265,6 @@ public class Button : MonoBehaviour {
                     }
                 }
             }
-
         }
     }
 
@@ -287,15 +277,6 @@ public class Button : MonoBehaviour {
                 if (InteractType == Interact.ByPlayer)
                 {
                     if (col.CompareTag("Player"))
-                    {
-                        Active = false;
-                        Activation(DependObjects, Active);
-                    }
-                }
-
-                if (InteractType == Interact.ByBox)
-                {
-                    if (col.CompareTag("Box"))
                     {
                         Active = false;
                         Activation(DependObjects, Active);
@@ -328,8 +309,9 @@ public class Button : MonoBehaviour {
             {
                 GameObjects[i].SetActive(Active);
             }
-            else {
- 
+            else
+            {
+
                 SetWork = GameObjects[i].GetComponentInChildren<DoorPlatform>();
                 SetWork.Active = !SetWork.Active;
             }
@@ -357,5 +339,11 @@ public class Button : MonoBehaviour {
                 PixelCameraController.instance.DirectionalShake(Vector2.right, 0.1f);
             }
         }
+    }
+
+    IEnumerator ActivationCoroutine()
+    {
+        yield return new WaitForSeconds(0.2f);
+        Activation(DependObjects, Active);
     }
 }

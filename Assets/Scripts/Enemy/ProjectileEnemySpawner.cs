@@ -29,7 +29,7 @@ public class ProjectileEnemySpawner : MonoBehaviour
     public void InstantiateProjectile()
     {
         //Instantiate the projectile prefab
-        var p = Instantiate(projectile, gunBarrel.position, Quaternion.Euler(0, 0, owner.GetComponent<WormEnemy>().angle)) as Projectile;
+        var p = Instantiate(projectile, gunBarrel.position, Quaternion.identity) as Projectile;
 
         // Shoot based on the X scale of our parent object (base facing), which should be 1 for right and -1 for left 
         var parentXScale = (float)DirectionShoot *  Mathf.Sign(transform.parent.localScale.x);

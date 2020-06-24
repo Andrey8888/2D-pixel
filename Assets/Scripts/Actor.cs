@@ -17,8 +17,11 @@ public class Actor : MonoBehaviour {
 	public Vector2 movementCounter = Vector2.zero;  // Counter for subpixel movement
 
 	[Header ("Collision Layers")]
-	public LayerMask solid_layer; // The layer on which solids are placed
-	public LayerMask oneway_layer; // The layer on which the OneWay/FallThrough platforms are
+	public LayerMask solid_layer; // The layer on which solids are placed, without box!
+    public LayerMask bumper_layer; 
+    public LayerMask box_layer; // The layer on which solids are placed
+	public LayerMask player_layer; // The layer on which player 
+    public LayerMask oneway_layer; // The layer on which the OneWay/FallThrough platforms are
 	public LayerMask ladder_layer; // The layer on which we place ladders
 
 	[SerializeField, Header("Collider")]
@@ -93,6 +96,12 @@ public class Actor : MonoBehaviour {
 
 						var pb = component as PushBlock;
 						if (pb) {
+							var moved = component.MoveHExact (num);
+							if (!moved && !pushing)
+								pushing = true;
+						}
+						var hpb = component as HitablePushBlock;
+						if (hpb) {
 							var moved = component.MoveHExact (num);
 							if (!moved && !pushing)
 								pushing = true;

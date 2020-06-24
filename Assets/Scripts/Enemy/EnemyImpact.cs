@@ -9,7 +9,15 @@ public class EnemyImpact : MonoBehaviour
 
     [Header("Damage To Player")]
     public int DamageOnTouch = 1;
+    public float SlowPlayerSpeed = 10f;
 
+    public enum ImpactZoneAction
+    {
+        Damage,
+        Slowdown
+    }
+
+    public ImpactZoneAction ImpactZoneActionType = ImpactZoneAction.Damage;
     void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -17,12 +25,21 @@ public class EnemyImpact : MonoBehaviour
             col = collision;
             InImpactZone = true;
         }
-        if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead)
+        if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Damage)
         {
             var playercomponent = collision.GetComponent<Player>();
             if (playercomponent != null)
             {
                 OnPlayerTrigger(playercomponent);
+            }
+        }
+
+        if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Slowdown)
+        {
+            var playercomponent = collision.GetComponent<Player>();
+            if (playercomponent != null)
+            {
+                OnPlayerSlow(playercomponent);
             }
         }
     }
@@ -34,7 +51,7 @@ public class EnemyImpact : MonoBehaviour
             col = collision;
             InImpactZone = true;
         }
-        if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead)
+        if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Damage)
         {
             var playercomponent = collision.GetComponent<Player>();
             if (playercomponent != null)
@@ -42,6 +59,17 @@ public class EnemyImpact : MonoBehaviour
                 OnPlayerTrigger(playercomponent);
             }
         }
+
+        if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Slowdown)
+        {
+            var playercomponent = collision.GetComponent<Player>();
+            if (playercomponent != null)
+            {
+                OnPlayerSlow(playercomponent);
+            }
+        }
+        
+
     }
 
     void OnTriggerExit2D(Collider2D collision)
@@ -51,11 +79,38 @@ public class EnemyImpact : MonoBehaviour
             col = null;
             InImpactZone = false;
         }
+        if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Slowdown)
+        {
+            var playercomponent = collision.GetComponent<Player>();
+            if (playercomponent != null)
+            {
+                OnPlayerNormalSpeed(playercomponent);
+            }
+        }
+
+        //if (collision.CompareTag("DestructibleObjects") && !gameObject.GetComponentInParent<Health>().dead)
+        //{
+        //    var boxcomponent = collision.GetComponent<HitablePushBlock>();
+        //    if (boxcomponent != null)
+        //    {
+        //        boxcomponent.Die();
+        //    }
+        //}
     }
 
     // Function to deal damage to the player
     void OnPlayerTrigger(Player player)
     {
         player.GetComponent<Health>().TakeDamage(DamageOnTouch);
+    }
+
+    void OnPlayerSlow(Player player)
+    {
+        player.GetComponent<Player>().MaxRun = SlowPlayerSpeed;
+    }
+
+    void OnPlayerNormalSpeed(Player player)
+    {
+        player.GetComponent<Player>().MaxRun = 140;
     }
 }

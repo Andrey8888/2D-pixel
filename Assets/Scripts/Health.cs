@@ -6,7 +6,8 @@ using UnityEngine.Events;
 public class Health : MonoBehaviour {
 
 	public UnityEvent OnTakeDamageEvent;
-	public UnityEvent OnTakeHealEvent;
+    public UnityEvent OnDamageBlockEvent;
+    public UnityEvent OnTakeHealEvent;
 	public UnityEvent OnDeathEvent;
 
 	[Header ("Max/Starting Health")]
@@ -19,7 +20,8 @@ public class Health : MonoBehaviour {
 
 	[Header ("Invincible")]
 	public bool invincible = false;
-	public bool becomeInvincibleOnHit = false;
+    public bool block = false;
+    public bool becomeInvincibleOnHit = false;
 	public float invincibleTimeOnHit = .5f;
 	private float invincibleTimer = 0f;
 
@@ -44,9 +46,18 @@ public class Health : MonoBehaviour {
 	}
 
 	public bool TakeDamage (int amount) {
-		if (dead || invincible)
-			return false;
 
+        if (block)
+        {
+            if (OnDamageBlockEvent != null)
+                OnDamageBlockEvent.Invoke();
+            block = false;
+            return false;
+        }
+        if (dead || invincible)
+        {
+            return false;
+        }
 		health = Mathf.Max (0, health - amount);
 
 		if (OnTakeDamageEvent != null)
@@ -66,7 +77,7 @@ public class Health : MonoBehaviour {
 		return true;
 	}
 
-	public bool TakeHeal (int amount) {
+    public bool TakeHeal (int amount) {
 		if (dead || health == maxHealth)
 			return false;
 

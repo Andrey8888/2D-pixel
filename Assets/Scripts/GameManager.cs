@@ -86,4 +86,17 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 	}
+
+    public void ResetEnemyHP()
+    {
+        var enemy = GameObject.FindObjectsOfType<Enemy>();
+
+        foreach (Enemy e in enemy)
+        {
+            if (e.enabled)
+            {
+                e.ResetEnenmyHP();
+            }
+        }
+    }
 }
