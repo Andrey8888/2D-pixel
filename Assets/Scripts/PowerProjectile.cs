@@ -80,7 +80,7 @@ public class PowerProjectile : MonoBehaviour
             healthsDamaged.Add(component);
 
             // Apply the damage
-            var didDamage = component.TakeDamage(DamageOnHit);
+            var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
             // Destroy the projectile after applying damage
             if (didDamage)
             {

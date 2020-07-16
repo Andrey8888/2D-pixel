@@ -8,6 +8,8 @@ TagManager:
   - Arrow
   - Enemy
   - DestructibleObjects
+  - object
+  - Inventory
   layers:
   - Default
   - TransparentFX

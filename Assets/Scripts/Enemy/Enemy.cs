@@ -13,16 +13,20 @@ public class Enemy : Actor
     public float Gravity = 900f;                // Speed at which you are pushed down when you are on the air
     public float MaxFall = -160f;               // Maximun common speed at which you can fall
     public float RunReduce = 400f;              // Horizontal Acceleration when you're already when your horizontal speed is higher or equal to the maximun
-    public float MaxRun = 30f;                  // Maximun Horizontal Run Speed
+    public float RunSpeed = 90f; 
+    public float WalkSpeed = 30f;
+    private float runSpeed = 0;
+    private float walkSpeed = 0;
     public float RunAccel = 1000f;              // Horizontal Acceleration Speed
     public float AirMult = 0.65f;               // Multiplier for the air horizontal movement (friction) the higher the more air control you'll have
-    public float TurnCooldownTime = 1f;        
+    public float TurnCooldownTime = 1f;
+    private float AggressionCooldownTime = 10f;
     private float turnCooldownTimer = 0f;
-    public float StunedCooldownTime = 0.25f;
+    private float aggressionCooldownTimer = 0f;
+    //public float StunedCooldownTime = 0.25f;
     private float stunedCooldownTimer = 0f;
     public bool OnStun = false;
 
-    public float MinDist = 0.5f;                // Допустимое расстояние, при котором враг переключается на следующую точку
 
     // Helper private Variables
     private int moveX;                          // Variable to store the horizontal Input each frame
@@ -45,21 +49,81 @@ public class Enemy : Actor
 
     [Header("Particles")]
     public GameObject BloodParticle;
+	
+	
+	[Header("MeleeAttacks")]
+	public int MeleeAttackDamage = 1;
+    public int MeleeCriticalDamage = 0;
+	public float MeleeAttackCooldownTime = 2f; // Задержка по ближней атаке  
+    public int MeleeAttackMaxDamage;
+    public int MeleeAttackMinDamage;
+    public int MeleeCriticalDamageMultiply;
+    public int MeleeCriticalDamageChance;
 
-    [Header("Attacks")]
-    public int MeleeAttackDamage = 1;
-    public Transform GunBarrel;                  // Позиция точки выстрела
-    private bool InVisibilityZone = false;       // Проверка на нахождение в зоне видимости
-    private bool InDetectionZone = false;           // Проверка на нахождение в зоне обнаружения        
-    public float MeleeAttackCooldownTime = 2f; // Задержка по ближней атаке      
-    public float BowAttackCooldownTime = 4f;     // Задержка по выстрелу     
+    [Header("Poison")]
+    public bool MeleeAttackCanPoison = false;
+	public int MeleePoisonDamaged = 0;
+	public int MeleePoisonFrequency = 0;
+	public int MeleePoisonTick = 0;
+    [Header("Fire")]
+    public bool MeleeAttackCanFire = false;
+	public int MeleeFireDamaged = 0;
+	public int MeleeFireFrequency = 0;
+	public int MeleeFireTick = 0;
+    [Header("Freez")]
+    public bool MeleeAttackCanFreez = false;
+    public int MeleeFreezDuration = 0;
+    [Header("Push")]
+    public bool MeleeAttackCanPush = false;
+    public int MeleePushDistance = 0;
+
+    [Header("RangedAttacks")]
+    public int RangedMeleeAttackDamage = 0;
+	public float BowAttackCooldownTime = 4f;     // Задержка по выстрелу     
     public float CastAttackCooldownTime = 2f;     // Задержка по выстрелу  
+    public int RangedCriticalDamage = 0;
+    public int RangedAttackMinDamage = 1;
+    public int RangedAttackMaxDamage = 2;
+    public int RangedCriticalDamageMultiply;
+    public int RangedCriticalDamageChance;
+    public Transform GunBarrel;                  // Позиция точки выстрела
+
+	[Header("Poison")]
+	public bool RangedAttackCanPoison = false;
+	public int RangedPoisonDamaged = 0;
+	public int RangedPoisonFrequency = 0;
+	public int RangedPoisonTick = 0;
+	[Header("Fire")]
+	public bool RangedAttackCanFire = false;
+	public int RangedFireDamaged = 0;
+	public int RangedFireFrequency = 0;
+	public int RangedFireTick = 0;
+    [Header("Freez")]
+    public bool RangedAttackCanFreez = false;
+    public int RangedFreezDuration = 0;
+    [Header("Push")]
+	public bool RangedAttackCanPush = false;
+    public int RangedPushDistance = 0;
+
+
+    private bool InVisibilityZone = false;       // Проверка на нахождение в зоне видимости
+    private bool InDetectionZone = false;           // Проверка на нахождение в зоне обнаружения   
     private float meleeAttackCooldownTimer = 0f; // Таймер до ближней атаки
     private float bowAttackCooldownTimer = 0f;   // Таймер до выстрела
     private float castAttackCooldownTimer = 0f;   // Таймер до выстрела
-                                                 //private Vector3 PlayerPos;                  // Позиция игрока, необходима для расчета угла стрельбы
-                                                 //public Vector3 PlayerPosGlobal;             // Позиция игрока на карте
+	
+	
+	
+	
+    //private Vector3 PlayerPos;                  // Позиция игрока, необходима для расчета угла стрельбы
+    //public Vector3 PlayerPosGlobal;             // Позиция игрока на карте
 
+	[Header("HP Bar")]
+	public Canvas MyGUI;                    // UI на котором будем отображать  
+    public Slider EnemyHP;                  // полоска здоровья врага на экране
+    public Transform metka;
+    public Camera Mycamera;
+	private Slider ShowHP;
     // States for the state machine
     public enum States
     {
@@ -100,7 +164,7 @@ public class Enemy : Actor
     {
         get
         {
-            return AttackType == Attack.Archery && EnemyVisibility.InVisibilityZone && castAttackCooldownTimer <= 0f;
+            return AttackType == Attack.Archery && EnemyVisibility.InVisibilityZone && bowAttackCooldownTimer <= 0f;
         }
     }
 
@@ -108,7 +172,7 @@ public class Enemy : Actor
     {
         get
         {
-            return AttackType == Attack.Magic && EnemyVisibility.InVisibilityZone && bowAttackCooldownTimer <= 0f;
+            return AttackType == Attack.Magic && EnemyVisibility.InVisibilityZone && CastAttackCooldownTime <= 0f;
         }
     }
 
@@ -125,7 +189,7 @@ public class Enemy : Actor
     {
         get
         {
-            return (AttackType == Attack.Melee && ((CheckColAtPlace(Vector2.right * 18, player_layer)) || (CheckColAtPlace(Vector2.left * 18, player_layer))) && meleeAttackCooldownTimer >= 0f) 
+            return (AttackType == Attack.Melee && ((CheckColAtPlace(Vector2.right * 18, player_layer)) || (CheckColAtPlace(Vector2.left * 18, player_layer))) && meleeAttackCooldownTimer >= 0f)
                 || (AttackType == Attack.Archery && EnemyVisibility.InVisibilityZone);
         }
     }
@@ -152,7 +216,10 @@ public class Enemy : Actor
     void Start()
     {
         fsm.ChangeState(States.Normal);
-    }
+        SetHPBar();
+        runSpeed = RunSpeed;
+        walkSpeed = WalkSpeed;
+}
 
     new void Update()
     {
@@ -185,14 +252,27 @@ public class Enemy : Actor
             meleeAttackCooldownTimer -= Time.deltaTime;
         }
 
+        if (aggressionCooldownTimer > 0f)
+        {
+            aggressionCooldownTimer -= Time.deltaTime;
+        }
+
         if (turnCooldownTimer > 0f)
         {
             turnCooldownTimer -= Time.deltaTime;
         }
 
-        if (stunedCooldownTimer > 0f)
+        //if (stunedCooldownTimer > 0f)
+        //{
+        //    stunedCooldownTimer -= Time.deltaTime;
+        //}
+		
+        if (ShowHP != null)
         {
-            stunedCooldownTimer -= Time.deltaTime;
+            // получаем экранные координаты расположения врага
+            Vector3 screenPos = metka.transform.position;
+            // задаем координаты расположения хп
+            ShowHP.transform.position = screenPos;
         }
     }
 
@@ -222,7 +302,7 @@ public class Enemy : Actor
             var health = GetComponent<Health>();
             if (health != null)
             {
-                health.TakeDamage(9999);
+                health.TakeDamage(9999, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
             }
         }
     }
@@ -253,7 +333,7 @@ public class Enemy : Actor
 
         if (CanStuned)
         {
-            stunedCooldownTimer = StunedCooldownTime;
+            //stunedCooldownTimer = StunedCooldownTime;
             fsm.ChangeState(States.Hit, StateTransition.Overwrite);
             return;
         }
@@ -267,7 +347,7 @@ public class Enemy : Actor
         else
         {
             if (AttackType == Attack.Melee)
-            BehaivourType = Behaivour.Patroling;
+                BehaivourType = Behaivour.Patroling;
 
             if (AttackType == Attack.Archery)
             {
@@ -279,7 +359,7 @@ public class Enemy : Actor
 
         if (BehaivourType == Behaivour.FreeWalking)
         {
-            Speed.x = Calc.Approach(Speed.x, moveX * MaxRun, RunReduce * num * Time.deltaTime);
+            Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
 
             if (!onGround)
             {
@@ -303,7 +383,6 @@ public class Enemy : Actor
             // преследование
             if (InDetectionZone)
             {
-                MaxRun = 90f;               
                 if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
                 {
                     if (turnCooldownTimer <= 0f)
@@ -316,15 +395,12 @@ public class Enemy : Actor
 
                 if (!InVisibilityZone)
                 {
-                    if (turnCooldownTimer <= 0f)
-                    {
                         CharacterRotation();
                         moveX *= -1;
                         turnCooldownTimer = TurnCooldownTime;
-                    }
                 }
 
-                Speed.x = Calc.Approach(Speed.x, moveX * MaxRun, RunReduce * num * Time.deltaTime);
+                Speed.x = Calc.Approach(Speed.x, moveX * runSpeed, RunReduce * num * Time.deltaTime);
 
                 if (!onGround)
                 {
@@ -334,10 +410,9 @@ public class Enemy : Actor
             }
 
             else if (!InVisibilityZone)
-               {
+            {
 
-                MaxRun = 30f;
-                Speed.x = Calc.Approach(Speed.x, moveX * MaxRun, RunReduce * num * Time.deltaTime);
+                Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
 
                 if (!onGround)
                 {
@@ -381,7 +456,7 @@ public class Enemy : Actor
                     }
                 }
 
-                Speed.x = Calc.Approach(Speed.x, moveX * MaxRun, RunReduce * num * Time.deltaTime);
+                Speed.x = Calc.Approach(Speed.x, moveX * runSpeed, RunReduce * num * Time.deltaTime);
 
                 if (!onGround)
                 {
@@ -427,7 +502,7 @@ public class Enemy : Actor
 
         if (CanStuned)
         {
-            stunedCooldownTimer = StunedCooldownTime;
+            //stunedCooldownTimer = StunedCooldownTime;
             fsm.ChangeState(States.Hit, StateTransition.Overwrite);
             return;
         }
@@ -448,7 +523,7 @@ public class Enemy : Actor
 
         if (CanStuned)
         {
-            stunedCooldownTimer = StunedCooldownTime;
+            //stunedCooldownTimer = StunedCooldownTime;
             fsm.ChangeState(States.Hit, StateTransition.Overwrite);
             return;
         }
@@ -469,7 +544,7 @@ public class Enemy : Actor
 
         if (CanStuned)
         {
-            stunedCooldownTimer = StunedCooldownTime;
+            //stunedCooldownTimer = StunedCooldownTime;
             fsm.ChangeState(States.Hit, StateTransition.Overwrite);
             return;
         }
@@ -484,7 +559,7 @@ public class Enemy : Actor
 
         if (CanStuned)
         {
-            stunedCooldownTimer = StunedCooldownTime;
+            //stunedCooldownTimer = StunedCooldownTime;
             fsm.ChangeState(States.Hit, StateTransition.Overwrite);
             return;
         }
@@ -518,6 +593,17 @@ public class Enemy : Actor
     {
         var health = GetComponent<Health>();
         health.health = health.maxHealth;
+    }
+
+    public void SetHPBar()
+    {
+	    var health = GetComponent<Health>();
+        // создаем новый слайдер на основе эталона
+        ShowHP = (Slider)Instantiate(EnemyHP);
+        //Объявляем что он будет расположен в canvas
+        ShowHP.transform.SetParent(MyGUI.transform, true);
+        ShowHP.maxValue = health.maxHealth;
+        ShowHP.value = health.health;
     }
 
     // Function to update the sprite scale, facing direction and animations 
@@ -621,11 +707,11 @@ public class Enemy : Actor
                     animator.Play("BowDeath");
                 }
             }
-            else if (fsm.State == States.Hit)
+            else if (fsm.State == States.Stun)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("BowHurt"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("BowStun"))
                 {
-                    animator.Play("BowHurt");
+                    animator.Play("BowStun");
                 }
             }
             else if (fsm.State == States.BowAttack)
@@ -691,11 +777,11 @@ public class Enemy : Actor
                     animator.Play("MageDeath");
                 }
             }
-            else if (fsm.State == States.Hit)
+            else if (fsm.State == States.Stun)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("MageHurt"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("MageStun"))
                 {
-                    animator.Play("MageHurt");
+                    animator.Play("MageStun");
                 }
             }
             else if (fsm.State == States.Cast)
@@ -755,6 +841,9 @@ public class Enemy : Actor
 
     public void Hit()
     {
+		var health = GetComponent<Health>();
+		// показываем текущие здоровье на полосе хп
+		ShowHP.value = health.health; 		
         //int random = Random.Range(0, 99);
         //Debug.Log(random + "/99 ");
         //if (random < 50)
@@ -763,10 +852,18 @@ public class Enemy : Actor
         //}
     }
 
+	//IEnumerator Poisoned()
+    //{
+    //        var health = GetComponent<Health>();
+    //        if (health != null)
+    //        {
+   //             health.TakeDamage(2);
+     //       }
+     //   yield return new WaitForSeconds(3);
+   // }
+	
     void Stun_Update()
     {
-
-        Debug.Log("Stun");
         // Horizontal Speed Update Section
         float num = onGround ? 1f : 0.65f;
 
@@ -779,13 +876,27 @@ public class Enemy : Actor
         }
     }
 
+    public void Freez()
+    {
+        walkSpeed = 0;
+        runSpeed = 0;
+    }
+
+    public void UnFreez()
+    {
+        walkSpeed = WalkSpeed;
+        runSpeed = RunSpeed;
+    }
+
     public void Die()
     {
-        var playercomponent = GetComponent<Player>();
-        if (playercomponent != null)
-        {
-            playercomponent.GetComponent<Player>().MaxRun = 140;
-        }
+        //var playercomponent = GetComponent<Player>();
+		
+        //if (playercomponent != null)
+        //{
+        //    playercomponent.GetComponent<Player>().MaxRun = playercomponent.curRun;
+        //}
+        ShowHP.transform.SetParent(transform, true);
         fsm.ChangeState(States.Death, StateTransition.Overwrite);
         //Destroy(ImpactZone);
         //Destroy(VisibilityZone);

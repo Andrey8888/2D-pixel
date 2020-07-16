@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7327393923314007316}
   - component: {fileID: 7445041374585675354}
-  - component: {fileID: 7312641702726868306}
-  - component: {fileID: 1287185897479124254}
+  - component: {fileID: 4064983902154758797}
+  - component: {fileID: 1636290072141247781}
   m_Layer: 0
   m_Name: Bow
   m_TagString: Untagged
@@ -40,7 +40,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7325081864335052826}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dc6c38049f3a5dd47b4e7adf31ea0370, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4a470a3d1f557614ca1152761b3d43b7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -82,7 +82,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &7312641702726868306
+--- !u!114 &4064983902154758797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7325081864335052826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b8723013d07350439dad8338d4d24f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recoveryTime: 2.5
+  PickupTime: 0
+  itemButton: {fileID: 1264874094776755892, guid: f804cfd50c293704ebb8d3d9be61c324,
+    type: 3}
+  RangedAttackMinDamage: 2
+  RangedAttackMaxDamage: 5
+  RangedAttackCooldownTime: 1
+  CriticalDamageMultiply: 1
+  ChanceCriticalDamage: 0
+  StepUpAfterHit: 0
+  level: 1
+  CanPoison: 0
+  PoisonDamaged: 0
+  PoisonFrequency: 3
+  PoisonTick: 3
+  CanFire: 0
+  FireDamaged: 0
+  FireFrequency: 1
+  FireTick: 2
+  CanPush: 0
+  CanThroughShoot: 0
+  Type: 0
+  Sprite: {fileID: 7445041374585675354}
+--- !u!61 &1636290072141247781
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,34 +130,16 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.457489, y: 0.6535225}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 35, y: 35}
+    oldSize: {x: 30, y: 30}
     newSize: {x: 16, y: 16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 12, y: 18}
+  m_Size: {x: 32.258392, y: 31.854118}
   m_EdgeRadius: 0
---- !u!114 &1287185897479124254
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7325081864335052826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17117fa16df49c94c88924ed54175faa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recoveryTime: 0
-  PickupTime: 0
-  itemButton: {fileID: 1264874094776755892, guid: f804cfd50c293704ebb8d3d9be61c324,
-    type: 3}
-  action: 2
-  Sprite: {fileID: 7445041374585675354}

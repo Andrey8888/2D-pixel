@@ -150,8 +150,14 @@ MonoBehaviour:
   movementCounter: {x: 0, y: 0}
   solid_layer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 4352
+  bumper_layer:
+    serializedVersion: 2
+    m_Bits: 0
   box_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  player_layer:
     serializedVersion: 2
     m_Bits: 0
   oneway_layer:
@@ -163,6 +169,3 @@ MonoBehaviour:
   myCollider: {fileID: 61579282769080782}
   Gravity: 500
   MaxFall: -240
-  animator: {fileID: 0}
-  Hitable: 0
-  Dropout: {fileID: 0}

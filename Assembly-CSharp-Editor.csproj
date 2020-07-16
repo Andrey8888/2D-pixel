@@ -63,6 +63,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\CustomInspectorWindow.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\ExpandableAttribute.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\LevelGraphEditor\EditorMode.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\LevelGraphEditor\EditorNodes\ConnectionNode.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\LevelGraphEditor\EditorNodes\RoomNode.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\LevelGraphEditor\LevelGraphInspector.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\LevelGraphEditor\LevelGraphWindow.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\MapDescriptionWindow.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\NodeBasedEditor\ConnectionLegacy.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\NodeBasedEditor\ConnectionPoint.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\NodeBasedEditor\IEditorNode.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\NodeBasedEditor\IEditorNodeBase.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\NodeBasedEditor\Node.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\NodeBasedEditor\NodeBasedEditorBase.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\NodeBasedEditorBaseOld.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\NodeBasedEditorWindow.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\RoomInspector.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\RoomsEditor\EditorNodes\RoomNode.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\RoomsEditor\EditorNodes\RoomSetNode.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\RoomsEditor\RoomsInspector.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Editor\RoomsEditor\RoomsWindow.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Scripts\GeneratorPipeline\DungeonGenerators\Editor\DungeonGeneratorPipelineInspector.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Scripts\GeneratorPipeline\RoomTemplates\Doors\Editor\DoorInfoPropertyDrawer.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Scripts\GeneratorPipeline\RoomTemplates\Doors\Editor\DoorsInspector.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Scripts\GeneratorPipeline\RoomTemplates\TilemapLayers\Editor\DefaultRoomTemplateInitializerInspector.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Scripts\GeneratorPipeline\RoomTemplates\TilemapLayers\Editor\RoomTemplateInitializerInspector.cs" />
+    <Compile Include="Assets\ProceduralLevelGenerator\Scripts\GeneratorPipeline\RoomTemplates\Transformations\Editor\RoomTransformationsInspector.cs" />
     <Compile Include="Assets\Tilemap\Brushes\Coordinate Brush\Scripts\Editor\CoordinateBrush.cs" />
     <Compile Include="Assets\Tilemap\Brushes\GameObject Brush\Scripts\Editor\GameObjectBrush.cs" />
     <Compile Include="Assets\Tilemap\Brushes\Line Brush\Scripts\Editor\LineBrush.cs" />
@@ -322,6 +349,27 @@
     </Reference>
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/16.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="GeneralAlgorithms">
+      <HintPath>C:/Users/888/Documents/2D pixel/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/GeneralAlgorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphPlanarityTesting">
+      <HintPath>C:/Users/888/Documents/2D pixel/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/GraphPlanarityTesting.dll</HintPath>
+    </Reference>
+    <Reference Include="MapGeneration">
+      <HintPath>C:/Users/888/Documents/2D pixel/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/MapGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="MapGeneration.Interfaces">
+      <HintPath>C:/Users/888/Documents/2D pixel/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/MapGeneration.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:/Users/888/Documents/2D pixel/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RangeTree">
+      <HintPath>C:/Users/888/Documents/2D pixel/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/RangeTree.dll</HintPath>
+    </Reference>
+    <Reference Include="YamlDotNet">
+      <HintPath>C:/Users/888/Documents/2D pixel/Assets/ProceduralLevelGenerator/Libraries/ProceduralLayoutGenerator/YamlDotNet.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/888/Documents/2D pixel/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>

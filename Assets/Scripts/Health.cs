@@ -3,110 +3,199 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Health : MonoBehaviour {
+public class Health : MonoBehaviour
+{
 
-	public UnityEvent OnTakeDamageEvent;
+    public UnityEvent OnTakeDamageEvent;
+    public UnityEvent OnPushedEvent;
+    public UnityEvent OnBurnedEvent;
+    public UnityEvent OnFreezedEvent;
+    public UnityEvent OnPoisonedEvent;
+    public UnityEvent OnBurnedEndEvent;
+    public UnityEvent OnFreezedEndEvent;
+    public UnityEvent OnPoisonedEndEvent;
     public UnityEvent OnDamageBlockEvent;
     public UnityEvent OnTakeHealEvent;
-	public UnityEvent OnDeathEvent;
+    public UnityEvent OnDeathEvent;
 
-	[Header ("Max/Starting Health")]
-	public int maxHealth;
-	[Header ("Current Health")]
-	public int health;
+    [Header("Max/Starting Health")]
+    public int maxHealth;
+    [Header("Current Health")]
+    public int health;
 
-	[Header ("IsDeathOrNot")]
-	public bool dead = false;
+    [Header("IsDeathOrNot")]
+    public bool dead = false;
 
-	[Header ("Invincible")]
-	public bool invincible = false;
+    [Header("Invincible")]
+    public bool invincible = false;
     public bool block = false;
     public bool becomeInvincibleOnHit = false;
-	public float invincibleTimeOnHit = .5f;
-	private float invincibleTimer = 0f;
+    public float invincibleTimeOnHit = .5f;
+    private float invincibleTimer = 0f;
 
-	[Header ("Perform Dead Events after x time")]
-	public float DieEventsAfterTime = 1f;
+    [Header("Perform Dead Events after x time")]
+    public float DieEventsAfterTime = 1f;
 
 
 
-	void Start () {
-		health = maxHealth;
-	}
+    void Start()
+    {
+        health = maxHealth;
+    }
 
-	void Update () {
-		if (invincibleTimer > 0f) {
-			invincibleTimer -= Time.deltaTime;
+    void Update()
+    {
+        if (invincibleTimer > 0f)
+        {
+            invincibleTimer -= Time.deltaTime;
 
-			if (invincibleTimer <= 0f) {
-				if (invincible)
-					invincible = false;
-			}
-		}
-	}
+            if (invincibleTimer <= 0f)
+            {
+                if (invincible)
+                    invincible = false;
+            }
+        }
+    }
 
-	public bool TakeDamage (int amount) {
-
+    public bool TakeDamage(int amount, bool poison, int poisonAmount, int poisonFrequency, int poisonTick,
+        bool fire, int fireAmount, int fireFrequency, int fireTick, bool push, int pushDistance, bool freez, int freezDuration)
+    {
         if (block)
         {
             if (OnDamageBlockEvent != null)
                 OnDamageBlockEvent.Invoke();
             block = false;
-            return false;
+            return true;
         }
         if (dead || invincible)
         {
             return false;
         }
-		health = Mathf.Max (0, health - amount);
+        health = Mathf.Max(0, health - amount);
 
-		if (OnTakeDamageEvent != null)
-			OnTakeDamageEvent.Invoke();
+        if (OnTakeDamageEvent != null)
+            OnTakeDamageEvent.Invoke();
 
-		if (health <= 0) {
-			Die ();
-		} else {
-			if (becomeInvincibleOnHit) {
-				invincible = true;
-				invincibleTimer = invincibleTimeOnHit;
-			}	 
+        if (health <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            if (becomeInvincibleOnHit)
+            {
+                invincible = true;
+                invincibleTimer = invincibleTimeOnHit;
+            }
+            if (poison)
+             StartCoroutine( Poisoned(poisonAmount, poisonFrequency, poisonTick));
+            if (fire)
+             StartCoroutine(Burned(fireAmount, fireFrequency, fireTick));
+            if (push)
+                Pushed(pushDistance);
+            if (freez)
+                StartCoroutine(Freezed(freezDuration));
+            PixelCameraController.instance.Shake(0.15f);
+        }
+        return true;
+    }
 
-			PixelCameraController.instance.Shake (0.15f);
-		}
+    IEnumerator Poisoned(int amount, int frequency, int tick)
+    {
+        for (int i = 0; i < tick; i++)
+        {
+            if (OnPoisonedEvent != null)
+                OnPoisonedEvent.Invoke();
+            yield return new WaitForSeconds(frequency);
+            health = Mathf.Max(0, health - amount);
+            if (OnTakeDamageEvent != null)
+                OnTakeDamageEvent.Invoke();
+            if (health <= 0)
+            {
+                Die();
+            }
+            PixelCameraController.instance.Shake(0.15f);
+        }
+        if (OnPoisonedEndEvent != null)
+                OnPoisonedEndEvent.Invoke();
+        yield return false;
+    }
 
-		return true;
-	}
+    IEnumerator Burned(int amount, int frequency, int tick)
+    {
+        for (int i = 0; i < tick; i++)
+        {
+            if (OnBurnedEvent != null)
+                OnBurnedEvent.Invoke();
+            yield return new WaitForSeconds(frequency);
+            health = Mathf.Max(0, health - amount);
+            if (OnTakeDamageEvent != null)
+                OnTakeDamageEvent.Invoke();
+            if (health <= 0)
+            {
+                Die();
+            }
+            PixelCameraController.instance.Shake(0.15f);
+        }
+        if (OnBurnedEndEvent != null)
+            OnBurnedEndEvent.Invoke();
+        yield return false;
+    }
 
-    public bool TakeHeal (int amount) {
-		if (dead || health == maxHealth)
-			return false;
+    IEnumerator Freezed(int duration)
+    {
+        if (OnFreezedEvent != null)
+            OnFreezedEvent.Invoke();
+        yield return new WaitForSeconds(duration);
 
-		health = Mathf.Min (maxHealth, health + amount);
+        if (OnFreezedEndEvent != null)
+            OnFreezedEndEvent.Invoke();
+        yield return false;
+    }
+    public void Pushed(int pushDistance)
+    {
+        if (OnPushedEvent != null)
+            OnPushedEvent.Invoke();
+        transform.position = new Vector2(transform.position.x + pushDistance, 0);
+        PixelCameraController.instance.Shake(0.35f);
+    }
 
-		if (OnTakeHealEvent != null)
-			OnTakeHealEvent.Invoke();
 
-		PixelCameraController.instance.Shake (0.1f);
+public bool TakeHeal(int amount)
+{
+    if (dead || health == maxHealth)
+        return false;
 
-		return true;
-	}
+    health = Mathf.Min(maxHealth, health + amount);
 
-	public void Die () {
-		dead = true;
-		PixelCameraController.instance.Shake (0.25f);
+    if (OnTakeHealEvent != null)
+        OnTakeHealEvent.Invoke();
 
-		StartCoroutine (DeathEventsRoutine (DieEventsAfterTime));
-	}
+    PixelCameraController.instance.Shake(0.1f);
 
-	IEnumerator DeathEventsRoutine (float time) {
-		yield return new WaitForSeconds (time);
-		if (OnDeathEvent != null)
-			OnDeathEvent.Invoke();
-	}
+    return true;
+}
 
-	public void SetUIHealthBar () {
-		if (UIHealthBar.instance != null) {
-			UIHealthBar.instance.setHealthBar (health);
-		}
-	}
+public void Die()
+{
+    dead = true;
+    PixelCameraController.instance.Shake(0.25f);
+
+    StartCoroutine(DeathEventsRoutine(DieEventsAfterTime));
+}
+
+IEnumerator DeathEventsRoutine(float time)
+{
+    yield return new WaitForSeconds(time);
+    if (OnDeathEvent != null)
+        OnDeathEvent.Invoke();
+}
+
+public void SetUIHealthBar()
+{
+    if (UIHealthBar.instance != null)
+    {
+        UIHealthBar.instance.setHealthBar(health);
+    }
+}
 }

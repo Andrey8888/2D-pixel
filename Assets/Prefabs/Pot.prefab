@@ -69,7 +69,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1417646081996595011, guid: 91af9eb48fb4e5e45b4da032910028e5,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -162,6 +162,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnDamageBlockEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnTakeHealEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -183,6 +186,7 @@ MonoBehaviour:
   health: 2
   dead: 0
   invincible: 0
+  block: 0
   becomeInvincibleOnHit: 0
   invincibleTimeOnHit: 0.5
   DieEventsAfterTime: 0

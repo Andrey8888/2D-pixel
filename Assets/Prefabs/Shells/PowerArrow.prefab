@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 5664169002481953898}
   - component: {fileID: 5629688331295964298}
   - component: {fileID: 5642020265040386116}
-  - component: {fileID: -7594328018525876018}
+  - component: {fileID: 5801730819362278875}
   m_Layer: 0
   m_Name: PowerArrow
   m_TagString: Untagged
@@ -181,7 +181,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 7, y: 3}
   m_EdgeRadius: 0
---- !u!114 &-7594328018525876018
+--- !u!114 &5801730819362278875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,11 +190,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5661651694734872350}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abad0921bbabea3498707ad3f2ff0dcb, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c89e6d7af8ccf042a52a76d461e9fb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: {x: 12, y: 0}
-  DamageOnHit: 1
+  DamageOnHit: 2
+  ThroughShoot: 1
   solid_layer:
     serializedVersion: 2
     m_Bits: 256

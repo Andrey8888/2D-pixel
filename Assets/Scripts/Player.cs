@@ -10,60 +10,132 @@ public class Player : Actor
 
     [Header("Movement Variables")]
     // Gravity, Maximun fall speed & fastfall Speed
-    public float Gravity = 900f; // Speed at which you are pushed down when you are on the air
-    public float MaxFall = -160f; // Maximun common speed at which you can fall
-    public float FastFall = -240f; // Maximun fall speed when you're fast falling
-                                   // Run Speed & Acceleration
-    public float MaxRun = 90f; // Maximun Horizontal Run Speed
-    public float RunAccel = 1000f; // Horizontal Acceleration Speed
-    public float RunReduce = 400f; // Horizontal Acceleration when you're already when your horizontal speed is higher or equal to the maximun
-                                   // Air value multiplier
-    public float AirMult = 0.65f; // Multiplier for the air horizontal movement (friction) the higher the more air control you'll have
-                                  // Jump Variables
-    public float JumpSpeed = 135f; // Vertical Jump Speed/Force
-    public float JumpHBoost = 40f; // Extra Horizontal Speed Boost when jumping
-    public float VariableJumpTime = 0.2f; // Time after performing a jump on which you can hold the jump key to jump higher
-    public float SpringJumpSpeed = 275f; // Vertical Jump Speed/Force for spring jumps
-    public float SpringJumpVariableTime = 0.05f; // ime after performing a spring jump (jumping off a spring) on which you can hold the jump key to jump higher
-                                                 // Wall Jump variables
-    public float WallJumpForceTime = 0.16f; // Time on which the horizontal movement is restrcited/forced after a wall jump (if too low the player migh be able to climb up a wall)
-    public float WallJumpHSpeed = 130f; // Horizontal Speed Boost when performing a wall jump
-    public int WallJumpCheckDist = 2; // Distance at which we check for walls before performing a wall jump (2-4 is recommended)
-                                      // Wall Slide Variables
-    public float WallSlideStartMax = -20f; // Starting vertical speed when you wall slide
-    public float WallSlideTime = 1.2f; // Maximun time you can wall slide before gaining the full fall speed again
-                                       // Dash Variables
-    public float DashSpeed = 240f; // Speed/Force which you dash at
-    public float EndDashSpeed = 160f; // Extra Speed Boost when the dash ends (2/3 of the dash speed recommended)
-    public float EndRollSpeed = 160f; // Extra Speed Boost when the roll ends (2/3 of the roll speed recommended)
-    public float EndDashUpMult = 0.75f; // Multiplier applied to the Speed after a dash ends if the direction you dashed at was up
-    public float EndRollUpMult = 0.75f; // Multiplier applied to the Speed after a roll ends if the direction you rolled at was up
-    public float DashTime = 0.15f; // The total time which a dash lasts for
-    public float RollTime = 0.15f; // The total time which a dash lasts for
-    public float DashCooldown = 0.4f; // The Cooldown time of a dash
-    public float RollCooldown = 0.4f; // The Cooldown time of a roll
-                                      // Other variables used for responsive movement
-    public float clingTime = 0.125f; // Wall Cling/Stick time after touching a wall where you can't leave the wall (to avoid unintentionally leaving the wall when trying to perform a wall jump)
-    public float JumpGraceTime = 0.1f; // Jump Grace Time after leaving the ground non-jump on which you can still make a jump
-    public float JumpBufferTime = 0.1f; // If the player hits the ground within this time after pressing the the jump button, the jump will be executed as soon as they touch the ground
-                                        // Ladder Variables 
+    public float Gravity = 900f; // Скорость, с которой игрок падает, пока находится в воздухе
+    public float MaxFall = -160f; // Максимальная общая скорость, с которой вы можете упасть
+    public float FastFall = -240f; // Максимальная скорость падения при быстром падении
+    // Скорость бега и ускорение
+    public float MaxRun = 90f; //  Максимальная скорость бега по горизонтали
+
+    public float RunAccel = 1000f; // Скорость горизонтального ускорения
+    public float RunReduce = 400f; // Горизонтальное ускорение, когда ваша горизонтальная скорость выше или равна максимальной
+    // Множитель в воздухе
+    public float AirMult = 0.65f; // Множитель для горизонтального перемещения воздуха (трения), чем выше, тем больше контроля в воздухе
+    // Переменные для прыжка
+    public float JumpSpeed = 135f; // Скорость вертикального прыжка / Сила
+    public float JumpHBoost = 40f; // Повышение скорости по горизонтали при прыжке
+    public float VariableJumpTime = 0.2f; // Время после выполнения прыжка, при котором вы можете удерживать клавишу прыжка, чтобы прыгнуть выше
+    public float SpringJumpSpeed = 275f; // Скорость вертикального прыжка / Сила прыжков на пружине
+    public float SpringJumpVariableTime = 0.05f; // Время после выполнения прыжка с пружины, при котором вы можете удерживать клавишу прыжка, чтобы прыгнуть выше
+    // Переменные для прыжков от стен
+    public float WallJumpForceTime = 0.16f; // Время, когда горизонтальное движение возобновляется / форсируется после прыжка со стены (если он слишком низок, игрок может взобраться на стену)
+    public float WallJumpHSpeed = 130f; // Увеличение скорости по горизонтали при выполнении прыжка со стены
+    public int WallJumpCheckDist = 2; // Расстояние, на котором мы проверяем стены перед выполнением прыжка со стены (рекомендуется 2-4)
+    // Переменные для скольжения по стене
+    public float WallSlideStartMax = -20f; //  Начальная вертикальная скорость, когда вы скользите по стене
+    public float WallSlideTime = 1.2f; // Максимальное время, когда вы можете скользить по стене, прежде чем снова набрать полную скорость падения
+    // Параметры для рывка и переката
+    public float DashSpeed = 240f; // Скорость / Сила рывка (dash)
+    public float EndDashSpeed = 160f; // Повышенная скорость, когда рывок заканчивается (рекомендуется 2/3 скорости рывка)
+    public float EndRollSpeed = 160f; // Повышение скорости при окончании переката (рекомендуется 2/3 скорости переката)
+    public float EndDashUpMult = 0.75f; // Множитель применяется к скорости после окончания рывка, если направление, в котором вы летели, было вверх
+    public float EndRollUpMult = 0.75f; // Множитель применяется к скорости после окончания переката, если направление, в котором вы катились, было вверх
+    public float DashTime = 0.15f; // Общее время, которое длится рывок
+    public float RollTime = 0.15f; // Общее время, которое длится перекат
+    public float DashCooldown = 0.4f; // Время восстановления рывка
+    public float RollCooldown = 0.4f; // Время восстановления переката
+    // Другие переменные, используемые для адаптивного движения
+    public float clingTime = 0.125f;  // Время после прикосновения к стене, где вы не можете покинуть стену (чтобы избежать непреднамеренного ухода от стены при попытке выполнить прыжок с стены)
+    public float JumpGraceTime = 0.1f; // Время отсрочки прыжка после того, как вы покинули землю без прыжка, на котором вы все еще можете сделать прыжок
+    public float JumpBufferTime = 0.1f; // Если игрок ударяет об землю в течение этого времени после нажатия кнопки прыжка, прыжок будет выполнен, как только он коснется земли
+                                        // Лестничные переменные
     public float LadderClimbSpeed = 60f;
 
+    [Header("Hands")]
+    public int HandAttackMinDamage = 1;//new int[2] {1, 0, 0};
+    public int HandAttackMaxDamage = 2;//new int[2] {2, 0, 0};
+    public int HandStepUpAfterHit = 20; //new int[2] {20,0,0};
 
+    [Header("MeleeAttacks")]
+	public string MeleeWeaponType;
+    public int MeleeCriticalDamage = 0;
+    public int MeleeAttackMaxDamage;
+    public int MeleeAttackMinDamage;
+    public int MeleeCriticalDamageMultiply;
+    public int MeleeCriticalDamageChance;
+    public float MeleeAttackSpeed = 1f;
+    private int StepUpAfterHit;
+    private float MeleeAttackCooldownTime = 0.8f;
+    private float MeleePowerAttackCooldownTime = 0.8f;
+    public int MeleePowerAttackMaxDamage = 0;
+    public int MeleePowerAttackMinDamage = 0;
 
-    [Header("Attacks")]
-    public int HandAttackDamage = 1;
-    public int SwordAttackDamage = 1; // The damage done by the sword attack
+    //public bool MeleeAttackCanPowerAttackCriticalDamage; // использовать для особой атаки (не реализовано)
     [HideInInspector]
-    public int MeleeAttackDamage = 1;
-    public float MeleeAttackCooldownTime = 0.8f;
-    public float BottomAttackCooldownTimer = 0.2f;
-    public float PowerfullAttackCooldownTimer = 0.2f;
+    public bool MeleeAttackCanThirdAttackCriticalDamage; 
 
+    public bool MeleeAttackCanPoison = false;
+	[HideInInspector]
+	public int MeleePoisonDamaged = 0;
+	[HideInInspector]
+	public int MeleePoisonFrequency = 0;
+	[HideInInspector]
+	public int MeleePoisonTick = 0;
+    [HideInInspector]
+    public bool MeleeAttackCanFire = false;
+	[HideInInspector]
+	public int MeleeFireDamaged = 0;
+	[HideInInspector]
+	public int MeleeFireFrequency = 0;
+	[HideInInspector]
+	public int MeleeFireTick = 0;
+    [HideInInspector]
+    public bool MeleeAttackCanPush = false;
+    [HideInInspector]
+    public int MeleePushDistance = 0;
+    [HideInInspector]
+    public bool MeleeAttackCanFreez = false;
+    [HideInInspector]
+    public int MeleeFreezDuration = 0;
+    [HideInInspector]
+    public float HandAttackCooldownTime = 0.8f;
+    [HideInInspector]
+    public float SecondSwordAttackCooldownTime = 0.2f;
+    [HideInInspector]
+    public float ThirdSwordAttackCooldownTime = 0.2f;
+    [HideInInspector]
     public float MeleeBlockCooldownTime = 0.5f;
 
-    public float BowAttackCooldownTime = 1f;
-    public float BowPowerAttackCooldownTime = 10f;
+    [Header("RangedAttacks")]
+	public string RangedWeaponType;
+    public int RangedAttackDamage = 0;
+    public int RangedCriticalDamage = 0;
+    public int RangedCriticalDamageMultiply;
+    public int RangedCriticalDamageChance;
+    public int RangedAttackMinDamage = 1;//new int[2] {1, 0, 0};
+    public int RangedAttackMaxDamage = 2;//new int[2] {2, 0, 0};
+    public float RangedAttackCooldownTime = 1f;
+    public float RangedPowerAttackCooldownTime = 10f;
+
+	[HideInInspector]
+	public bool RangedAttackCanPoison = false;
+	[HideInInspector]
+	public int RangedPoisonDamaged = 0;
+	[HideInInspector]
+	public int RangedPoisonFrequency = 0;
+	[HideInInspector]
+	public int RangedPoisonTick = 0;
+	[HideInInspector]
+	public bool RangedAttackCanFire = false;
+	[HideInInspector]
+	public int RangedFireDamaged = 0;
+	[HideInInspector]
+	public int RangedFireFrequency = 0;
+	[HideInInspector]
+	public int RangedFireTick = 0;
+	[HideInInspector]
+	public bool RangedAttackCanPush = false;
+    [HideInInspector]
+    public bool RangedAttackCanThroughShoot = false;
 
     [Header("Facing Direction")]
     public Facings Facing;  // Facing Direction
@@ -85,6 +157,8 @@ public class Player : Actor
     // Helper private Variables
     private int moveX; // Variable to store the horizontal Input each frame
     private int moveY; // Variable to store the vectical Input each frame
+    [HideInInspector]
+    public float curRun = 0;
     private int oldMoveY; // Variable to store the he vertical Input for the last frame
     private float varJumpSpeed; // Vertical Speed to apply on each frame of the variable jump
     private float varJumpTimer = 0f; // Variable to store the time left on the variable jump
@@ -102,28 +176,31 @@ public class Player : Actor
     private float jumpGraceTimer = 0f; // Timer to store the time left to perform a jump after leaving a platform/solid
     private float jumpBufferTimer = 0f; // Timer to store the time left in the JumpBuffer timer
     private bool jumpIsInsideBuffer = false;
-    private bool hasBow = false;
-    private bool hasSword = false;
-    public bool onBlock = false;
     private float meleeAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
+    private float meleePowerAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
     private float meleeBlockCooldownTimer = 0f;
-    private float bottomAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
-    private float powerfullAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
-    private int hitCount = 0;
-    private float bowAttackCooldownTimer = 0f; // Timer to store cooldown left on the bow attak
-    private float bowPowerAttackCooldownTimer = 0f; // Timer to store cooldown left on the bow attak
+    private float secondSwordAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
+    private float thirdSwordAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
+    private float rangedAttackCooldownTimer = 0f; // Timer to store cooldown left on the bow attak
+    private float rangedPowerAttackCooldownTimer = 0f; // Timer to store cooldown left on the bow attak
     private float moveToRespawnPositionAfter = .5f; // Time to wait before moving to the respawn position
     private float moveToRespawnPosTimer = 0f; // Timer to store how much time is left before moving to the respawn position
-    private float stepUpAfterHit;
     private bool rollAgain = false;
     private float ledgeClimbTime = 1f; // Total time it takes to climb a wall
     private float ledgeClimbTimer = 0f; // Timer to store the current time passed in the ledgeClimb state
     private Vector2 extraPosOnClimb = new Vector2(10, 16); // Extra position to add to the current position to the end position of the climb animation matches the start position in idle state
+    public int hitCount = 0;
+    private bool hasBow = false;
+    private bool hasSword = false;
+	
+    private bool hasSeries = false;
+    private bool hasBlock = false;
 
     [SerializeField]
     private Health owner;
 
     List<Health> healthsDamaged = new List<Health>();
+	public List<ItemParameters> parameters = new List<ItemParameters>();
 
     // Check if we should duck (on the ground and moveY is pointing down and moveX is 0)
     public bool CanDuck
@@ -167,41 +244,47 @@ public class Player : Actor
         }
     }
 
-
-    public bool CanBottomAttack
+    public bool CanSecondSwordAttack
     {
         get
         {
-            return (hitCount == 1 && activeWeapon == ActiveWeapon.Sword) && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+            return (hasSeries && hitCount == 1 && activeWeapon == ActiveWeapon.Sword) && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
         }
     }
 
-    public bool CanPowerfullAttack
+    public bool CanThirdSwordAttack
     {
         get
         {
-            return hitCount == 2 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+            return hasSeries && hitCount == 2 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+        }
+    }
+    public bool CanPowerSwordAttack
+    {
+        get
+        {
+            return !hasBlock && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack2") && meleePowerAttackCooldownTimer <= 0f;
         }
     }
     public bool CanBlock
     {
         get
         {
-            return activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack2") && meleeBlockCooldownTimer <= 0f;
+            return hasBlock && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack2") && meleeBlockCooldownTimer <= 0f;
         }
     }
     public bool CanShoot
     {
         get
         {
-            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack") && bowAttackCooldownTimer <= 0f;
+            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack") && rangedAttackCooldownTimer <= 0f;
         }
     }
     public bool CanPowerShoot
     {
         get
         {
-            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && bowPowerAttackCooldownTimer <= 0f;
+            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && rangedPowerAttackCooldownTimer <= 0f;
         }
     }
 
@@ -230,25 +313,29 @@ public class Player : Actor
         LedgeClimb,
         Attack,
         SwordAttack,
-        BottomAttack,
-        PowerfullAttack,
+        SecondSwordAttack,
+        ThirdSwordAttack,
         SwordBlock,
         BowAttack,
         BowPowerAttack,
         Roll,
-        Action
+        Action,
+        PowerSwordAttack
     }
 
     // State Machine
     public StateMachine<States> fsm;
+
     public enum ActiveWeapon
     {
         Hands,         // Руки
         Bow,           // Лук 
         Sword          // Меч
     }
+    [Header("Initial weapon")]
     public ActiveWeapon activeWeapon; // Активное оружие
 
+    public GameObject InitialWeapon = null;
     new void Awake()
     {
         base.Awake();
@@ -273,15 +360,30 @@ public class Player : Actor
     {
         fsm.ChangeState(States.LadderClimb);
         ChangeWeapon(activeWeapon);
+        if (InitialWeapon.GetComponent<PickupRangedWeapons>() != null)
+            InitialWeapon.GetComponent<PickupRangedWeapons>().OnPlayerTrigger(this);
+        if (InitialWeapon.GetComponent<PickupMeleeWeapons>() != null)
+            InitialWeapon.GetComponent<PickupMeleeWeapons>().OnPlayerTrigger(this);
+        if (activeWeapon == ActiveWeapon.Hands)
+        {
+            MeleeAttackMaxDamage = HandAttackMaxDamage;
+            MeleeAttackMinDamage = HandAttackMinDamage;
+        }
+        curRun = MaxRun;
+
     }
 
-    private void ChangeWeapon(ActiveWeapon activeWeapon)
+    private void ChangeWeapon(ActiveWeapon activeWeapon) // удалить вместе с вызовом
     {
         if (activeWeapon == ActiveWeapon.Hands)
         {
-            stepUpAfterHit = 20;
-            MeleeAttackDamage = HandAttackDamage;
-            MeleeAttackCooldownTime = 0.8f;
+            MeleeAttackCooldownTime = HandAttackCooldownTime;
+            MeleeCriticalDamageMultiply = 0;
+            MeleeCriticalDamageChance = 0;
+            StepUpAfterHit = HandStepUpAfterHit;
+
+            hasSeries = false;
+            hasBlock = false;
         }
         if (activeWeapon == ActiveWeapon.Bow)
         {
@@ -289,9 +391,7 @@ public class Player : Actor
         }
         if (activeWeapon == ActiveWeapon.Sword)
         {
-            stepUpAfterHit = 60;
-            MeleeAttackDamage = SwordAttackDamage;
-            MeleeAttackCooldownTime = 0.2f;
+
         }
     }
     private void SelectWeapon()
@@ -317,19 +417,6 @@ public class Player : Actor
                     activeWeapon = ActiveWeapon.Bow;
                     break;
                 case ActiveWeapon.Bow:
-                    activeWeapon = ActiveWeapon.Hands;
-                    break;
-            }
-            ChangeWeapon(activeWeapon);
-        }
-        if (Input.GetKeyDown(KeyCode.Tab) && !hasBow && hasSword)
-        {
-            switch (activeWeapon)
-            {
-                case ActiveWeapon.Hands:
-                    activeWeapon = ActiveWeapon.Sword;
-                    break;
-                case ActiveWeapon.Sword:
                     activeWeapon = ActiveWeapon.Hands;
                     break;
             }
@@ -448,15 +535,15 @@ public class Player : Actor
         moveY = (int)Input.GetAxisRaw("Vertical");
 
         //Bow Attack timer
-        if (bowAttackCooldownTimer > 0f)
+        if (rangedAttackCooldownTimer > 0f)
         {
-            bowAttackCooldownTimer -= Time.deltaTime;
+            rangedAttackCooldownTimer -= Time.deltaTime;
         }
 
         //Bow Power Attack timer
-        if (bowPowerAttackCooldownTimer > 0f)
+        if (rangedPowerAttackCooldownTimer > 0f)
         {
-            bowPowerAttackCooldownTimer -= Time.deltaTime;
+            rangedPowerAttackCooldownTimer -= Time.deltaTime;
         }
 
         //Melee Attack timer
@@ -465,22 +552,28 @@ public class Player : Actor
             meleeAttackCooldownTimer -= Time.deltaTime;
         }
 
-        //Bottom Attack timer
-        if (bottomAttackCooldownTimer > 0f)
+        //Second Attack timer
+        if (secondSwordAttackCooldownTimer > 0f)
         {
-            bottomAttackCooldownTimer -= Time.deltaTime;
+            secondSwordAttackCooldownTimer -= Time.deltaTime;
             hitCount = 1;
         }
 
-        if (bottomAttackCooldownTimer < 0f && powerfullAttackCooldownTimer < 0f)
+        if (secondSwordAttackCooldownTimer < 0f && thirdSwordAttackCooldownTimer < 0f)
         {
             hitCount = 0;
         }
-        //Powerfull Attack timer
-        if (powerfullAttackCooldownTimer > 0f)
+        //Third Attack timer
+        if (thirdSwordAttackCooldownTimer > 0f)
         {
-            powerfullAttackCooldownTimer -= Time.deltaTime;
+            thirdSwordAttackCooldownTimer -= Time.deltaTime;
             hitCount = 2;
+        }
+
+        //Melee Power Attack timer
+        if (meleePowerAttackCooldownTimer > 0f)
+        {
+            meleePowerAttackCooldownTimer -= Time.deltaTime;
         }
 
         //Melee Block timer
@@ -565,6 +658,14 @@ public class Player : Actor
             return;
         }
 
+        // Melee PowerAttack over here
+        if (CanPowerSwordAttack)
+        {
+            meleePowerAttackCooldownTimer = MeleePowerAttackCooldownTime;
+            fsm.ChangeState(States.PowerSwordAttack, StateTransition.Overwrite);
+            return;
+        }
+
         // Melee Attack over here
         if (CanSwordAttack)
         {
@@ -574,18 +675,18 @@ public class Player : Actor
         }
 
         // Bottom Attack over here
-        if (CanBottomAttack)
+        if (CanSecondSwordAttack)
         {
-            bottomAttackCooldownTimer = BottomAttackCooldownTimer;
-            fsm.ChangeState(States.BottomAttack, StateTransition.Overwrite);
+            secondSwordAttackCooldownTimer = SecondSwordAttackCooldownTime;
+            fsm.ChangeState(States.SecondSwordAttack, StateTransition.Overwrite);
             return;
         }
 
         // Powerfull Attack over here
-        if (CanPowerfullAttack)
+        if (CanThirdSwordAttack)
         {
-            powerfullAttackCooldownTimer = PowerfullAttackCooldownTimer;
-            fsm.ChangeState(States.PowerfullAttack, StateTransition.Overwrite);
+            thirdSwordAttackCooldownTimer = ThirdSwordAttackCooldownTime;
+            fsm.ChangeState(States.ThirdSwordAttack, StateTransition.Overwrite);
             return;
         }
 
@@ -600,7 +701,7 @@ public class Player : Actor
         // Bow Attack over here
         if (CanShoot)
         {
-            bowAttackCooldownTimer = BowAttackCooldownTime;
+            rangedAttackCooldownTimer = RangedAttackCooldownTime;
             fsm.ChangeState(States.BowAttack, StateTransition.Overwrite);
             return;
         }
@@ -608,7 +709,7 @@ public class Player : Actor
         // Bow Power Attack over here
         if (CanPowerShoot)
         {
-            bowPowerAttackCooldownTimer = BowPowerAttackCooldownTime;
+            rangedPowerAttackCooldownTimer = RangedPowerAttackCooldownTime;
             fsm.ChangeState(States.BowPowerAttack, StateTransition.Overwrite);
             return;
         }
@@ -1155,7 +1256,7 @@ public class Player : Actor
         //Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
         if (!sticking && !CheckColAtPlace(Vector2.right * (int)Facing, solid_layer))
         {
-            var MoveH = MoveHPlatform(stepUpAfterHit * Time.deltaTime);
+            var MoveH = MoveHPlatform(StepUpAfterHit * Time.deltaTime);
         }
         if (!onGround)
         {
@@ -1164,6 +1265,28 @@ public class Player : Actor
         }
     }
 
+    void PowerSwordAttack_Update()
+    {
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+        //Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+        if (!sticking && !CheckColAtPlace(Vector2.right * (int)Facing, solid_layer))
+        {
+            var MoveH = MoveHPlatform(StepUpAfterHit * Time.deltaTime);
+        }
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+    }
 
     void SwordAttack_Update()
     {
@@ -1179,18 +1302,17 @@ public class Player : Actor
         //Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
         if (!sticking && !CheckColAtPlace(Vector2.right * (int)Facing, solid_layer))
         {
-            var MoveH = MoveHPlatform(stepUpAfterHit * Time.deltaTime);
+            var MoveH = MoveHPlatform(StepUpAfterHit * Time.deltaTime);
         }
         if (!onGround)
         {
             float target = MaxFall;
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
-        bottomAttackCooldownTimer = BottomAttackCooldownTimer;
+        secondSwordAttackCooldownTimer = SecondSwordAttackCooldownTime;
     }
 
-
-    void BottomAttack_Update()
+    void SecondSwordAttack_Update()
     {
         float num = onGround ? 1f : AirMult;
 
@@ -1204,20 +1326,18 @@ public class Player : Actor
         //Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
         if (!sticking && !CheckColAtPlace(Vector2.right * (int)Facing, solid_layer))
         {
-            var MoveH = MoveHPlatform(stepUpAfterHit * Time.deltaTime);
+            var MoveH = MoveHPlatform(StepUpAfterHit * Time.deltaTime);
         }
         if (!onGround)
         {
             float target = MaxFall;
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
-        powerfullAttackCooldownTimer = PowerfullAttackCooldownTimer;
+        thirdSwordAttackCooldownTimer = ThirdSwordAttackCooldownTime;
     }
 
-
-    void PowerfullAttack_Update()
+    void ThirdSwordAttack_Update()
     {
-        // Horizontal Speed Update Section
         float num = onGround ? 1f : AirMult;
 
         Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
@@ -1227,15 +1347,20 @@ public class Player : Actor
             float target = MaxFall;
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
+        //Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+        if (!sticking && !CheckColAtPlace(Vector2.right * (int)Facing, solid_layer))
+        {
+            var MoveH = MoveHPlatform(StepUpAfterHit * Time.deltaTime);
+        }
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
     }
 
-    void PowerfullAttack_Enter()
+    void ThirdSwordAttack_Exit()
     {
-        MeleeAttackDamage = 2;
-    }
-    void PowerfullAttack_Exit()
-    {
-        MeleeAttackDamage = 1;
         hitCount = 0;
     }
 
@@ -1279,7 +1404,7 @@ public class Player : Actor
 
         Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
 
-        if(health.block == false)
+        if (health.block == false)
         {
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
         }
@@ -1613,25 +1738,106 @@ public class Player : Actor
 		return false;
 		*/
     }
-        public bool PickUpSword()
+
+    //public void WithoutWeapons() //????
+    //{
+    //    MeleeAttackMinDamage[0] = HandAttackMinDamage;
+    //    MeleeAttackMaxDamage[0] = HandAttackMaxDamage;
+    //    MeleeAttackCooldownTime = HandAttackCooldownTime; // 0,2
+
+    //    CriticalDamageMultiply = new int[3] { 0, 0, 0 };
+    //    CriticalDamageMultiplyChance = new int[3] { 0, 0, 0 };
+    //    StepUpAfterHit = new int[3] { 0, 0, 0 };
+    //    hasSeries = false;
+    //    hasBlock = false;
+    //}
+
+    public bool PickUpMeleeWeapon(string type, int minDamage, int maxDamage, 
+    float attackCooldown, int criticalDamage, int critMultiply, int critChance, int stepUpAfterHit, 
+    bool series, bool block, bool hasThirdAttackCriticalDamage, 
+    bool hasPoison, bool hasPowerAttackPoison, int poisonAmount, int poisonFrequency, int poisonTick,
+	bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick,
+    bool hasFreez, bool hasPowerAttackFreez, int freezDuration,  
+    bool hasPush, bool hasPowerAttackPush, int pushDistance,
+    int meleePowerAttackMinDamage, int meleePowerAttackMaxDamage) // TODO не доделано
     {
         if (!hasSword)
         {
+            if (parameters != null)
+            {
+                foreach (var item in parameters)
+                {
+                    TakeItem(item);
+                }
+            }
+
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
-            stepUpAfterHit = 60;
-            MeleeAttackDamage = SwordAttackDamage;
-            MeleeAttackCooldownTime = 0.2f;
+
+			MeleeWeaponType = type;
+            MeleeAttackMinDamage = minDamage;
+            MeleeAttackMaxDamage = maxDamage;
+            MeleeCriticalDamage = criticalDamage;
+            MeleeAttackCooldownTime = attackCooldown;
+            MeleeCriticalDamageMultiply = critMultiply;
+            MeleeCriticalDamageChance = critChance;
+            StepUpAfterHit = stepUpAfterHit;
+            MeleeAttackCanThirdAttackCriticalDamage = hasThirdAttackCriticalDamage;
+            hasSeries = series;
+            hasBlock = block;
+			
+			MeleeAttackCanPoison = hasPoison;
+		    MeleePoisonDamaged = poisonAmount;
+		    MeleePoisonFrequency = poisonFrequency;
+		    MeleePoisonTick = poisonTick;
+		    MeleeAttackCanFire = hasFire;
+		    MeleeFireDamaged = fireAmount;
+		    MeleeFireFrequency = fireFrequency;
+		    MeleeFireTick = fireTick;
+		    MeleeAttackCanPush = hasPush;
+            MeleePushDistance = pushDistance;
+            MeleeAttackCanFreez = hasFreez;
+            MeleeFreezDuration = freezDuration;
+
             activeWeapon = ActiveWeapon.Sword;
             hasSword = true;
             return false;
         }
         return true;
     }
-    public bool PickUpBow()
+    public bool PickUpRangedWeapon(string type, int minDamage, int maxDamage, 
+	bool hasPoison, int poisonAmount, int poisonFrequency, int poisonTick,
+	bool hasFire, int fireAmount, int fireFrequency, int fireTick,
+	bool hasPush, bool hasThroughShoot)
     {
         if (!hasBow)
         {
+            if (parameters != null)
+            { 
+                foreach (var item in parameters)
+                {
+                    TakeItem(item);
+                }
+            }
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
+
+			RangedWeaponType = type;
+            RangedAttackMinDamage = minDamage;
+            RangedAttackMaxDamage = maxDamage;
+            //RangedAttackCooldownTime = attackCooldown;
+            //RangedCriticalDamageMultiply = critMultiply;
+            //RangedCriticalDamageMultiplyChance = critChance;
+			
+			RangedAttackCanPoison = hasPoison;
+		    RangedPoisonDamaged = poisonAmount;
+		    RangedPoisonFrequency = poisonFrequency;
+		    RangedPoisonTick = poisonTick;
+		    RangedAttackCanFire = hasFire;
+		    RangedFireDamaged = fireAmount;
+		    RangedFireFrequency = fireFrequency;
+		    RangedFireTick = fireTick;
+		    RangedAttackCanPush = hasPush;
+            RangedAttackCanThroughShoot = hasThroughShoot;
+
             activeWeapon = ActiveWeapon.Bow;
             hasBow = true;
             return false;
@@ -1639,8 +1845,18 @@ public class Player : Actor
         return true;
     }
 
-    public void DropSword()
+    public void DropMeleeWeapon()
     {
+        foreach (var item in parameters) // перебор всех предметов и вычитание хар-тик
+        {
+            DropItem(item);
+        }
+
+        foreach (var item in parameters) // перебор всех предметов и прибавление хар-тик
+        {
+            TakeItem(item);
+        }
+
         if (hasBow)
         {
             activeWeapon = ActiveWeapon.Bow;
@@ -1649,14 +1865,187 @@ public class Player : Actor
         hasSword = false;
     }
 
-    public void DropBow()
+    public void DropRangedWeapon()
     {
+        foreach (var item in parameters) // перебор всех предметов и вычитание хар-тик
+        {
+            DropItem(item);
+        }
+
+        foreach (var item in parameters) // перебор всех предметов и прибавление хар-тик
+        {
+            TakeItem(item);
+        }
+
         if (hasSword)
         {
             activeWeapon = ActiveWeapon.Sword;
         }
         else activeWeapon = ActiveWeapon.Hands;
         hasBow = false;
+    }
+	
+	public bool TakeItem(ItemParameters item) // TODO переделать логику
+    {
+	    Gravity = Gravity + item.Gravity;
+        MaxFall = MaxFall + item.MaxFall;
+        FastFall = FastFall + item.FastFall;
+        curRun = MaxRun + item.MaxRun;
+        MaxRun = MaxRun + item.MaxRun;
+        RunAccel = RunAccel + item.RunAccel;
+        RunReduce = RunReduce + item.RunReduce;
+        AirMult = AirMult + item.AirMult;
+        JumpSpeed = JumpSpeed + item.JumpSpeed;
+        JumpHBoost = JumpHBoost + item.JumpHBoost;
+	    VariableJumpTime = VariableJumpTime + item.VariableJumpTime;
+	    SpringJumpSpeed = SpringJumpSpeed + item.SpringJumpSpeed;
+	    SpringJumpVariableTime = SpringJumpVariableTime + item.SpringJumpVariableTime;
+	    WallJumpForceTime = WallJumpForceTime + item.WallJumpForceTime;
+	    WallJumpHSpeed = WallJumpHSpeed + item.WallJumpHSpeed;
+	    WallJumpCheckDist = WallJumpCheckDist + item.WallJumpCheckDist;
+	    WallSlideStartMax = WallSlideStartMax + item.WallSlideStartMax;
+	    WallSlideTime = WallSlideTime + item.WallSlideTime;
+	    DashSpeed = DashSpeed + item.DashSpeed;
+	    EndDashSpeed = EndDashSpeed + item.EndDashSpeed;
+	    EndRollSpeed = EndRollSpeed + item.EndRollSpeed;
+	    EndDashUpMult = EndDashUpMult + item.EndDashUpMult;
+	    EndRollUpMult = EndRollUpMult + item.EndRollUpMult;
+	    DashTime = DashTime + item.DashTime;
+	    RollTime = RollTime + item.RollTime;
+	    DashCooldown = DashCooldown + item.DashCooldown;
+	    RollCooldown = RollCooldown + item.RollCooldown;
+	    clingTime = RollCooldown + item.clingTime;
+	    JumpGraceTime = JumpGraceTime + item.JumpGraceTime;
+	    JumpBufferTime = JumpBufferTime + item.JumpBufferTime;
+	    LadderClimbSpeed = LadderClimbSpeed + item.LadderClimbSpeed;
+
+        MeleeCriticalDamage = MeleeCriticalDamage + item.MeleeCriticalDamage;
+        MeleeAttackMaxDamage = MeleeAttackMaxDamage+ item.MeleeAttackMaxDamage;
+        MeleeAttackMinDamage = MeleeAttackMinDamage+ item.MeleeAttackMinDamage;
+        MeleeCriticalDamageMultiply = MeleeCriticalDamageMultiply + item.MeleeCriticalDamageMultiply;
+        MeleeCriticalDamageChance = MeleeCriticalDamageChance + item.MeleeCriticalDamageChance;
+        StepUpAfterHit = StepUpAfterHit+ item.StepUpAfterHit;
+        MeleeAttackCooldownTime = MeleeAttackCooldownTime+ item.MeleeAttackCooldownTime;
+        MeleePowerAttackMaxDamage = MeleePowerAttackMaxDamage+ item.MeleePowerAttackMaxDamage;
+        MeleePowerAttackMinDamage = MeleePowerAttackMinDamage+ item.MeleePowerAttackMinDamage;
+
+        //MeleeAttackCanPowerAttackCriticalDamage = item.MeleeAttackCanPowerAttackCriticalDamage;
+        MeleeAttackCanThirdAttackCriticalDamage = item.MeleeAttackCanThirdAttackCriticalDamage;
+        MeleeAttackCanPoison = item.MeleeAttackCanPoison;
+        MeleePoisonDamaged = MeleePoisonDamaged+ item.MeleePoisonDamaged;
+        MeleePoisonFrequency = MeleePoisonFrequency+ item.MeleePoisonFrequency;
+        MeleePoisonTick = MeleePoisonTick+ item.MeleePoisonTick;
+        MeleeAttackCanFire = item.MeleeAttackCanFire;
+        MeleeFireDamaged = MeleeFireDamaged+ item.MeleeFireDamaged;
+        MeleeFireFrequency = MeleeFireFrequency+ item.MeleeFireFrequency;
+        MeleeFireTick = MeleeFireTick+ item.MeleeFireTick;
+        MeleeAttackCanPush = item.MeleeAttackCanPush;
+        MeleeAttackCanFreez = item.MeleeAttackCanFreez;
+        MeleeFreezDuration = MeleeFreezDuration+ item.MeleeFreezDuration;
+        MeleePushDistance = MeleePushDistance+ item.MeleePushDistance;
+        MeleeBlockCooldownTime = MeleeBlockCooldownTime+ item.MeleeBlockCooldownTime;
+
+        RangedAttackMinDamage = RangedAttackMinDamage+ item.RangedAttackMinDamage;
+        RangedAttackMaxDamage = RangedAttackMaxDamage+ item.RangedAttackMaxDamage;
+        RangedAttackCooldownTime = RangedAttackCooldownTime+ item.RangedAttackCooldownTime;
+        RangedPowerAttackCooldownTime = RangedPowerAttackCooldownTime+ item.RangedPowerAttackCooldownTime;
+        RangedCriticalDamageMultiply = RangedCriticalDamageMultiply + item.RangedCriticalDamageMultiply;
+        RangedCriticalDamageChance = RangedCriticalDamageChance + item.RangedCriticalDamageChance;
+        RangedCriticalDamage = RangedCriticalDamage + item.RangedCriticalDamage;
+
+        RangedAttackCanPoison = item.RangedAttackCanPoison;
+        RangedPoisonDamaged = RangedPoisonDamaged+ item.RangedPoisonDamaged;
+        RangedPoisonFrequency = RangedPoisonFrequency+ item.RangedPoisonFrequency;
+        RangedPoisonTick = RangedPoisonTick+ item.RangedPoisonTick;
+        RangedAttackCanFire = item.RangedAttackCanFire;
+        RangedFireDamaged = RangedFireDamaged+ item.RangedFireDamaged;
+        RangedFireFrequency = RangedFireFrequency+ item.RangedFireFrequency;
+        RangedFireTick = RangedFireTick+ item.RangedFireTick;
+        RangedAttackCanPush = item.RangedAttackCanPush;
+        RangedAttackCanThroughShoot = item.RangedAttackCanThroughShoot;
+
+		return true;
+    }
+
+        public void DropItem(ItemParameters item) // TODO переделать логику
+    {
+        Gravity = Gravity - item.Gravity;
+        MaxFall = MaxFall - item.MaxFall;
+        FastFall = FastFall - item.FastFall;
+        curRun = MaxRun - item.MaxRun;
+        MaxRun = MaxRun - item.MaxRun;
+        RunAccel = RunAccel - item.RunAccel;
+        RunReduce = RunReduce - item.RunReduce;
+        AirMult = AirMult - item.AirMult;
+        JumpSpeed = JumpSpeed - item.JumpSpeed;
+        JumpHBoost = JumpHBoost - item.JumpHBoost;
+        VariableJumpTime = VariableJumpTime - item.VariableJumpTime;
+        SpringJumpSpeed = SpringJumpSpeed - item.SpringJumpSpeed;
+        SpringJumpVariableTime = SpringJumpVariableTime - item.SpringJumpVariableTime;
+        WallJumpForceTime = WallJumpForceTime - item.WallJumpForceTime;
+        WallJumpHSpeed = WallJumpHSpeed - item.WallJumpHSpeed;
+        WallJumpCheckDist = WallJumpCheckDist - item.WallJumpCheckDist;
+        WallSlideStartMax = WallSlideStartMax - item.WallSlideStartMax;
+        WallSlideTime = WallSlideTime - item.WallSlideTime;
+        DashSpeed = DashSpeed - item.DashSpeed;
+        EndDashSpeed = EndDashSpeed - item.EndDashSpeed;
+        EndRollSpeed = EndRollSpeed - item.EndRollSpeed;
+        EndDashUpMult = EndDashUpMult - item.EndDashUpMult;
+        EndRollUpMult = EndRollUpMult - item.EndRollUpMult;
+        DashTime = DashTime - item.DashTime;
+        RollTime = RollTime - item.RollTime;
+        DashCooldown = DashCooldown - item.DashCooldown;
+        RollCooldown = - item.RollCooldown;
+        clingTime = RollCooldown - item.clingTime;
+        JumpGraceTime = JumpGraceTime - item.JumpGraceTime;
+        JumpBufferTime = JumpBufferTime - item.JumpBufferTime;
+        LadderClimbSpeed = LadderClimbSpeed - item.LadderClimbSpeed;
+
+        MeleeCriticalDamage = MeleeCriticalDamage - item.MeleeCriticalDamage;
+        MeleeAttackMaxDamage = MeleeAttackMaxDamage - item.MeleeAttackMaxDamage;
+        MeleeAttackMinDamage = MeleeAttackMinDamage - item.MeleeAttackMinDamage;
+        MeleeCriticalDamageMultiply = MeleeCriticalDamageMultiply - item.MeleeCriticalDamageMultiply;
+        MeleeCriticalDamageChance = MeleeCriticalDamageChance - item.MeleeCriticalDamageChance;
+        StepUpAfterHit = StepUpAfterHit - item.StepUpAfterHit;
+        MeleeAttackCooldownTime = MeleeAttackCooldownTime - item.MeleeAttackCooldownTime;
+        MeleePowerAttackMaxDamage = MeleePowerAttackMaxDamage - item.MeleePowerAttackMaxDamage;
+        MeleePowerAttackMinDamage = MeleePowerAttackMinDamage - item.MeleePowerAttackMinDamage;
+
+        //MeleeAttackCanPowerAttackCriticalDamage = false;
+        MeleeAttackCanThirdAttackCriticalDamage = false;
+        MeleeAttackCanPoison = false;
+        MeleePoisonDamaged = MeleePoisonDamaged - item.MeleePoisonDamaged;
+        MeleePoisonFrequency = MeleePoisonFrequency - item.MeleePoisonFrequency;
+        MeleePoisonTick = MeleePoisonTick - item.MeleePoisonTick;
+        MeleeAttackCanFire = false;
+        MeleeFireDamaged = MeleeFireDamaged - item.MeleeFireDamaged;
+        MeleeFireFrequency = MeleeFireFrequency - item.MeleeFireFrequency;
+        MeleeFireTick = MeleeFireTick - item.MeleeFireTick;
+        MeleeAttackCanPush = false;
+        MeleeAttackCanFreez = false;
+        MeleeFreezDuration = MeleeFreezDuration - item.MeleeFreezDuration;
+        MeleePushDistance = MeleePushDistance - item.MeleePushDistance;
+        MeleeBlockCooldownTime = MeleeBlockCooldownTime - item.MeleeBlockCooldownTime;
+
+        RangedAttackMinDamage = RangedAttackMinDamage - item.RangedAttackMinDamage;
+        RangedAttackMaxDamage = RangedAttackMaxDamage - item.RangedAttackMaxDamage;
+        RangedAttackCooldownTime = RangedAttackCooldownTime - item.RangedAttackCooldownTime;
+        RangedPowerAttackCooldownTime = RangedPowerAttackCooldownTime - item.RangedPowerAttackCooldownTime;
+        RangedCriticalDamageMultiply = RangedCriticalDamageMultiply - item.RangedCriticalDamageMultiply;
+        RangedCriticalDamageChance = RangedCriticalDamageChance - item.RangedCriticalDamageChance;
+        RangedCriticalDamage = RangedCriticalDamage - item.RangedCriticalDamage;
+
+        RangedAttackCanPoison = false;
+        RangedPoisonDamaged = RangedPoisonDamaged - item.RangedPoisonDamaged;
+        RangedPoisonFrequency = RangedPoisonFrequency - item.RangedPoisonFrequency;
+        RangedPoisonTick = RangedPoisonTick - item.RangedPoisonTick;
+        RangedAttackCanFire = false;
+        RangedFireDamaged = RangedFireDamaged - item.RangedFireDamaged;
+        RangedFireFrequency = RangedFireFrequency - item.RangedFireFrequency;
+        RangedFireTick = RangedFireTick - item.RangedFireTick;
+        RangedAttackCanPush = false;
+        RangedAttackCanThroughShoot = false;
+
     }
 
     // Function to update the sprite scale, facing direction and animations 
@@ -1828,33 +2217,33 @@ public class Player : Actor
 
             if (fsm.State == States.LedgeClimb)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordLedgeClimb"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "LedgeClimb"))
                 {
-                    animator.Play("SwordLedgeClimb");
+                    animator.Play((string)MeleeWeaponType + "LedgeClimb");
                 }
                 // If on the ledge grab state
             }
             else if (fsm.State == States.LedgeGrab)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordLedgeHang"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "LedgeHang"))
                 {
-                    animator.Play("SwordLedgeHang");
+                    animator.Play((string)MeleeWeaponType + "LedgeHang");
                 }
                 // If on the Ladder Climbing state
             }
             else if (fsm.State == States.Action)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordAction"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Action"))
                 {
-                    animator.Play("SwordAction");
+                    animator.Play((string)MeleeWeaponType + "Action");
                 }
                 // If on the Ladder Climbing state
             }
             else if (fsm.State == States.LadderClimb)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordLadderClimb"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "LadderClimb"))
                 {
-                    animator.Play("SwordLadderClimb");
+                    animator.Play((string)MeleeWeaponType + "LadderClimb");
                 }
 
                 //animator.speed = Mathf.Abs(moveY);
@@ -1864,57 +2253,67 @@ public class Player : Actor
             }
             else if (fsm.State == States.BowAttack)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordShoot"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Shoot"))
                 {
-                    animator.Play("SwordShoot");
+                    animator.Play((string)MeleeWeaponType + "Shoot");
                 }
                 // If on the attack state
             }
             else if (fsm.State == States.SwordAttack)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordAttack"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Attack"))
                 {
-                    animator.Play("SwordAttack");
+                    //animator.SetFloat("AttackSpeed", MeleeAttackSpeed);
+                    animator.Play((string)MeleeWeaponType + "Attack");
+                }
+
+                // If on the dash state
+            }
+            else if (fsm.State == States.SecondSwordAttack)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "SecondAttack"))
+                {
+                    animator.Play((string)MeleeWeaponType + "SecondAttack");
                 }
                 // If on the dash state
             }
-            else if (fsm.State == States.BottomAttack)
+            else if (fsm.State == States.ThirdSwordAttack)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordBottomAttack"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "ThirdAttack"))
                 {
-                    animator.Play("SwordBottomAttack");
+                    animator.Play((string)MeleeWeaponType + "ThirdAttack");
                 }
                 // If on the dash state
             }
-            else if (fsm.State == States.PowerfullAttack)
+            else if (fsm.State == States.PowerSwordAttack)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordPowerfullAttack"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "PowerAttack"))
                 {
-                    animator.Play("SwordPowerfullAttack");
+                    animator.Play((string)MeleeWeaponType + "PowerAttack");
                 }
                 // If on the dash state
             }
             else if (fsm.State == States.SwordBlock)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordBlock"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Block"))
                 {
-                    animator.Play("SwordBlock");
+                    animator.Play((string)MeleeWeaponType + "Block");
                 }
                 // If on the dash state
             }
             else if (fsm.State == States.Dash)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordDash"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Dash"))
                 {
-                    animator.Play("SwordDash");
+                    animator.Play((string)MeleeWeaponType + "Dash");
                 }
                 // If on the ground
             }
             else if (fsm.State == States.Roll)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordRoll"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Roll"))
                 {
-                    animator.Play("SwordRoll");
+                    animator.Play((string)MeleeWeaponType + "Roll");
                 }
                 // If on the ground
             }
@@ -1923,35 +2322,35 @@ public class Player : Actor
                 if (fsm.State == States.Ducking)
                 {
                     // Idle Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordDucking"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Ducking"))
                     {
-                        animator.Play("SwordDucking");
+                        animator.Play((string)MeleeWeaponType + "Ducking");
                     }
                     // If the is nohorizontal movement input
                 }
                 else if (moveX == 0)
                 {
                     // Idle Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordIdle"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Idle"))
                     {
-                        animator.Play("SwordIdle");
+                        animator.Play((string)MeleeWeaponType + "Idle");
                     }
                     // If there is horizontal movement input
                 }
                 else if (pushing)
                 {
                     // Push Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordPush"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Push"))
                     {
-                        animator.Play("SwordPush");
+                        animator.Play((string)MeleeWeaponType + "Push");
                     }
                 }
                 else
                 {
                     // Run Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordRun"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Run"))
                     {
-                        animator.Play("SwordRun");
+                        animator.Play((string)MeleeWeaponType + "Run");
                     }
                 }
                 // If not on the ground
@@ -1962,27 +2361,27 @@ public class Player : Actor
                 if (wallSlideDir != 0)
                 {
                     // Wall Slide Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordWallSlide"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "WallSlide"))
                     {
-                        animator.Play("SwordWallSlide");
+                        animator.Play((string)MeleeWeaponType + "WallSlide");
                     }
                     // If not sliding and speed is upward
                 }
                 else if (Speed.y > 0)
                 {
                     // Jump Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordJump"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Jump"))
                     {
-                        animator.Play("SwordJump");
+                        animator.Play((string)MeleeWeaponType + "Jump");
                     }
                     // if speed is not upwards then it is downward
                 }
                 else if (Speed.y <= 0)
                 {
                     // Fall Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SwordFall"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Fall"))
                     {
-                        animator.Play("SwordFall");
+                        animator.Play((string)MeleeWeaponType + "Fall");
                     }
                 }
             }
@@ -2157,11 +2556,17 @@ public class Player : Actor
     {
         fsm.ChangeState(States.Action, StateTransition.Overwrite);
     }
+	
     public void DamageBlocked()
     {
         GameManager.instance.Emit(SparkParticle, Random.Range(5, 8), new Vector2(transform.position.x, transform.position.y + 10) + new Vector2(wallSlideDir * 2.5f, 4), Vector2.one * 1f);
     }
 
+		public void Pushed()
+    {
+		transform.position = new Vector2(transform.position.x + Speed.x * 2, transform.position.y);	
+    }
+	
     void OnTriggerEnter2D(Collider2D col)
     {
         var component = col.GetComponent<Health>();
@@ -2170,7 +2575,7 @@ public class Player : Actor
         if (component != null && component != owner && !healthsDamaged.Contains(component) && worm != null && fsm.State == States.Roll)
         {
             // Try to Apply the damage
-            var didDamage = component.TakeDamage(3);
+            var didDamage = component.TakeDamage(3, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
 
             if (didDamage)
             {

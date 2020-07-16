@@ -42,23 +42,41 @@ public class EnemyHitBoxManager : MonoBehaviour {
 		localCollider.pathCount = 0; // Clear auto-generated polygons
 	}
 
-	void OnTriggerEnter2D (Collider2D col) {
-		var component = col.GetComponent<Health> ();
-		// If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
-		if (component != null && component != owner && !healthsDamaged.Contains(component)) {
-			// Try to Apply the damage
-			var EnemyComponent = GetComponentInParent<Enemy>();
-			var damageToDo = EnemyComponent != null ? EnemyComponent.MeleeAttackDamage : 1;
-			var didDamage = component.TakeDamage (damageToDo);
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        var component = col.GetComponent<Health>();
+        // If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
+        if (component != null && component != owner && !healthsDamaged.Contains(component))
+        {
+            // Try to Apply the damage
+            var EnemyComponent = GetComponentInParent<Enemy>();
+            var didDamage = false;
+            if (Random.Range(0, 100) < EnemyComponent.MeleeCriticalDamageChance)
+            {
+                int dmg = (Random.Range(EnemyComponent.MeleeAttackMinDamage, EnemyComponent.MeleeAttackMaxDamage + 1));
+                didDamage = component.TakeDamage(dmg, EnemyComponent.MeleeAttackCanPoison, EnemyComponent.MeleePoisonDamaged,
+                EnemyComponent.MeleePoisonFrequency, EnemyComponent.MeleePoisonTick, EnemyComponent.MeleeAttackCanFire,
+                EnemyComponent.MeleeFireDamaged, EnemyComponent.MeleeFireFrequency, EnemyComponent.MeleeFireTick,
+                EnemyComponent.MeleeAttackCanPush, EnemyComponent.MeleePushDistance, EnemyComponent.MeleeAttackCanFreez, EnemyComponent.MeleeFreezDuration);
+            }
+            else
+            {
+                int dmg = (Random.Range(EnemyComponent.MeleeAttackMinDamage, EnemyComponent.MeleeAttackMaxDamage + 1));
+                didDamage = component.TakeDamage(dmg, EnemyComponent.MeleeAttackCanPoison, EnemyComponent.MeleePoisonDamaged,
+                EnemyComponent.MeleePoisonFrequency, EnemyComponent.MeleePoisonTick, EnemyComponent.MeleeAttackCanFire,
+                EnemyComponent.MeleeFireDamaged, EnemyComponent.MeleeFireFrequency, EnemyComponent.MeleeFireTick,
+                EnemyComponent.MeleeAttackCanPush, EnemyComponent.MeleePushDistance, EnemyComponent.MeleeAttackCanFreez, EnemyComponent.MeleeFreezDuration);
+            }
 
-			if (didDamage) {
-				// Add the health component to the list of damaged healths
-				healthsDamaged.Add (component);
-			}
-		}
-	}
+            if (didDamage)
+            {
+                // Add the health component to the list of damaged healths
+                healthsDamaged.Add(component);
+            }
+        }
+    }
 
-	public void setHitBox(hitBoxes val)
+    public void setHitBox(hitBoxes val)
 	{
 		healthsDamaged.Clear (); // Clear the list of damaged healths everytime we start a new attack
 

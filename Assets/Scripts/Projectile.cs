@@ -12,6 +12,7 @@ public class Projectile : MonoBehaviour
     [Header("Damage")]
     public int DamageOnHit;
 
+
     [Header("Layers")]
     public LayerMask solid_layer;
 
@@ -80,9 +81,9 @@ public class Projectile : MonoBehaviour
             healthsDamaged.Add(component);
 
             // Apply the damage
-            var didDamage = component.TakeDamage(DamageOnHit);
+            var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
             // Destroy the projectile after applying damage
-            if (didDamage)
+            if (didDamage )
             {
                 DestroyMe();
             }

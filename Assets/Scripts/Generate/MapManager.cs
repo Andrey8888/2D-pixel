@@ -36,4 +36,9 @@ public class Feature
     public int width;
     public int height;
     public int numberOfExits;
+	public int numberOfExitSouth;
+	public int numberOfExitNorth;
+	public int numberOfExitWest;
+	public int numberOfExitEast;
+	public bool prefabMaps;
 }

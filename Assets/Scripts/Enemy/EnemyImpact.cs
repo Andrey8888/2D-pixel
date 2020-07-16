@@ -65,7 +65,7 @@ public class EnemyImpact : MonoBehaviour
             var playercomponent = collision.GetComponent<Player>();
             if (playercomponent != null)
             {
-                OnPlayerSlow(playercomponent);
+                StartCoroutine(OnPlayerSlow(playercomponent));
             }
         }
         
@@ -101,16 +101,18 @@ public class EnemyImpact : MonoBehaviour
     // Function to deal damage to the player
     void OnPlayerTrigger(Player player)
     {
-        player.GetComponent<Health>().TakeDamage(DamageOnTouch);
+        player.GetComponent<Health>().TakeDamage(DamageOnTouch, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
     }
 
-    void OnPlayerSlow(Player player)
+    IEnumerator OnPlayerSlow(Player player)
     {
         player.GetComponent<Player>().MaxRun = SlowPlayerSpeed;
+        yield return new WaitForSeconds(1);
+        player.GetComponent<Player>().MaxRun = player.GetComponent<Player>().curRun;
     }
 
     void OnPlayerNormalSpeed(Player player)
     {
-        player.GetComponent<Player>().MaxRun = 140;
+        player.GetComponent<Player>().MaxRun = player.GetComponent<Player>().curRun;
     }
 }

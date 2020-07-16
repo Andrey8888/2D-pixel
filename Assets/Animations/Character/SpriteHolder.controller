@@ -334,10 +334,10 @@ AnimatorState:
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 20155a7ddf774b04c8872220dc7144cf, type: 2}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: MeleeAttackSpeed
   m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_CycleOffsetParameter: LadderSpeed
+  m_TimeParameter: MeleeAttackSpeed
 --- !u!1102 &-4291336521085344808
 AnimatorState:
   serializedVersion: 5
@@ -450,7 +450,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BowLedgeClimb
-  m_Speed: 1
+  m_Speed: 0.8
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -554,7 +554,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SwordPush
-  m_Speed: 1
+  m_Speed: 0.6
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -605,7 +605,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SwordBottomAttack
+  m_Name: SwordSecondAttack
   m_Speed: 0.6
   m_CycleOffset: 0
   m_Transitions: []
@@ -634,6 +634,12 @@ AnimatorController:
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: LadderSpeed
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: MeleeAttackSpeed
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -779,7 +785,7 @@ AnimatorStateMachine:
     m_Position: {x: 395, y: 385, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3347108571132096303}
-    m_Position: {x: 430, y: 450, z: 0}
+    m_Position: {x: 900, y: 1450, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5531358182824558651}
     m_Position: {x: 460, y: 520, z: 0}
@@ -815,13 +821,13 @@ AnimatorStateMachine:
     m_Position: {x: 580, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 509254321619933512}
-    m_Position: {x: 730, y: 460, z: 0}
+    m_Position: {x: 1170, y: 1450, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4379399685105717996}
     m_Position: {x: 790, y: 580, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7846954731339671846}
-    m_Position: {x: 980, y: 390, z: 0}
+    m_Position: {x: 950, y: 390, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1271536219873318465}
     m_Position: {x: 1110, y: 710, z: 0}
@@ -839,7 +845,7 @@ AnimatorStateMachine:
     m_Position: {x: 850, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4166032974538233033}
-    m_Position: {x: 990, y: 460, z: 0}
+    m_Position: {x: 1420, y: 1460, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8161148779086440179}
     m_Position: {x: 890, y: 250, z: 0}
@@ -999,7 +1005,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BowPush
-  m_Speed: 1
+  m_Speed: 0.6
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -1362,7 +1368,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SwordPowerfullAttack
+  m_Name: SwordThirdAttack
   m_Speed: 0.6
   m_CycleOffset: 0
   m_Transitions: []

@@ -21,9 +21,14 @@ public class DungeonGenerator : MonoBehaviour
     public List<Feature> allFeatures;
 
     public Tile wall;
+    public Tile wall2;
     public Tile flor;
+    public Tile flor2;
     public Tilemap SolidMap;
     public Tilemap BackGroundMap;
+    public GameObject[] roomPrefabs;
+    public GameObject grid;
+
     public void InitializeDungeon()
     {
         MapManager.map = new MyTile[mapWidth, mapHeight];
@@ -79,9 +84,27 @@ public class DungeonGenerator : MonoBehaviour
             }
 
             if (GenerateFeature(type, wall))
-            originFeature.numberOfExits++;
+            {
+                originFeature.numberOfExits++;
+                if (originFeature.walls[0].hasFeature)
+                    originFeature.numberOfExitSouth++;
+                if (originFeature.walls[1].hasFeature)
+                    originFeature.numberOfExitNorth++;
+                if (originFeature.walls[2].hasFeature)
+                    originFeature.numberOfExitWest++;
+                if (originFeature.walls[3].hasFeature)
+                    originFeature.numberOfExitEast++;
 
-            if (countFeatures >= maxFeatures) break;
+                if (originFeature.width == 20 & originFeature.height == 20)
+                {
+                    originFeature.prefabMaps = true;
+                    //RemoveRoom(originFeature);
+                }
+            }
+            if (countFeatures >= maxFeatures)
+            {
+                break;
+            }
         }
 
         //for (int i = 0; i < allFeatures.Count-1; i++)
@@ -102,7 +125,6 @@ public class DungeonGenerator : MonoBehaviour
 
         int roomWidth = 0;
         int roomHeight = 0;
-        room.numberOfExits = 0;
 
         if (type == "Room")
         {
@@ -229,6 +251,15 @@ public class DungeonGenerator : MonoBehaviour
                 MapManager.map[position.x, position.y].xPosition = position.x;
                 MapManager.map[position.x, position.y].yPosition = position.y;
 
+                if (((x % 2 == 1 & y % 2 != 1) || (x % 2 != 1 & y % 2 == 1)))
+                {
+                    MapManager.map[position.x, position.y].type = "Floor";
+                }
+                else
+                {
+                    MapManager.map[position.x, position.y].type = "Floor2";
+                }
+
                 if (y == 0)
                 {
                     room.walls[0].positions.Add(position);
@@ -245,20 +276,17 @@ public class DungeonGenerator : MonoBehaviour
                 {
                     room.walls[2].positions.Add(position);
                     room.walls[2].length++;
-                    MapManager.map[position.x, position.y].type = "Wall";
+                    MapManager.map[position.x, position.y].type = "Wall2";
                 }
                 if (x == (roomWidth - 1))
                 {
                     room.walls[3].positions.Add(position);
                     room.walls[3].length++;
-                    MapManager.map[position.x, position.y].type = "Wall";
+                    MapManager.map[position.x, position.y].type = "Wall2";
                 }
-                if (MapManager.map[position.x, position.y].type != "Wall")
-                {
-                    MapManager.map[position.x, position.y].type = "Floor";
-                }
-            }
-        }
+                //все углы
+    }
+}
 
         if (!isFirst)
         {
@@ -267,29 +295,29 @@ public class DungeonGenerator : MonoBehaviour
             {
                 case "South":
                     MapManager.map[lastWallPosition.x, lastWallPosition.y - 1].type = "Floor";
+                    room.numberOfExitSouth++;
                     break;
                 case "North":
                     MapManager.map[lastWallPosition.x, lastWallPosition.y + 1].type = "Floor";
+                    room.numberOfExitNorth++;
                     break;
                 case "West":
                     MapManager.map[lastWallPosition.x - 1, lastWallPosition.y].type = "Floor";
-
-                        MapManager.map[lastWallPosition.x - 1, lastWallPosition.y + 1 ].type = "Floor";
+						room.numberOfExitWest++;
+                        MapManager.map[lastWallPosition.x - 1, lastWallPosition.y + 1].type = "Floor";
                         MapManager.map[lastWallPosition.x - 1, lastWallPosition.y + 2].type = "Floor";
 
                         MapManager.map[lastWallPosition.x, lastWallPosition.y + 1].type = "Floor";
                         MapManager.map[lastWallPosition.x, lastWallPosition.y + 2].type = "Floor";
-
                     break;
                 case "East":
                     MapManager.map[lastWallPosition.x + 1, lastWallPosition.y].type = "Floor";
-
+						room.numberOfExitEast++;
                         MapManager.map[lastWallPosition.x + 1, lastWallPosition.y + 1].type = "Floor";
                         MapManager.map[lastWallPosition.x + 1, lastWallPosition.y + 2].type = "Floor";
 
                         MapManager.map[lastWallPosition.x, lastWallPosition.y + 1].type = "Floor";
                         MapManager.map[lastWallPosition.x, lastWallPosition.y + 2].type = "Floor";
-
                     break;
             }
         }
@@ -303,56 +331,90 @@ public class DungeonGenerator : MonoBehaviour
     }
 
     bool CheckIfHasSpace(Vector2Int start, Vector2Int end)
+{
+    for (int y = start.y; y <= end.y; y++)
     {
-        for (int y = start.y; y <= end.y; y++)
+        for (int x = start.x; x <= end.x; x++)
         {
-            for (int x = start.x; x <= end.x; x++)
-            {
-                if (x < 0 || y < 0 || x >= mapWidth || y >= mapHeight) return false;
-                if (MapManager.map[x, y] != null) return false;
-            }
+            if (x < 0 || y < 0 || x >= mapWidth || y >= mapHeight) return false;
+            if (MapManager.map[x, y] != null) return false;
         }
-
-        return true;
     }
 
-    Wall ChoseWall(Feature feature)
+    return true;
+}
+
+Wall ChoseWall(Feature feature)
+{
+    for (int i = 0; i < 10; i++)
     {
-        for (int i = 0; i < 10; i++)
+        int id = Random.Range(0, 100) / 25;
+        if (!feature.walls[id].hasFeature)
         {
-            int id = Random.Range(0, 100) / 25;
-            if (!feature.walls[id].hasFeature)
-            {
-                return feature.walls[id];
-            }
+            return feature.walls[id];
         }
-        return null;
     }
+    return null;
+}
 
-    void DrawMap( ) {
+void RemoveRoom(Feature feature)
+{
 
-            for (int y = (mapHeight - 1); y >= 0; y--) {
-                for (int x = 0; x < mapWidth; x++) {
-                    if (MapManager.map[x, y] != null) {
-                        switch (MapManager.map[x, y].type) {
-                        case "Wall":
-                            SolidMap.SetTile(new Vector3Int(x, y, 0), wall);
-                            break;
-                        case "Floor":
-                            BackGroundMap.SetTile(new Vector3Int(x, y, 0), flor);
-                            break;
-                    }
-                    }
-                    else {
-                    //пустота
-                }
+    for (int y = 0; y < feature.positions.Count; y++)
+    {
+        for (int x = 0; x < feature.positions.Count; x++)
+        {
+            MapManager.map[feature.positions[x].x, feature.positions[y].y].type = "Empty";
 
-                if (x == (mapWidth - 1)) {
-                    // новая строка?
+            if (x == (int)feature.positions.Count / 2 && y == (int)feature.positions.Count / 2)
+            {
+                MapManager.map[feature.positions[x].x, feature.positions[y].y].type = "Centr";
+            }
+
+        }
+    }
+}
+
+void DrawMap()
+{
+
+    for (int y = (mapHeight - 1); y >= 0; y--)
+    {
+        for (int x = 0; x < mapWidth; x++)
+        {
+            if (MapManager.map[x, y] != null)
+            {
+                switch (MapManager.map[x, y].type)
+                {
+                    case "Wall":
+                        SolidMap.SetTile(new Vector3Int(x, y, 0), wall);
+                        break;
+                    case "Wall2":
+                        SolidMap.SetTile(new Vector3Int(x, y, 0), wall2);
+                        break;
+                    case "Floor":
+                        BackGroundMap.SetTile(new Vector3Int(x, y, 0), flor);
+                        break;
+                    case "Floor2":
+                        BackGroundMap.SetTile(new Vector3Int(x, y, 0), flor2);
+                        break;
+                    //case "Centr":
+                    //    SolidMap.SetTile(new Vector3Int(x, y, 0), flor);
+                    //    break;
                 }
             }
+            else
+            {
+                //пустота
+            }
+
+            if (x == (mapWidth - 1))
+            {
+                // новая строка?
             }
         }
+    }
+}
 
 }
 

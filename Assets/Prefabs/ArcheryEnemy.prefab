@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &512172268341068781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4619071349243463617}
+  m_Layer: 0
+  m_Name: hpPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4619071349243463617
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512172268341068781}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -7.52, y: 24.29, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1861400158198977870}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1862357413914842242
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,15 +156,23 @@ MonoBehaviour:
   RunAccel: 5000
   AirMult: 0.65
   TurnCooldownTime: 1
-  MinDist: 10
+  StunedCooldownTime: 0.25
+  OnStun: 0
   Facing: -1
   SpriteHolder: {fileID: 1861400158198977870}
   SpriteScale: {x: 1, y: 1}
   animator: {fileID: 1769734995006453978}
+  BloodParticle: {fileID: 1145837783617200, guid: d34108a4353e0b94bb2f012ea46eb1b1,
+    type: 3}
   MeleeAttackDamage: 1
   GunBarrel: {fileID: 6073554510267883467}
   MeleeAttackCooldownTime: 1.5
   BowAttackCooldownTime: 3
+  CastAttackCooldownTime: 2
+  MyGUI: {fileID: 0}
+  EnemyHP: {fileID: 6886868313733489362, guid: 6affc755d48261040900328762443f74, type: 3}
+  metka: {fileID: 4619071349243463617}
+  Mycamera: {fileID: 0}
   AttackType: 1
   BehaivourType: 2
   DetectionZone: {fileID: 5018651899252688809}
@@ -166,6 +204,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1751258889770320112}
+        m_MethodName: Hit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDamageBlockEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnTakeHealEvent:
     m_PersistentCalls:
       m_Calls:
@@ -194,10 +246,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  maxHealth: 4
-  health: 4
+  maxHealth: 14
+  health: 14
   dead: 0
   invincible: 0
+  block: 0
   becomeInvincibleOnHit: 0
   invincibleTimeOnHit: 0.5
   DieEventsAfterTime: 0
@@ -239,6 +292,7 @@ Transform:
   - {fileID: 5018651899252688814}
   - {fileID: 5018651897940891322}
   - {fileID: 6073554510267883467}
+  - {fileID: 4619071349243463617}
   m_Father: {fileID: 1858759552895241798}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -710,7 +764,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6073554510267883464}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 16.5, y: 0, z: 0}
+  m_LocalPosition: {x: 16.5, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1861400158198977870}
