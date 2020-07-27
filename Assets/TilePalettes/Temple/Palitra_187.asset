@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: Palitra_187
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 8921593196905950583, guid: bba15dcc4634a844dae4574e9cc32c6b,
+  m_Sprite: {fileID: 7297477595965802209, guid: bba15dcc4634a844dae4574e9cc32c6b,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:

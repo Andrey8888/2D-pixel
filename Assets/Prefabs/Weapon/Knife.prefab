@@ -127,12 +127,12 @@ MonoBehaviour:
     type: 3}
   MeleeAttackMinDamage: 2
   MeleeAttackMaxDamage: 5
-  MeleeAttackCooldownTime: 0.2
+  MeleeAttackCooldownTime: 0
   MeleeAttackCriticalDamage: 0
   CanThirdAttackCriticalDamage: 0
   CriticalDamageMultiply: 1
   ChanceCriticalDamage: 0
-  StepUpAfterHit: 60
+  StepUpAfterHit: 150
   level: 1
   CanPoison: 0
   CanPowerAttackPoison: 0

@@ -36,4 +36,54 @@ public class AnimatorEvents : MonoBehaviour {
             pushblock.fsm.ChangeState(HitablePushBlock.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
         }
     }
+
+    public void PlayerAim()
+    {
+        var player = GetComponentInParent<Player>();
+
+        if (player != null)
+        {
+            player.canAim = true;
+        }
+    }
+
+    public void PlayerSwordAttackMove()
+    {
+        var player = GetComponentInParent<Player>();
+
+        if (player != null)
+        {
+            player.OnAttackMove = true;
+        }
+    }
+
+    public void PlayerSwordAttackMoveEnd()
+    {
+        var player = GetComponentInParent<Player>();
+
+        if (player != null)
+        {
+            player.OnAttackMove = false;
+        }
+    }
+
+    public void CanSecondSwordAttack()
+    {
+        var player = GetComponentInParent<Player>();
+
+        if (player != null)
+        {
+            player.secondSwordAttackCooldownTimer = player.SecondSwordAttackCooldownTime;
+        }
+    }
+
+    public void CanThirdSwordAttack()
+    {
+        var player = GetComponentInParent<Player>();
+
+        if (player != null)
+        {
+            player.thirdSwordAttackCooldownTimer = player.ThirdSwordAttackCooldownTime;
+        }
+    }
 }

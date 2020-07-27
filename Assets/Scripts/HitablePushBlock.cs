@@ -15,7 +15,7 @@ public class HitablePushBlock : Actor {
     // State Machine
     public StateMachine<States> fsm;
 
-    public GameObject Dropout;
+    public GameObject[] Dropout;
 
     public enum States
     {
@@ -101,7 +101,8 @@ public class HitablePushBlock : Actor {
         myCollider.enabled = false;
         if (Dropout != null)
         {
-            var p = Instantiate(Dropout, gameObject.transform.position, Quaternion.identity);
+            var rnd = Random.Range(0, Dropout.Length);
+            var p = Instantiate(Dropout[rnd], gameObject.transform.position, Quaternion.identity);
         }
     }
 }

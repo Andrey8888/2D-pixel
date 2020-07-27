@@ -169,8 +169,8 @@ MonoBehaviour:
   JumpGraceTime: 0
   JumpBufferTime: 0
   LadderClimbSpeed: 0
-  MeleeWeaponType: 
-  MeleeCriticalDamage: 0
+  MeleeWeaponType: 00000000
+  MeleeCriticalDamage: 1
   MeleeAttackMaxDamage: 0
   MeleeAttackMinDamage: 0
   MeleeCriticalDamageMultiply: 0

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,4 +12,9 @@ public class Calc {
 		else
 			return Mathf.Max(Start - Shift, End);
 	}
+
+    internal static float Approach(object popUpAfterAttack, float target, float v)
+    {
+        throw new NotImplementedException();
+    }
 }

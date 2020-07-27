@@ -95,18 +95,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c89e6d7af8ccf042a52a76d461e9fb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: {x: 12, y: 0}
+  Speed: {x: 11, y: 0}
   DamageOnHit: 1
   solid_layer:
     serializedVersion: 2
     m_Bits: 256
   owner: {fileID: 0}
-  InitVelocity: 0
-  destroyDelay: 5
-  changAngle: 0
-  OurCollider: {fileID: 0}
-  OwnerType: 1
-  Movement: 1
 --- !u!50 &50720931562722542
 Rigidbody2D:
   serializedVersion: 4
@@ -141,16 +135,16 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -5, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 11, y: 5}
+    oldSize: {x: 15, y: 5}
     newSize: {x: 11, y: 5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 7, y: 3}
+  m_Size: {x: 16, y: 3}
   m_EdgeRadius: 0

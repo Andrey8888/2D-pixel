@@ -1104,7 +1104,19 @@ MonoBehaviour:
   OnBurnedEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls: []
   OnDamageBlockEvent:
@@ -1389,7 +1401,19 @@ MonoBehaviour:
   OnBurnedEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls: []
   OnDamageBlockEvent:
@@ -1902,7 +1926,19 @@ MonoBehaviour:
   OnBurnedEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls: []
   OnDamageBlockEvent:
@@ -4131,8 +4167,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 12, y: -21, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4140,8 +4176,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 24, y: -21, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4149,8 +4185,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 12, y: -20, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4158,8 +4194,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 24, y: -20, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4176,8 +4212,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 24, y: -19, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4194,8 +4230,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 24, y: -18, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4212,8 +4248,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 24, y: -17, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4221,8 +4257,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 12, y: -16, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4230,8 +4266,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: 24, y: -16, z: 0}
     second:
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileIndex: 9
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 1
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -4428,8 +4464,8 @@ Tilemap:
       m_ColliderType: 1
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 9
-    m_Data: {fileID: 11400000, guid: ac770ae266a37c64eb5bd81d41a4a2dc, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: a609fb12faf47674facc8972901e85bc, type: 2}
   - m_RefCount: 6
@@ -4446,12 +4482,11 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 286b4ba7af3d4e142ad14cda73e49e8e, type: 2}
   - m_RefCount: 2
     m_Data: {fileID: 11400000, guid: 8a48234996fa1d546839dbd19f5f49ab, type: 2}
+  - m_RefCount: 9
+    m_Data: {fileID: 11400000, guid: 37ad2f6a3db95834b82ab7d84c0cdeb4, type: 2}
+  m_TileSpriteArray:
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  m_TileSpriteArray:
-  - m_RefCount: 9
-    m_Data: {fileID: 1317273998781520484, guid: bba15dcc4634a844dae4574e9cc32c6b,
-      type: 3}
   - m_RefCount: 3
     m_Data: {fileID: -7754484051553832231, guid: bba15dcc4634a844dae4574e9cc32c6b,
       type: 3}
@@ -4464,8 +4499,9 @@ Tilemap:
   - m_RefCount: 6
     m_Data: {fileID: 8114437270481180490, guid: bba15dcc4634a844dae4574e9cc32c6b,
       type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 9
+    m_Data: {fileID: 1317273998781520484, guid: bba15dcc4634a844dae4574e9cc32c6b,
+      type: 3}
   - m_RefCount: 7
     m_Data: {fileID: 1070900049645671057, guid: bba15dcc4634a844dae4574e9cc32c6b,
       type: 3}
@@ -4643,45 +4679,45 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 7000040119153355243}
     m_ColliderPaths:
-    - - X: 5119999490
+    - - X: 5119999374
         Y: -3680000100
-      - X: 5119999490
+      - X: 5119999374
         Y: -3519999900
       - X: 4160000100
-        Y: -3519999809
-      - X: 4160000651
+        Y: -3519999693
+      - X: 4160000767
         Y: -2240000100
       - X: 7679999900
-        Y: -2240000651
-      - X: 7679999349
+        Y: -2240000767
+      - X: 7679999233
         Y: -3519999900
       - X: 5119999900
-        Y: -3520000162
-      - X: 5120000162
+        Y: -3520000278
+      - X: 5120000278
         Y: -3680000100
       - X: 7999999548
-        Y: -3680000042
-      - X: 7999999490
+        Y: -3679999926
+      - X: 7999999374
         Y: -2080000100
       - X: 7679999900
-        Y: -2079999693
-      - X: 7679999553
+        Y: -2079999577
+      - X: 7679999437
         Y: -1919999958
       - X: 6720000100
-        Y: -1920000481
-      - X: 6719999519
+        Y: -1920000597
+      - X: 6719999403
         Y: -2080000100
       - X: 5119999900
-        Y: -2079999635
-      - X: 5119999494
+        Y: -2079999519
+      - X: 5119999378
         Y: -1920000003
       - X: 4160000100
-        Y: -1920000477
-      - X: 4159999664
+        Y: -1920000593
+      - X: 4159999548
         Y: -2080000100
       - X: 3839999939
-        Y: -2080000457
-      - X: 3840000017
+        Y: -2080000573
+      - X: 3840000133
         Y: -3680000100
   m_CompositePaths:
     m_Paths:
@@ -4690,21 +4726,21 @@ CompositeCollider2D:
       - {x: 416, y: -351.99997}
       - {x: 416.0001, y: -224}
       - {x: 768, y: -224.00008}
-      - {x: 767.99994, y: -352}
+      - {x: 767.9999, y: -352}
       - {x: 512, y: -352.00003}
-      - {x: 512, y: -368}
+      - {x: 512.00006, y: -368}
       - {x: 799.99994, y: -368}
       - {x: 799.99994, y: -208.00002}
-      - {x: 768, y: -207.99997}
+      - {x: 768, y: -207.99995}
       - {x: 767.99994, y: -192}
       - {x: 672, y: -192.00006}
       - {x: 671.99994, y: -208.00002}
-      - {x: 512, y: -207.99997}
+      - {x: 512, y: -207.99995}
       - {x: 511.99997, y: -192}
       - {x: 416, y: -192.00006}
-      - {x: 415.99997, y: -208.00002}
+      - {x: 415.99994, y: -208.00002}
       - {x: 384, y: -208.00006}
-      - {x: 384, y: -368}
+      - {x: 384.00003, y: -368}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.000005
 --- !u!1 &5457222135782163983
@@ -5672,7 +5708,19 @@ MonoBehaviour:
   OnBurnedEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls: []
   OnDamageBlockEvent:
@@ -5957,7 +6005,19 @@ MonoBehaviour:
   OnBurnedEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls: []
   OnDamageBlockEvent:
@@ -6451,7 +6511,19 @@ MonoBehaviour:
   OnBurnedEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls: []
   OnDamageBlockEvent:

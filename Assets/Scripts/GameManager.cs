@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour {
 
         foreach (Enemy e in enemy)
         {
-            if (e.enabled)
+            if (e.enabled && e.GetComponent<Health>().health > 0)
             {
                 e.ResetEnenmyHP();
             }

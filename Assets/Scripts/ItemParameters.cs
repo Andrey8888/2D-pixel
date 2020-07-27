@@ -32,6 +32,7 @@ public class ItemParameters : MonoBehaviour {
     public float WallSlideTime = 1.2f; // Максимальное время, когда вы можете скользить по стене, прежде чем снова набрать полную скорость падения
     // Параметры для рывка и переката
     public float DashSpeed = 240f; // Скорость / Сила рывка (dash)
+    public float RollSpeed = 240f; // Скорость переката 
     public float EndDashSpeed = 160f; // Повышенная скорость, когда рывок заканчивается (рекомендуется 2/3 скорости рывка)
     public float EndRollSpeed = 160f; // Повышение скорости при окончании переката (рекомендуется 2/3 скорости переката)
     public float EndDashUpMult = 0.75f; // Множитель применяется к скорости после окончания рывка, если направление, в котором вы летели, было вверх
@@ -48,7 +49,8 @@ public class ItemParameters : MonoBehaviour {
     public float LadderClimbSpeed = 60f;
 
     [Header("MeleeAttacks")]
-    public string MeleeWeaponType = null; // TODO с чем стакается предмет
+    public MeleeWeapon[] MeleeWeaponType = null; // TODO с чем стакается предмет
+    public ItemParameters[] StacksMeleeWeapon;
     public int MeleeCriticalDamage = 0;
     public int MeleeAttackMaxDamage;
     public int MeleeAttackMinDamage;
@@ -87,7 +89,8 @@ public class ItemParameters : MonoBehaviour {
     public float MeleeBlockCooldownTime = 0.5f;
 
     [Header("RangedAttacks")]
-    public string RangedWeaponType = null; // TODO с чем стакается предмет
+    public RangedWeapon[] RangedWeaponType = null; // TODO с чем стакается предмет
+    public ItemParameters[] StacksRangedWeapon;
     public int RangedAttackMinDamage = 1;//new int[2] {1, 0, 0};
     public int RangedAttackMaxDamage = 2;//new int[2] {2, 0, 0};
     public int RangedCriticalDamage = 0;
@@ -115,6 +118,8 @@ public class ItemParameters : MonoBehaviour {
     public bool RangedAttackCanPush = false;
     public int RangedPushDistance = 0;
     public bool RangedAttackCanThroughShoot = false;
-	
-	
+
+    [Header("Artifacts Stacks")]
+    public Artifacts[] ArtifactsType = null; // TODO с чем стакается предмет
+    public ItemParameters[] StacksArtifacts;
 }

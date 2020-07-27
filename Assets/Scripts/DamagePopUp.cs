@@ -20,18 +20,18 @@ public class DamagePopUp : MonoBehaviour
         if (!isCriticalHit)
         {
             // normal hit
-            textMesh.fontSize = 90;
-            textColor = Utilities.GetColorFromString("D9D9D9");
+            textMesh.fontSize = 130;
+            textColor = Utilities.GetColorFromString("FFFFFF");
         }
         else
         {
             // critical hit
-            textMesh.fontSize = 110;
+            textMesh.fontSize = 150;
             textColor = Utilities.GetColorFromString("FF0000");
         }
         textMesh.color = textColor;
         disappearTimer = 60f;
-        moveVector = new Vector3(4, 2) * 3f;
+        moveVector = new Vector3(4, 2) * 5f;
     }
 
     public void Update()
@@ -42,7 +42,7 @@ public class DamagePopUp : MonoBehaviour
 
         if (disappearTimer < 0)
         {
-            float disappearSpeed = 1f;
+            float disappearSpeed = 0.8f;
             textColor.a -= disappearSpeed * Time.deltaTime;
             textMesh.color = textColor;
 

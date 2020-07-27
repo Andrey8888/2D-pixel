@@ -1,0 +1,188 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6013507851993815756
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6008803910162675650}
+  - component: {fileID: 5873176658751919244}
+  - component: {fileID: -3560420648228316081}
+  - component: {fileID: 1085712543673641426}
+  m_Layer: 0
+  m_Name: Sickle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6008803910162675650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6013507851993815756}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -122.7, y: -3.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &5873176658751919244
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6013507851993815756}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 96ce3383aeba8e54292797fe9462e17a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 16, y: 16}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!114 &-3560420648228316081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6013507851993815756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d0e094a6224dc419c856171c2ff44a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onGround: 1
+  wasOnGround: 1
+  canPushBlock: 0
+  pushing: 0
+  Speed: {x: 0, y: 0}
+  movementCounter: {x: 0, y: 0}
+  solid_layer:
+    serializedVersion: 2
+    m_Bits: 4352
+  bumper_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  box_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  player_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  oneway_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  ladder_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  myCollider: {fileID: 0}
+  Gravity: 900
+  MaxFall: -240
+  recoveryTime: 2.5
+  PickupTime: 0
+  itemButton: {fileID: 2533529874395637400, guid: f32aab83dd125964eb89de51a87f053b,
+    type: 3}
+  MeleeAttackMinDamage: 2
+  MeleeAttackMaxDamage: 5
+  MeleeAttackCooldownTime: 0
+  CanThirdAttackCriticalDamage: 0
+  CriticalDamageMultiply: 1
+  ChanceCriticalDamage: 0
+  StepUpAfterHit: 150
+  level: 1
+  CanPoison: 0
+  CanPowerAttackPoison: 0
+  PoisonDamaged: 0
+  PoisonFrequency: 3
+  PoisonTick: 3
+  CanFire: 0
+  CanPowerAttackFire: 0
+  FireDamaged: 0
+  FireFrequency: 1
+  FireTick: 2
+  CanFreez: 0
+  CanPowerAttackFreez: 0
+  FreezDuration: 0
+  CanPush: 0
+  CanPowerAttackPush: 0
+  PushDistance: 0
+  MeleePowerAttackMinDamage: 0
+  MeleePowerAttackMaxDamage: 0
+  hasBlock: 1
+  hasSeries: 1
+  MeleeTossingUp: 0
+  MeleePopUpAfterHit: 0
+  Type: 0
+  Sprite: {fileID: 5873176658751919244}
+  spriteHighlight: {fileID: 21300000, guid: 9105befb8ffdfef4d880479627681885, type: 3}
+  spriteNormal: {fileID: 21300000, guid: 96ce3383aeba8e54292797fe9462e17a, type: 3}
+  dist: 0
+--- !u!61 &1085712543673641426
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6013507851993815756}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.457489, y: 0.6535225}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 22, y: 23}
+    newSize: {x: 16, y: 16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 32.258392, y: 31.854118}
+  m_EdgeRadius: 0

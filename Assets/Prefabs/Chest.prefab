@@ -175,6 +175,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPushedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamageBlockEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnTakeHealEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -196,6 +220,7 @@ MonoBehaviour:
   health: 2
   dead: 0
   invincible: 0
+  block: 0
   becomeInvincibleOnHit: 0
   invincibleTimeOnHit: 0.5
   DieEventsAfterTime: 0
@@ -286,4 +311,17 @@ MonoBehaviour:
   Gravity: 0
   MaxFall: 0
   animator: {fileID: 2784686948152935890}
-  Dropout: {fileID: 6013507851993815756, guid: baf233e0e1c6ae442b8f601b57093cc2, type: 3}
+  Dropout:
+  - {fileID: 8170472105816836034, guid: ebe1e04015655bc4291cc33a5fee0421, type: 3}
+  - {fileID: 388717182106067654, guid: a3c693e11638c9f4c94ee3d6821bbc3d, type: 3}
+  - {fileID: 1320930784596647971, guid: 165d8037259ae394e8e2320ac2f83e6f, type: 3}
+  - {fileID: 7299660224963033829, guid: 4288ace4cd32c114f84de69c5692c3c5, type: 3}
+  - {fileID: 3971711499331128897, guid: ab5ba5dbbcbf8be458168cb489429312, type: 3}
+  - {fileID: 5523098073151036333, guid: 6f5398f4d2278f04a83477f1e2338c7a, type: 3}
+  - {fileID: 6000734750275535254, guid: 097bb985d3a35394c9001b31b2ff45ff, type: 3}
+  - {fileID: 4918873826438345055, guid: df16cadc66182a6468b57d00efdda500, type: 3}
+  - {fileID: 4130890836628939970, guid: 1e5eee78e4e835a4ebd67c0813288a87, type: 3}
+  - {fileID: 7325081864335052826, guid: 7fcda9774c39b3d43a737f8f09c492ea, type: 3}
+  - {fileID: 6013507851993815756, guid: baf233e0e1c6ae442b8f601b57093cc2, type: 3}
+  - {fileID: 4765598502538143739, guid: 05bb5750d5056d94b982cf3b160bf6cb, type: 3}
+  - {fileID: 5228130748185353716, guid: e342daec97ea5de4dbe3fa2791e1901b, type: 3}

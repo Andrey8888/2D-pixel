@@ -21,7 +21,7 @@
 
 			var backTilemapObject = CreateTilemapGameObject("Back", gameObject, -3);
 
-            var frontTilemapObject = CreateTilemapGameObject("Front", gameObject, 0);
+            var frontTilemapObject = CreateTilemapGameObject("Front", gameObject, 3);
 
             var collideableTilemapObject = CreateTilemapGameObject("Collideable", gameObject, 2);
 			AddCompositeCollider(collideableTilemapObject);
@@ -35,7 +35,7 @@
             other2TilemapObject.AddComponent<TilemapCollider2D>();
             other2TilemapObject.GetComponent<TilemapCollider2D>().isTrigger = true;
 
-            var other3TilemapObject = CreateTilemapGameObject("Bumpers", gameObject, -2);
+            var other3TilemapObject = CreateTilemapGameObject("Bumpers", gameObject, -4);
             other3TilemapObject.AddComponent<TilemapCollider2D>();
 
             var other4TilemapObject = CreateTilemapGameObject("Prefabs", gameObject, 3);

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Slot : MonoBehaviour
 {
-
-    public Player player;
     public int i;
     public bool dropped = false;
 
@@ -13,7 +11,7 @@ public class Slot : MonoBehaviour
     {
         if (transform.childCount <= 0)
         {
-            player.GetComponent<Inventory>().isFull[i] = false;
+            GetComponentInParent<Inventory>().isFull[i] = false;
         }
         //if (Input.GetKeyDown(KeyCode.Q))
         //{

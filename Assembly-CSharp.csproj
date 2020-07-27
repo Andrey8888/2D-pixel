@@ -145,6 +145,7 @@
     <Compile Include="Assets\Scripts\Enemy\EnemyHitBoxManager.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyImpact.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyProjectile.cs" />
+    <Compile Include="Assets\Scripts\Enemy\EnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyVisibility.cs" />
     <Compile Include="Assets\Scripts\Enemy\ProjectileEnemySpawner.cs" />
     <Compile Include="Assets\Scripts\Enemy\WallCrawlerEnemy.cs" />
@@ -155,12 +156,15 @@
     <Compile Include="Assets\Scripts\Generate\DungeonGenerator.cs" />
     <Compile Include="Assets\Scripts\Generate\MapManager.cs" />
     <Compile Include="Assets\Scripts\Generate\MyGameManager.cs" />
+    <Compile Include="Assets\Scripts\Gold.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\HealthPotion.cs" />
     <Compile Include="Assets\Scripts\HitablePushBlock.cs" />
     <Compile Include="Assets\Scripts\HitBoxManager.cs" />
     <Compile Include="Assets\Scripts\ItemParameters.cs" />
     <Compile Include="Assets\Scripts\Items\Inventory.cs" />
+    <Compile Include="Assets\Scripts\Items\PickupMeleeWeapons.cs" />
+    <Compile Include="Assets\Scripts\Items\PickupRangedWeapons.cs" />
     <Compile Include="Assets\Scripts\Items\Slot.cs" />
     <Compile Include="Assets\Scripts\Items\Spawn.cs" />
     <Compile Include="Assets\Scripts\MovingBlock.cs" />
@@ -168,12 +172,11 @@
     <Compile Include="Assets\Scripts\Particle.cs" />
     <Compile Include="Assets\Scripts\Pickup.cs" />
     <Compile Include="Assets\Scripts\PickupArtifact.cs" />
-    <Compile Include="Assets\Scripts\PickupMeleeWeapons.cs" />
-    <Compile Include="Assets\Scripts\PickupRangedWeapons.cs" />
     <Compile Include="Assets\Scripts\PixelCamDrawer.cs" />
     <Compile Include="Assets\Scripts\PixelCamera.cs" />
     <Compile Include="Assets\Scripts\PixelCameraController.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\PlayerSpawn.cs" />
     <Compile Include="Assets\Scripts\PointParameters.cs" />
     <Compile Include="Assets\Scripts\PowerProjectile.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />

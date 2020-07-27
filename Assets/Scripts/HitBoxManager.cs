@@ -6,13 +6,18 @@ public class HitBoxManager : MonoBehaviour
 {
 
     // Set these in the editor
-    public PolygonCollider2D attack1;
+    public PolygonCollider2D[] attack;
+    public MeleeWeapon MeleeWeaponType; 
 
     // Used for organization
     private PolygonCollider2D[] colliders;
 
     // Collider on this game object
     private PolygonCollider2D localCollider;
+
+    private bool damageShow = false;
+    [SerializeField]
+    public Transform PopUpDamage;          // Всплывающий текст с уроном по монстру
 
     // We say box, but we're still using polygons.
     public enum hitBoxes
@@ -37,8 +42,24 @@ public class HitBoxManager : MonoBehaviour
             }
         }
         // Set up an array so our script can more easily set up the hit boxes
-        colliders = new PolygonCollider2D[] { attack1 };
+        colliders = new PolygonCollider2D[] { attack[0] };
+        // Create a polygon collider
+        localCollider = gameObject.AddComponent<PolygonCollider2D>();
+        localCollider.isTrigger = true; // Set as a trigger so it doesn't collide with our environment
+        localCollider.pathCount = 0; // Clear auto-generated polygons
+    }
 
+    public void ChangeCollider(int i)
+    {
+        if (owner == null)
+        {
+            owner = GetComponentInParent<Health>();
+            if (owner == null)
+            {
+                Debug.Log("There is no owner health component asigned to this HitBoxManager");
+            }
+        }
+        colliders = new PolygonCollider2D[] { attack[i] };
         // Create a polygon collider
         localCollider = gameObject.AddComponent<PolygonCollider2D>();
         localCollider.isTrigger = true; // Set as a trigger so it doesn't collide with our environment
@@ -49,13 +70,13 @@ public class HitBoxManager : MonoBehaviour
     {
         var component = col.GetComponent<Health>();
         // If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
-        if (component != null && component != owner && !healthsDamaged.Contains(component))
+        if (component != null && component != owner && !healthsDamaged.Contains(component) && component.health > 0)
         {
             // Try to Apply the damage
             var PlayerComponent = GetComponentInParent<Player>();
             var didDamage = false;
 
-            if(PlayerComponent.CanPowerSwordAttack == false)
+            if (PlayerComponent.CanPowerSwordAttack == false)
             { 
                 if (PlayerComponent.MeleeAttackCanThirdAttackCriticalDamage == true)
                 {
@@ -93,6 +114,7 @@ public class HitBoxManager : MonoBehaviour
 
                 }
         }
+        damageShow = false;
     }
 
     private void Damage(Player PlayerComponent, Health component, bool didDamage)
@@ -102,6 +124,14 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleeAttackCanFire,
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick,
         PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, PlayerComponent.MeleeFreezDuration);
+
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, false);
+            damageShow = true;
+        }
     }
 
     private void CriticalDamage(Player PlayerComponent, Health component, bool didDamage)
@@ -112,6 +142,14 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleeAttackCanFire,
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick,
         PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, PlayerComponent.MeleeFreezDuration);
+
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, true);
+            damageShow = true;
+        }
     }
 
     public void setHitBox(hitBoxes val)

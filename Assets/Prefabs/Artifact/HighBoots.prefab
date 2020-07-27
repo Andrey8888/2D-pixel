@@ -146,7 +146,7 @@ MonoBehaviour:
   RunAccel: 0
   RunReduce: 0
   AirMult: 0
-  JumpSpeed: 50
+  JumpSpeed: 30
   JumpHBoost: 0
   VariableJumpTime: 0
   SpringJumpSpeed: 0
@@ -169,7 +169,8 @@ MonoBehaviour:
   JumpGraceTime: 0
   JumpBufferTime: 0
   LadderClimbSpeed: 0
-  MeleeWeaponType: 0
+  MeleeWeaponType: 
+  StacksMeleeWeapon: []
   MeleeCriticalDamage: 0
   MeleeAttackMaxDamage: 0
   MeleeAttackMinDamage: 0
@@ -194,7 +195,8 @@ MonoBehaviour:
   MeleeAttackCanPush: 0
   MeleePushDistance: 0
   MeleeBlockCooldownTime: 0
-  RangedWeaponType: 0
+  RangedWeaponType: 00000000
+  StacksRangedWeapon: []
   RangedAttackMinDamage: 0
   RangedAttackMaxDamage: 0
   RangedCriticalDamage: 0
@@ -215,6 +217,8 @@ MonoBehaviour:
   RangedAttackCanPush: 0
   RangedPushDistance: 0
   RangedAttackCanThroughShoot: 0
+  ArtifactsType: 
+  StacksArtifacts: []
 --- !u!61 &7299660224963033832
 BoxCollider2D:
   m_ObjectHideFlags: 0

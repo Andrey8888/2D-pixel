@@ -34,12 +34,6 @@ public class Enemy : Actor
     [Header("Facing Direction")]
     public Facings Facing;  // Facing Direction
 
-    //[Header("HealthBar")]
-    //public Canvas MyGUI;                      // UI на котором будем отображать  
-    //public Slider EnemyHP;                    // полоска здоровья врага на экране
-    //public Transform metka;
-    //public Camera Mycamera;
-
     [Header("Squash & Stretch")]
     public Transform SpriteHolder;              // Reference to the transform of the child object which holds the sprite renderer of the player
     public Vector2 SpriteScale = Vector2.one;   // The current X and Y scale of the sprite holder (used for Squash & Stretch)
@@ -119,10 +113,9 @@ public class Enemy : Actor
     //public Vector3 PlayerPosGlobal;             // Позиция игрока на карте
 
 	[Header("HP Bar")]
-	public Canvas MyGUI;                    // UI на котором будем отображать  
+	private GameObject MyGUI;                    // UI на котором будем отображать  
     public Slider EnemyHP;                  // полоска здоровья врага на экране
     public Transform metka;
-    public Camera Mycamera;
 	private Slider ShowHP;
     // States for the state machine
     public enum States
@@ -172,7 +165,7 @@ public class Enemy : Actor
     {
         get
         {
-            return AttackType == Attack.Magic && EnemyVisibility.InVisibilityZone && CastAttackCooldownTime <= 0f;
+            return AttackType == Attack.Magic && EnemyVisibility.InVisibilityZone && castAttackCooldownTimer <= 0f;
         }
     }
 
@@ -216,6 +209,7 @@ public class Enemy : Actor
     void Start()
     {
         fsm.ChangeState(States.Normal);
+        MyGUI = GameObject.Find("Canvas");
         SetHPBar();
         runSpeed = RunSpeed;
         walkSpeed = WalkSpeed;
@@ -601,6 +595,7 @@ public class Enemy : Actor
         // создаем новый слайдер на основе эталона
         ShowHP = (Slider)Instantiate(EnemyHP);
         //Объявляем что он будет расположен в canvas
+
         ShowHP.transform.SetParent(MyGUI.transform, true);
         ShowHP.maxValue = health.maxHealth;
         ShowHP.value = health.health;
@@ -848,7 +843,7 @@ public class Enemy : Actor
         //Debug.Log(random + "/99 ");
         //if (random < 50)
         //{
-            fsm.ChangeState(States.Stun, StateTransition.Overwrite);
+            //fsm.ChangeState(States.Stun, StateTransition.Overwrite);
         //}
     }
 
@@ -891,11 +886,12 @@ public class Enemy : Actor
     public void Die()
     {
         //var playercomponent = GetComponent<Player>();
-		
+
         //if (playercomponent != null)
         //{
         //    playercomponent.GetComponent<Player>().MaxRun = playercomponent.curRun;
         //}
+        var health = GetComponent<Health>();
         ShowHP.transform.SetParent(transform, true);
         fsm.ChangeState(States.Death, StateTransition.Overwrite);
         //Destroy(ImpactZone);
