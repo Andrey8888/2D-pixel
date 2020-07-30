@@ -13,19 +13,20 @@ public class Enemy : Actor
     public float Gravity = 900f;                // Speed at which you are pushed down when you are on the air
     public float MaxFall = -160f;               // Maximun common speed at which you can fall
     public float RunReduce = 400f;              // Horizontal Acceleration when you're already when your horizontal speed is higher or equal to the maximun
-    public float RunSpeed = 90f; 
     public float WalkSpeed = 30f;
-    private float runSpeed = 0;
     private float walkSpeed = 0;
     public float RunAccel = 1000f;              // Horizontal Acceleration Speed
     public float AirMult = 0.65f;               // Multiplier for the air horizontal movement (friction) the higher the more air control you'll have
     public float TurnCooldownTime = 1f;
     private float AggressionCooldownTime = 10f;
+	private float ExpectationCooldownTime = 2f;
     private float turnCooldownTimer = 0f;
     private float aggressionCooldownTimer = 0f;
+	private float expectationCooldownTimer = 0f;
     //public float StunedCooldownTime = 0.25f;
     private float stunedCooldownTimer = 0f;
     public bool OnStun = false;
+    public bool OnAggression = false;
 
 
     // Helper private Variables
@@ -43,12 +44,12 @@ public class Enemy : Actor
 
     [Header("Particles")]
     public GameObject BloodParticle;
-	
-	
-	[Header("MeleeAttacks")]
-	public int MeleeAttackDamage = 1;
+
+
+    [Header("MeleeAttacks")]
+    public int MeleeAttackDamage = 1;
     public int MeleeCriticalDamage = 0;
-	public float MeleeAttackCooldownTime = 2f; // Задержка по ближней атаке  
+    public float MeleeAttackCooldownTime = 2f; // Задержка по ближней атаке  
     public int MeleeAttackMaxDamage;
     public int MeleeAttackMinDamage;
     public int MeleeCriticalDamageMultiply;
@@ -56,24 +57,27 @@ public class Enemy : Actor
 
     [Header("Poison")]
     public bool MeleeAttackCanPoison = false;
-	public int MeleePoisonDamaged = 0;
-	public int MeleePoisonFrequency = 0;
-	public int MeleePoisonTick = 0;
+    public int MeleePoisonDamaged = 0;
+    public int MeleePoisonFrequency = 0;
+    public int MeleePoisonTick = 0;
+    public int MeleePoisonChance = 100;
     [Header("Fire")]
     public bool MeleeAttackCanFire = false;
-	public int MeleeFireDamaged = 0;
-	public int MeleeFireFrequency = 0;
-	public int MeleeFireTick = 0;
+    public int MeleeFireDamaged = 0;
+    public int MeleeFireFrequency = 0;
+    public int MeleeFireTick = 0;
+    public int MeleeFireChance = 100;
     [Header("Freez")]
     public bool MeleeAttackCanFreez = false;
     public int MeleeFreezDuration = 0;
+    public int MeleeFreezChance = 100;
     [Header("Push")]
     public bool MeleeAttackCanPush = false;
     public int MeleePushDistance = 0;
 
     [Header("RangedAttacks")]
     public int RangedMeleeAttackDamage = 0;
-	public float BowAttackCooldownTime = 4f;     // Задержка по выстрелу     
+    public float BowAttackCooldownTime = 4f;     // Задержка по выстрелу     
     public float CastAttackCooldownTime = 2f;     // Задержка по выстрелу  
     public int RangedCriticalDamage = 0;
     public int RangedAttackMinDamage = 1;
@@ -82,21 +86,24 @@ public class Enemy : Actor
     public int RangedCriticalDamageChance;
     public Transform GunBarrel;                  // Позиция точки выстрела
 
-	[Header("Poison")]
-	public bool RangedAttackCanPoison = false;
-	public int RangedPoisonDamaged = 0;
-	public int RangedPoisonFrequency = 0;
-	public int RangedPoisonTick = 0;
-	[Header("Fire")]
-	public bool RangedAttackCanFire = false;
-	public int RangedFireDamaged = 0;
-	public int RangedFireFrequency = 0;
-	public int RangedFireTick = 0;
+    [Header("Poison")]
+    public bool RangedAttackCanPoison = false;
+    public int RangedPoisonDamaged = 0;
+    public int RangedPoisonFrequency = 0;
+    public int RangedPoisonTick = 0;
+    public int RangedPoisonChance = 100;
+    [Header("Fire")]
+    public bool RangedAttackCanFire = false;
+    public int RangedFireDamaged = 0;
+    public int RangedFireFrequency = 0;
+    public int RangedFireTick = 0;
+    public int RangedFireChance = 100;
     [Header("Freez")]
     public bool RangedAttackCanFreez = false;
     public int RangedFreezDuration = 0;
+    public int RangedFreezChance = 100;
     [Header("Push")]
-	public bool RangedAttackCanPush = false;
+    public bool RangedAttackCanPush = false;
     public int RangedPushDistance = 0;
 
 
@@ -105,18 +112,18 @@ public class Enemy : Actor
     private float meleeAttackCooldownTimer = 0f; // Таймер до ближней атаки
     private float bowAttackCooldownTimer = 0f;   // Таймер до выстрела
     private float castAttackCooldownTimer = 0f;   // Таймер до выстрела
-	
-	
-	
-	
+
+
+
+
     //private Vector3 PlayerPos;                  // Позиция игрока, необходима для расчета угла стрельбы
     //public Vector3 PlayerPosGlobal;             // Позиция игрока на карте
 
-	[Header("HP Bar")]
-	private GameObject MyGUI;                    // UI на котором будем отображать  
+    [Header("HP Bar")]
+    private GameObject MyGUI;                    // UI на котором будем отображать  
     public Slider EnemyHP;                  // полоска здоровья врага на экране
     public Transform metka;
-	private Slider ShowHP;
+    private Slider ShowHP;
     // States for the state machine
     public enum States
     {
@@ -125,7 +132,7 @@ public class Enemy : Actor
         Attack,
         Hit,
         Stun,
-        Death, 
+        Death,
         Cast
     }
 
@@ -141,8 +148,9 @@ public class Enemy : Actor
     {
         Following,                          // Преследование
         Patroling,                          // Патрулирование
-        FreeWalking,                        // Свободное движение до преграды
-        Idle                                // Покой
+        FreeWalking,                        // патрулирование без преследования
+        Idle,                                // Покой
+        Aggression
     }
     public Behaivour BehaivourType = Behaivour.Idle;
 
@@ -150,7 +158,7 @@ public class Enemy : Actor
     public GameObject VisibilityZone;
 
     private EnemyVisibility EnemyVisibility;// Скрипт видимости
-    private EnemyDetection EnemyDetection;// Скрипт обнаружения
+    private EnemyDetection EnemyDetection;  // Скрипт обнаружения
     public float PatrolTimer = 0;
 
     public bool CanShoot
@@ -182,11 +190,19 @@ public class Enemy : Actor
     {
         get
         {
-            return (AttackType == Attack.Melee && ((CheckColAtPlace(Vector2.right * 18, player_layer)) || (CheckColAtPlace(Vector2.left * 18, player_layer))) && meleeAttackCooldownTimer >= 0f)
-                || (AttackType == Attack.Archery && EnemyVisibility.InVisibilityZone);
+            return ((AttackType == Attack.Melee && (CheckColAtPlace(Vector2.right * 18, player_layer) || CheckColAtPlace(Vector2.left * 18, player_layer))  || CheckColInDir(new Vector2(moveX, 0), player_layer))  
+                && meleeAttackCooldownTimer >= 0f) || (AttackType == Attack.Archery && EnemyVisibility.InVisibilityZone);
         }
     }
 
+    public bool CanAggression
+    {
+        get
+        {
+            return OnAggression;
+        }
+    }
+	
     public bool CanStuned
     {
         get
@@ -211,9 +227,8 @@ public class Enemy : Actor
         fsm.ChangeState(States.Normal);
         MyGUI = GameObject.Find("Canvas");
         SetHPBar();
-        runSpeed = RunSpeed;
         walkSpeed = WalkSpeed;
-}
+    }
 
     new void Update()
     {
@@ -251,6 +266,11 @@ public class Enemy : Actor
             aggressionCooldownTimer -= Time.deltaTime;
         }
 
+		if (expectationCooldownTimer > 0f)
+        {
+            expectationCooldownTimer -= Time.deltaTime;
+        }
+		
         if (turnCooldownTimer > 0f)
         {
             turnCooldownTimer -= Time.deltaTime;
@@ -260,7 +280,7 @@ public class Enemy : Actor
         //{
         //    stunedCooldownTimer -= Time.deltaTime;
         //}
-		
+
         if (ShowHP != null)
         {
             // получаем экранные координаты расположения врага
@@ -296,7 +316,7 @@ public class Enemy : Actor
             var health = GetComponent<Health>();
             if (health != null)
             {
-                health.TakeDamage(9999, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
+                health.TakeDamage(9999, false, 0, 0, 0,0 , false, 0, 0, 0, 0, false, 0, false, 0, 0);
             }
         }
     }
@@ -332,18 +352,30 @@ public class Enemy : Actor
             return;
         }
 
+        if (CanAggression)
+        {
+            BehaivourType = Behaivour.Aggression;
+            OnAggression = false;
+            aggressionCooldownTimer = AggressionCooldownTime;
+            Debug.Log("агр");
+        }
+
         if (CanIdle)
         {
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
             BehaivourType = Behaivour.Idle;
+			Debug.Log("Ожидание");
             return;
         }
-        else
+        else if (BehaivourType == Behaivour.Idle)//if (expectationCooldownTimer >= 0f)
         {
-            if (AttackType == Attack.Melee)
+			//expectationCooldownTimer = ExpectationCooldownTime;
+			////Debug.Log("Подход");
+           if (AttackType == Attack.Melee)
+			//{
                 BehaivourType = Behaivour.Patroling;
-
-            if (AttackType == Attack.Archery)
+			//}
+           if (AttackType == Attack.Archery)
             {
                 BehaivourType = Behaivour.FreeWalking;
             }
@@ -351,7 +383,7 @@ public class Enemy : Actor
 
         float num = onGround ? 1f : 0.65f;
 
-        if (BehaivourType == Behaivour.FreeWalking)
+        if (BehaivourType == Behaivour.FreeWalking) 
         {
             Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
 
@@ -372,12 +404,13 @@ public class Enemy : Actor
             }
         }
 
+
         if (BehaivourType == Behaivour.Patroling)
         {
             // преследование
             if (InDetectionZone)
             {
-                if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
+                if (!InVisibilityZone)	// поворот за игрком
                 {
                     if (turnCooldownTimer <= 0f)
                     {
@@ -387,14 +420,7 @@ public class Enemy : Actor
                     }
                 }
 
-                if (!InVisibilityZone)
-                {
-                        CharacterRotation();
-                        moveX *= -1;
-                        turnCooldownTimer = TurnCooldownTime;
-                }
-
-                Speed.x = Calc.Approach(Speed.x, moveX * runSpeed, RunReduce * num * Time.deltaTime);
+                Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
 
                 if (!onGround)
                 {
@@ -402,7 +428,7 @@ public class Enemy : Actor
                     Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
                 }
             }
-
+			// патрулироавние
             else if (!InVisibilityZone)
             {
 
@@ -429,7 +455,7 @@ public class Enemy : Actor
 
         if (BehaivourType == Behaivour.Following)
         {
-        if (InDetectionZone)
+            if (InDetectionZone)
             {
                 if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer))
                 {
@@ -450,7 +476,7 @@ public class Enemy : Actor
                     }
                 }
 
-                Speed.x = Calc.Approach(Speed.x, moveX * runSpeed, RunReduce * num * Time.deltaTime);
+                Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
 
                 if (!onGround)
                 {
@@ -460,7 +486,46 @@ public class Enemy : Actor
             }
         }
 
+		if (BehaivourType == Behaivour.Aggression)  // спорно реализовано
+        {
 
+			Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+			if (-(int)Facing * transform.position.x  > EnemyDetection.PlayerPos.x)  // разворот за игроком
+			{
+				if (turnCooldownTimer <= 0f)
+				{
+                    CharacterRotation(); 
+					moveX *= -1;
+					turnCooldownTimer = TurnCooldownTime;
+				}
+			}
+
+            if (aggressionCooldownTimer <= 0f && !InVisibilityZone)
+            {
+                OnAggression = false;
+                Debug.Log("агр спал");
+                if (AttackType == Attack.Melee)
+                    //{
+                    BehaivourType = Behaivour.Patroling;
+                //}
+                if (AttackType == Attack.Archery)
+                {
+                    BehaivourType = Behaivour.FreeWalking;
+                }
+            }
+
+            if (!(moveX != 0 && CheckColInDir(new Vector2(moveX, 0), bumper_layer)))
+            {
+                Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
+            }
+                if (!onGround)
+                {
+                    float target = MaxFall;
+                    Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+                }
+		}
+		
         if (BehaivourType == Behaivour.Idle)
         {
             // Horizontal Speed Update Section
@@ -543,8 +608,21 @@ public class Enemy : Actor
             return;
         }
     }
+    void Attack_Exit()
+    {
+        if (!(CheckColAtPlace(Vector2.right * 26, solid_layer) || (CheckColAtPlace(Vector2.left * 26, solid_layer)) || !CheckColInDir(new Vector2(moveX, 0), solid_layer)))
+        {
+            float num = onGround ? 1f : AirMult;
+            Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
 
-    void Idle_Update()
+            if (!onGround)
+            {
+                float target = MaxFall;
+                Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+            }
+        }
+    }
+void Idle_Update()
     {
         if (!onGround)
         {
@@ -558,7 +636,7 @@ public class Enemy : Actor
             return;
         }
     }
-   
+
     void Death_Update()
     {
         // Horizontal Speed Update Section
@@ -591,7 +669,7 @@ public class Enemy : Actor
 
     public void SetHPBar()
     {
-	    var health = GetComponent<Health>();
+        var health = GetComponent<Health>();
         // создаем новый слайдер на основе эталона
         ShowHP = (Slider)Instantiate(EnemyHP);
         //Объявляем что он будет расположен в canvas
@@ -648,28 +726,6 @@ public class Enemy : Actor
             } // If on the ground
             else if (onGround)
             {
-                if (InDetectionZone)
-                {
-                    if (Speed.x == 0)
-                    {
-                        // Idle Animation
-                        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-                        {
-                            animator.Play("Idle");
-                        }
-                        // If there is horizontal movement input
-                    }
-                    else
-                    {
-                        // Run Animation
-                        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
-                        {
-                            animator.Play("Run");
-                        }
-                    }
-                }
-                else
-                {
                     // If the is nohorizontal movement input
                     if (Speed.x == 0)
                     {
@@ -688,7 +744,6 @@ public class Enemy : Actor
                             animator.Play("Walk");
                         }
                     }
-                }
             }
         }
 
@@ -718,28 +773,6 @@ public class Enemy : Actor
             } // If on the ground
             else if (onGround)
             {
-                if (InDetectionZone)
-                {
-                    if (Speed.x == 0)
-                    {
-                        // Idle Animation
-                        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("BowIdle"))
-                        {
-                            animator.Play("BowIdle");
-                        }
-                        // If there is horizontal movement input
-                    }
-                    else
-                    { 
-                        // Run Animation
-                        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("BowRun"))
-                        {
-                            animator.Play("BowRun");
-                        }
-                    }
-                }
-                else
-                {
                     // If the is nohorizontal movement input
                     if (Speed.x == 0)
                     {
@@ -758,7 +791,6 @@ public class Enemy : Actor
                             animator.Play("BowWalk");
                         }
                     }
-                }
             }
         }
 
@@ -788,28 +820,7 @@ public class Enemy : Actor
             } // If on the ground
             else if (onGround)
             {
-                if (InDetectionZone)
-                {
-                    if (Speed.x == 0)
-                    {
-                        // Idle Animation
-                        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("MageIdle"))
-                        {
-                            animator.Play("MageIdle");
-                        }
-                        // If there is horizontal movement input
-                    }
-                    else
-                    {
-                        // Run Animation
-                        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("MageRun"))
-                        {
-                            animator.Play("MageRun");
-                        }
-                    }
-                }
-                else
-                {
+
                     // If the is nohorizontal movement input
                     if (Speed.x == 0)
                     {
@@ -828,35 +839,23 @@ public class Enemy : Actor
                             animator.Play("MageWalk");
                         }
                     }
-                }
+                
             }
         }
 
     }
 
-    public void Hit()
-    {
-		var health = GetComponent<Health>();
-		// показываем текущие здоровье на полосе хп
-		ShowHP.value = health.health; 		
-        //int random = Random.Range(0, 99);
-        //Debug.Log(random + "/99 ");
-        //if (random < 50)
-        //{
-            //fsm.ChangeState(States.Stun, StateTransition.Overwrite);
-        //}
-    }
 
-	//IEnumerator Poisoned()
+    //IEnumerator Poisoned()
     //{
     //        var health = GetComponent<Health>();
     //        if (health != null)
     //        {
-   //             health.TakeDamage(2);
-     //       }
-     //   yield return new WaitForSeconds(3);
-   // }
-	
+    //             health.TakeDamage(2);
+    //       }
+    //   yield return new WaitForSeconds(3);
+    // }
+
     void Stun_Update()
     {
         // Horizontal Speed Update Section
@@ -874,19 +873,34 @@ public class Enemy : Actor
     public void Freez()
     {
         walkSpeed = 0;
-        runSpeed = 0;
     }
 
     public void UnFreez()
     {
         walkSpeed = WalkSpeed;
-        runSpeed = RunSpeed;
+    }
+
+    public void Stun()
+    {
+        fsm.ChangeState(States.Stun, StateTransition.Overwrite);
+    }
+
+    public void Hit()
+    {
+        OnAggression = true;
+        var health = GetComponent<Health>();
+        // показываем текущие здоровье на полосе хп
+        ShowHP.value = health.health;
+        //int random = Random.Range(0, 99);
+        //if (random < 50)
+        //{
+        //fsm.ChangeState(States.Stun, StateTransition.Overwrite);
+        //}
     }
 
     public void Die()
     {
         //var playercomponent = GetComponent<Player>();
-
         //if (playercomponent != null)
         //{
         //    playercomponent.GetComponent<Player>().MaxRun = playercomponent.curRun;

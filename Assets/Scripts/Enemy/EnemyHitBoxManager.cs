@@ -53,19 +53,11 @@ public class EnemyHitBoxManager : MonoBehaviour {
             var didDamage = false;
             if (Random.Range(0, 100) < EnemyComponent.MeleeCriticalDamageChance)
             {
-                int dmg = (Random.Range(EnemyComponent.MeleeAttackMinDamage, EnemyComponent.MeleeAttackMaxDamage + 1));
-                didDamage = component.TakeDamage(dmg, EnemyComponent.MeleeAttackCanPoison, EnemyComponent.MeleePoisonDamaged,
-                EnemyComponent.MeleePoisonFrequency, EnemyComponent.MeleePoisonTick, EnemyComponent.MeleeAttackCanFire,
-                EnemyComponent.MeleeFireDamaged, EnemyComponent.MeleeFireFrequency, EnemyComponent.MeleeFireTick,
-                EnemyComponent.MeleeAttackCanPush, EnemyComponent.MeleePushDistance, EnemyComponent.MeleeAttackCanFreez, EnemyComponent.MeleeFreezDuration);
+                CriticalDamage(EnemyComponent, component, didDamage);
             }
             else
             {
-                int dmg = (Random.Range(EnemyComponent.MeleeAttackMinDamage, EnemyComponent.MeleeAttackMaxDamage + 1));
-                didDamage = component.TakeDamage(dmg, EnemyComponent.MeleeAttackCanPoison, EnemyComponent.MeleePoisonDamaged,
-                EnemyComponent.MeleePoisonFrequency, EnemyComponent.MeleePoisonTick, EnemyComponent.MeleeAttackCanFire,
-                EnemyComponent.MeleeFireDamaged, EnemyComponent.MeleeFireFrequency, EnemyComponent.MeleeFireTick,
-                EnemyComponent.MeleeAttackCanPush, EnemyComponent.MeleePushDistance, EnemyComponent.MeleeAttackCanFreez, EnemyComponent.MeleeFreezDuration);
+                Damage(EnemyComponent, component, didDamage);
             }
 
             if (didDamage)
@@ -74,6 +66,43 @@ public class EnemyHitBoxManager : MonoBehaviour {
                 healthsDamaged.Add(component);
             }
         }
+    }
+
+    private void Damage(Enemy EnemyComponent, Health component, bool didDamage)
+    {
+        int dmg = (Random.Range(EnemyComponent.MeleeAttackMinDamage, EnemyComponent.MeleeAttackMaxDamage + 1));
+        didDamage = component.TakeDamage(dmg, EnemyComponent.MeleeAttackCanPoison, EnemyComponent.MeleePoisonDamaged,
+        EnemyComponent.MeleePoisonFrequency, EnemyComponent.MeleePoisonTick, EnemyComponent.MeleePoisonChance, EnemyComponent.MeleeAttackCanFire,
+        EnemyComponent.MeleeFireDamaged, EnemyComponent.MeleeFireFrequency, EnemyComponent.MeleeFireTick, EnemyComponent.MeleeFireChance,
+        EnemyComponent.MeleeAttackCanPush, EnemyComponent.MeleePushDistance, EnemyComponent.MeleeAttackCanFreez,
+        EnemyComponent.MeleeFreezDuration, EnemyComponent.MeleeFreezChance);
+
+        //if (!damageShow)
+        //{
+        //    Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+        //    DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+        //    damagePopUp.Setup(dmg, false);
+        //    damageShow = true;
+        //}
+    }
+
+    private void CriticalDamage(Enemy EnemyComponent, Health component, bool didDamage)
+    {
+        int dmg = (Random.Range(EnemyComponent.MeleeAttackMinDamage, EnemyComponent.MeleeAttackMaxDamage + 1))
+        * EnemyComponent.MeleeCriticalDamageMultiply;
+        didDamage = component.TakeDamage(dmg, EnemyComponent.MeleeAttackCanPoison, EnemyComponent.MeleePoisonDamaged,
+        EnemyComponent.MeleePoisonFrequency, EnemyComponent.MeleePoisonTick, EnemyComponent.MeleePoisonChance, EnemyComponent.MeleeAttackCanFire,
+        EnemyComponent.MeleeFireDamaged, EnemyComponent.MeleeFireFrequency, EnemyComponent.MeleeFireTick, EnemyComponent.MeleeFireChance,
+        EnemyComponent.MeleeAttackCanPush, EnemyComponent.MeleePushDistance, EnemyComponent.MeleeAttackCanFreez,
+        EnemyComponent.MeleeFreezDuration, EnemyComponent.MeleeFreezChance);
+
+        //if (!damageShow)
+        //{
+        //    Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+        //    DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+        //    damagePopUp.Setup(dmg, true);
+        //    damageShow = true;
+        //}
     }
 
     public void setHitBox(hitBoxes val)

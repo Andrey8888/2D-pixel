@@ -78,7 +78,7 @@ public class HitBoxManager : MonoBehaviour
 
             if (PlayerComponent.CanPowerSwordAttack == false)
             { 
-                if (PlayerComponent.MeleeAttackCanThirdAttackCriticalDamage == true)
+                if (PlayerComponent.MeleeCanThirdAttackCriticalDamage == true)
                 {
                     if (PlayerComponent.hitCount == 3)
                     {
@@ -121,9 +121,10 @@ public class HitBoxManager : MonoBehaviour
     {
         int dmg = (Random.Range(PlayerComponent.MeleeAttackMinDamage, PlayerComponent.MeleeAttackMaxDamage + 1));
         didDamage = component.TakeDamage(dmg, PlayerComponent.MeleeAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
-        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleeAttackCanFire,
-        PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick,
-        PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, PlayerComponent.MeleeFreezDuration);
+        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
+        PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
+        PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, 
+		PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
 
         if (!damageShow)
         {
@@ -139,9 +140,10 @@ public class HitBoxManager : MonoBehaviour
         int dmg = (Random.Range(PlayerComponent.MeleeAttackMinDamage, PlayerComponent.MeleeAttackMaxDamage + 1))
         * PlayerComponent.MeleeCriticalDamageMultiply;
         didDamage = component.TakeDamage(dmg, PlayerComponent.MeleeAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
-        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleeAttackCanFire,
-        PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick,
-        PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, PlayerComponent.MeleeFreezDuration);
+        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
+        PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
+        PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, 
+		PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
 
         if (!damageShow)
         {

@@ -23,6 +23,7 @@ public class PickupMeleeWeapons : Actor
 	public int MeleeAttackMinDamage = 0;
 	public int MeleeAttackMaxDamage = 0;
     public float MeleeAttackCooldownTime = 0.2f;
+    public float MeleePowerAttackCooldownTime = 0f;
     public bool CanThirdAttackCriticalDamage = false; // or all attack
     //public bool CanPowerAttackCriticalDamage = false;
     [Range(1, 10)]
@@ -40,16 +41,19 @@ public class PickupMeleeWeapons : Actor
     public int PoisonDamaged = 0;
 	public int PoisonFrequency = 0;
 	public int PoisonTick = 0;
-	[Header("Fire")]
+    public int PoisonChance = 0;
+    [Header("Fire")]
 	public bool CanFire = false;
     public bool CanPowerAttackFire = false;
     public int FireDamaged = 0;
 	public int FireFrequency = 0;
 	public int FireTick = 0;
+    public int FireChance = 0;
     [Header("Freez")]
     public bool CanFreez = false;
     public bool CanPowerAttackFreez = false;
     public int FreezDuration = 0;
+    public int FreezChance = 0;
     [Header("Push")]
     public bool CanPush = false;
     public bool CanPowerAttackPush = false;
@@ -132,12 +136,12 @@ public class PickupMeleeWeapons : Actor
             Sprite.sprite = spriteHighlight;
             if (inventory.isFull[0] == false && Input.GetKey(KeyCode.E))
             {
-                if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level,MeleeAttackMaxDamage * level, 
-                MeleeAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage,
+                if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level, 
+                MeleeAttackCooldownTime, MeleePowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage,
                 StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
-                CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, 
-                CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick,
-                CanFreez, CanPowerAttackFreez, FreezDuration,
+                CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
+                CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
+                CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
                 CanPush, CanPowerAttackPush, PushDistance, 
                 MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage, MeleeTossingUp, MeleePopUpAfterHit))
                 {
@@ -208,11 +212,11 @@ public class PickupMeleeWeapons : Actor
         if (inventory.isFull[0] == false && player.CompareTag("Player"))
                 {
                     if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
-                    MeleeAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage,
-                    StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
-                    CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick,
-                    CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick,
-                    CanFreez, CanPowerAttackFreez, FreezDuration,
+                    MeleeAttackCooldownTime, MeleePowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage, StepUpAfterHit, 
+                    hasSeries, hasBlock, CanThirdAttackCriticalDamage,
+                    CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
+                    CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
+                    CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
                     CanPush, CanPowerAttackPush, PushDistance,
                     MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage, MeleeTossingUp, MeleePopUpAfterHit))
             {
@@ -250,14 +254,14 @@ public class PickupMeleeWeapons : Actor
     {
         inventory = FindObjectOfType<Inventory>();
         if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
-            MeleeAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage,
-            StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
-            CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick,
-            CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick,
-            CanFreez, CanPowerAttackFreez, FreezDuration,
+            MeleeAttackCooldownTime, MeleePowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage, StepUpAfterHit,
+            hasSeries, hasBlock, CanThirdAttackCriticalDamage,
+            CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
+            CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
+            CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
             CanPush, CanPowerAttackPush, PushDistance,
             MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage, MeleeTossingUp, MeleePopUpAfterHit))
-            {
+        {
                 inventory.isFull[0] = true;
                 Instantiate(itemButton, inventory.slots[0].transform, false);
             }

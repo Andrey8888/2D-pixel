@@ -57,8 +57,8 @@ public class Health : MonoBehaviour
         }
     }
 
-    public bool TakeDamage(int amount, bool poison, int poisonAmount, int poisonFrequency, int poisonTick,
-        bool fire, int fireAmount, int fireFrequency, int fireTick, bool push, int pushDistance, bool freez, int freezDuration)
+    public bool TakeDamage(int amount, bool poison, int poisonAmount, int poisonFrequency, int poisonTick, int poisonChance,
+        bool fire, int fireAmount, int fireFrequency, int fireTick, int fireChance, bool push, int pushDistance, bool freez, int freezDuration, int freezChance)
     {
         if (block)
         {
@@ -87,14 +87,34 @@ public class Health : MonoBehaviour
                 invincible = true;
                 invincibleTimer = invincibleTimeOnHit;
             }
+			
             if (poison)
-             StartCoroutine( Poisoned(poisonAmount, poisonFrequency, poisonTick));
+			{
+			    if (Random.Range(0, 100) < poisonChance)
+                {
+				     StartCoroutine( Poisoned(poisonAmount, poisonFrequency, poisonTick));
+				}
+			}
+			
             if (fire)
-             StartCoroutine(Burned(fireAmount, fireFrequency, fireTick));
+			{
+			    if (Random.Range(0, 100) < fireChance)
+                {
+				StartCoroutine(Burned(fireAmount, fireFrequency, fireTick));
+				}
+			}
+			
             if (push)
                 Pushed(pushDistance);
+				
             if (freez)
-                StartCoroutine(Freezed(freezDuration));
+				{
+					if (Random.Range(0, 100) < freezChance)
+					{
+						 StartCoroutine(Freezed(freezDuration));
+					}
+				}
+				
             PixelCameraController.instance.Shake(0.15f);
         }
         return true;
@@ -117,7 +137,7 @@ public class Health : MonoBehaviour
             PixelCameraController.instance.Shake(0.15f);
         }
         if (OnPoisonedEndEvent != null)
-                OnPoisonedEndEvent.Invoke();
+            OnPoisonedEndEvent.Invoke();
         yield return false;
     }
 

@@ -9,9 +9,6 @@ public class Projectile : MonoBehaviour
     [Header("Speed")]
     public Vector2 Speed;
 
-    [Header("Damage")]
-    public int DamageOnHit;
-
 
     [Header("Layers")]
     public LayerMask solid_layer;
@@ -22,6 +19,10 @@ public class Projectile : MonoBehaviour
     private Vector2 movementCounter = Vector2.zero;  // Counter for subpixel movement
     private Rigidbody2D rb2D; // Cached Rigidbody2D attached to the projectile
 
+	private bool damageShow = false;
+    [SerializeField]
+    public Transform PopUpDamage;          // Всплывающий текст с уроном по монстру
+	
     List<Health> healthsDamaged = new List<Health>(); // List to store healths damaged
 
     void Awake()
@@ -75,18 +76,68 @@ public class Projectile : MonoBehaviour
 
         var component = col.GetComponent<Health>();
         // If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
-        if (component != null && component != owner && !healthsDamaged.Contains(component))
+        if (component != null && component != owner && !healthsDamaged.Contains(component) && component.health > 0)
         {
             // Add the health component to the list of damaged healths
             healthsDamaged.Add(component);
 
+			var PlayerComponent = FindObjectOfType<Player>();
+            var didDamage = false;
+			
+				if (Random.Range(0, 100) < PlayerComponent.RangedCriticalDamageChance)
+				{
+					CriticalDamage(PlayerComponent, component, didDamage);
+				}
+				else
+				{
+					Damage(PlayerComponent, component, didDamage);
+				}
+			
+			
             // Apply the damage
-            var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
+            //var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
             // Destroy the projectile after applying damage
             if (didDamage )
             {
                 DestroyMe();
             }
+        }
+    }
+	
+	private void Damage(Player PlayerComponent, Health component, bool didDamage)
+    {
+        int dmg = (Random.Range(PlayerComponent.RangedAttackMinDamage, PlayerComponent.RangedAttackMaxDamage + 1));
+        didDamage = component.TakeDamage(dmg, PlayerComponent.RangedAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
+        PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedAttackCanFire,
+        PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
+        PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez, 
+		PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+
+	if (!damageShow)
+		{
+			Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+			DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+			damagePopUp.Setup(dmg, false);
+			damageShow = true;
+		}
+    }
+	
+	private void CriticalDamage(Player PlayerComponent, Health component, bool didDamage)
+    {
+        int dmg = (Random.Range(PlayerComponent.RangedAttackMinDamage, PlayerComponent.RangedAttackMaxDamage + 1))
+        * PlayerComponent.RangedCriticalDamageMultiply;
+        didDamage = component.TakeDamage(dmg, PlayerComponent.RangedAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
+        PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedAttackCanFire,
+        PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
+        PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez, 
+		PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, true);
+            damageShow = true;
         }
     }
 }

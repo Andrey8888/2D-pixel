@@ -397,7 +397,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -1}
+  m_Offset: {x: 0, y: -0.56306076}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -408,7 +408,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 11.2146, y: 43.66298}
+  m_Size: {x: 11.2146, y: 42.7891}
   m_EdgeRadius: 0
 --- !u!50 &4660279609438235656
 Rigidbody2D:
@@ -471,26 +471,65 @@ MonoBehaviour:
   Gravity: 900
   MaxFall: -160
   RunReduce: 5000
-  MaxRun: 50
+  WalkSpeed: 30
   RunAccel: 5000
   AirMult: 0.65
   TurnCooldownTime: 1
-  StunedCooldownTime: 0.25
   OnStun: 0
+  OnAggression: 0
   Facing: -1
   SpriteHolder: {fileID: 4617891218855951990}
   SpriteScale: {x: 1, y: 1}
   animator: {fileID: 4705226514271851490}
   BloodParticle: {fileID: 0}
   MeleeAttackDamage: 1
-  GunBarrel: {fileID: 975759024697816307}
+  MeleeCriticalDamage: 0
   MeleeAttackCooldownTime: 1.5
+  MeleeAttackMaxDamage: 0
+  MeleeAttackMinDamage: 0
+  MeleeCriticalDamageMultiply: 0
+  MeleeCriticalDamageChance: 0
+  MeleeAttackCanPoison: 0
+  MeleePoisonDamaged: 0
+  MeleePoisonFrequency: 0
+  MeleePoisonTick: 0
+  MeleePoisonChance: 100
+  MeleeAttackCanFire: 0
+  MeleeFireDamaged: 0
+  MeleeFireFrequency: 0
+  MeleeFireTick: 0
+  MeleeFireChance: 100
+  MeleeAttackCanFreez: 0
+  MeleeFreezDuration: 0
+  MeleeFreezChance: 100
+  MeleeAttackCanPush: 0
+  MeleePushDistance: 0
+  RangedMeleeAttackDamage: 0
   BowAttackCooldownTime: 3
   CastAttackCooldownTime: 2
-  MyGUI: {fileID: 0}
+  RangedCriticalDamage: 0
+  RangedAttackMinDamage: 1
+  RangedAttackMaxDamage: 2
+  RangedCriticalDamageMultiply: 0
+  RangedCriticalDamageChance: 0
+  GunBarrel: {fileID: 975759024697816307}
+  RangedAttackCanPoison: 0
+  RangedPoisonDamaged: 0
+  RangedPoisonFrequency: 0
+  RangedPoisonTick: 0
+  RangedPoisonChance: 100
+  RangedAttackCanFire: 0
+  RangedFireDamaged: 0
+  RangedFireFrequency: 0
+  RangedFireTick: 0
+  RangedFireChance: 100
+  RangedAttackCanFreez: 0
+  RangedFreezDuration: 0
+  RangedFreezChance: 100
+  RangedAttackCanPush: 0
+  RangedPushDistance: 0
   EnemyHP: {fileID: 6886868313733489362, guid: 6affc755d48261040900328762443f74, type: 3}
   metka: {fileID: 178128043709533260}
-  Mycamera: {fileID: 0}
   AttackType: 2
   BehaivourType: 2
   DetectionZone: {fileID: 2046564165174717585}
@@ -533,6 +572,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPushedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnDamageBlockEvent:
     m_PersistentCalls:
       m_Calls: []

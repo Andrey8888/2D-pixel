@@ -128,7 +128,7 @@ public class WormEnemy : Actor
             var health = GetComponent<Health>();
             if (health != null)
             {
-                health.TakeDamage(9999, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
+                health.TakeDamage(9999, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
             }
         }
     }

@@ -83,9 +83,9 @@ public class EnemyProjectile : MonoBehaviour
                 healthsDamaged.Add(component);
 
                 // Apply the damage
-                var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false,0, false, 0);
-                // Destroy the projectile after applying damage
-                if (didDamage)
+                var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
+            // Destroy the projectile after applying damage
+            if (didDamage)
                 {
                     DestroyMe();
                 }

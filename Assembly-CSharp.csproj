@@ -140,6 +140,7 @@
     <Compile Include="Assets\Scripts\Calc.cs" />
     <Compile Include="Assets\Scripts\Checkpoint.cs" />
     <Compile Include="Assets\Scripts\DamagePopUp.cs" />
+    <Compile Include="Assets\Scripts\Enemy\BlinkEnemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyDetection.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyHitBoxManager.cs" />

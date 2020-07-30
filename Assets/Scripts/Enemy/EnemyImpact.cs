@@ -37,9 +37,15 @@ public class EnemyImpact : MonoBehaviour
         if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Slowdown)
         {
             var playercomponent = collision.GetComponent<Player>();
+            var enemy = GetComponentInParent<Enemy>();
             if (playercomponent != null)
             {
-                OnPlayerSlow(playercomponent);
+                //collision.transform.position = new Vector2(collision.transform.position.x - 5, 0);
+            if (!playercomponent.sticking && !playercomponent.CheckColAtPlace(Vector2.right * -(int)enemy.Facing, playercomponent.solid_layer))
+            {
+                var MoveH = playercomponent.MoveHPlatform(400 * Time.deltaTime);
+            }
+                StartCoroutine(OnPlayerSlow(playercomponent));
             }
         }
     }
@@ -51,6 +57,7 @@ public class EnemyImpact : MonoBehaviour
             col = collision;
             InImpactZone = true;
         }
+		
         if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Damage)
         {
             var playercomponent = collision.GetComponent<Player>();
@@ -63,9 +70,17 @@ public class EnemyImpact : MonoBehaviour
         if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Slowdown)
         {
             var playercomponent = collision.GetComponent<Player>();
+            var enemy = GetComponentInParent<Enemy>();
             if (playercomponent != null)
             {
+                //collision.transform.position = new Vector2(collision.transform.position.x - 5, 0);
+				
                 StartCoroutine(OnPlayerSlow(playercomponent));
+
+                if (!playercomponent.sticking && !playercomponent.CheckColAtPlace(Vector2.right * -(int)enemy.Facing, playercomponent.solid_layer))
+                {
+                    var MoveH = playercomponent.MoveHPlatform(400 * Time.deltaTime);
+                }
             }
         }
         
@@ -101,7 +116,7 @@ public class EnemyImpact : MonoBehaviour
     // Function to deal damage to the player
     void OnPlayerTrigger(Player player)
     {
-        player.GetComponent<Health>().TakeDamage(DamageOnTouch, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
+        player.GetComponent<Health>().TakeDamage(DamageOnTouch, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
     }
 
     IEnumerator OnPlayerSlow(Player player)

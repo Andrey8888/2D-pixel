@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Player : Actor
 {
-
+	#region Params
     [Header("Movement Variables")]
     // Gravity, Maximun fall speed & fastfall Speed
     public float Gravity = 900f; // Скорость, с которой игрок падает, пока находится в воздухе
@@ -51,7 +51,9 @@ public class Player : Actor
     public float JumpBufferTime = 0.1f; // Если игрок ударяет об землю в течение этого времени после нажатия кнопки прыжка, прыжок будет выполнен, как только он коснется земли
                                         // Лестничные переменные
     public float LadderClimbSpeed = 60f;
-
+	#endregion
+	#region WeaponParams
+	
     [Header("Hands")]
     public int HandAttackMinDamage = 1;//new int[2] {1, 0, 0};
     public int HandAttackMaxDamage = 2;//new int[2] {2, 0, 0};
@@ -70,82 +72,84 @@ public class Player : Actor
     public int StepUpAfterHit;
     public int PopUpAfterHit = 0;
     public float MeleeAttackCooldownTime = 0.8f;
-    private float MeleePowerAttackCooldownTime = 0.8f;
-    private int MeleePowerAttackMaxDamage = 0;
-    private int MeleePowerAttackMinDamage = 0;
-    private float SpeedOnSwordAttack = 20;
+    public float MeleePowerAttackCooldownTime = 0.8f;
+    public int MeleePowerAttackMaxDamage = 0;
+    public int MeleePowerAttackMinDamage = 0;
+    public float SpeedOnSwordAttack = 20;
     [HideInInspector]
     public bool ChangeCollider = false;
+    public bool hasSeries = false;
+    private bool hasBlock = false;
+    public bool MeleeCanThirdAttackCriticalDamage;
 
-    //public bool MeleeAttackCanPowerAttackCriticalDamage; // использовать для особой атаки (не реализовано)
-    [HideInInspector]
-    public bool MeleeAttackCanThirdAttackCriticalDamage;
-    [HideInInspector]
+    public bool MeleeAttackCanPowerAttackCriticalDamage; // использовать для особой атаки (не реализовано)
     public bool MeleeAttackCanPoison = false;
-	[HideInInspector]
-	public int MeleePoisonDamaged = 0;
-	[HideInInspector]
-	public int MeleePoisonFrequency = 0;
-	[HideInInspector]
-	public int MeleePoisonTick = 0;
-    [HideInInspector]
+    public bool MeleePowerAttackCanPoison = false;
+    public int MeleePoisonDamaged = 0;
+    public int MeleePoisonFrequency = 0;
+    public int MeleePoisonTick = 0;
+    public int MeleePoisonChance = 100;
+
     public bool MeleeAttackCanFire = false;
-	[HideInInspector]
-	public int MeleeFireDamaged = 0;
-	[HideInInspector]
-	public int MeleeFireFrequency = 0;
-	[HideInInspector]
-	public int MeleeFireTick = 0;
-    [HideInInspector]
-    public bool MeleeAttackCanPush = false;
-    [HideInInspector]
-    public int MeleePushDistance = 0;
-    [HideInInspector]
+    public bool MeleePowerAttackCanFire = false;
+    public int MeleeFireDamaged = 0;
+    public int MeleeFireFrequency = 0;
+    public int MeleeFireTick = 0;
+    public int MeleeFireChance = 100;
+
     public bool MeleeAttackCanFreez = false;
-    [HideInInspector]
+    public bool MeleePowerAttackCanFreez = false;
     public int MeleeFreezDuration = 0;
-    [HideInInspector]
+    public int MeleeFreezChance = 100;
+
+    public bool MeleeAttackCanPush = false;
+    public bool MeleePowerAttackCanPush = false;
+    public int MeleePushDistance = 0;
+
     public float HandAttackCooldownTime = 0.8f;
-
     public float SecondSwordAttackCooldownTime = 0.4f;
-
     public float ThirdSwordAttackCooldownTime = 0.4f;
-    [HideInInspector]
     public float MeleeBlockCooldownTime = 0.5f;
 
     [Header("RangedAttacks")]
 	public string RangedWeaponType;
-    public int RangedAttackDamage = 0;
     public int RangedCriticalDamage = 0;
-    public int RangedCriticalDamageMultiply;
-    public int RangedCriticalDamageChance;
+    public int RangedCriticalDamageMultiply = 1;
+    public int RangedCriticalDamageChance = 0;
     public int RangedAttackMinDamage = 1;//new int[2] {1, 0, 0};
     public int RangedAttackMaxDamage = 2;//new int[2] {2, 0, 0};
     public int ShellsCount = 0;
     public float RangedAttackCooldownTime = 1f;
     public float RangedPowerAttackCooldownTime = 10f;
 
-	[HideInInspector]
-	public bool RangedAttackCanPoison = false;
-	[HideInInspector]
-	public int RangedPoisonDamaged = 0;
-	[HideInInspector]
-	public int RangedPoisonFrequency = 0;
-	[HideInInspector]
-	public int RangedPoisonTick = 0;
-	[HideInInspector]
-	public bool RangedAttackCanFire = false;
-	[HideInInspector]
-	public int RangedFireDamaged = 0;
-	[HideInInspector]
-	public int RangedFireFrequency = 0;
-	[HideInInspector]
-	public int RangedFireTick = 0;
-	[HideInInspector]
-	public bool RangedAttackCanPush = false;
-    [HideInInspector]
-    public bool RangedAttackCanThroughShoot = false;
+    public bool RangedAttackCanPoison = false;
+    public bool RangedPowerAttackCanPoison = false;
+    public int RangedPoisonDamaged = 0;
+    public int RangedPoisonFrequency = 0;
+    public int RangedPoisonTick = 0;
+    public int RangedPoisonChance = 100;
 
+    public bool RangedAttackCanFire = false;
+    public bool RangedPowerAttackCanFire = false;
+    public int RangedFireDamaged = 0;
+    public int RangedFireFrequency = 0;
+    public int RangedFireTick = 0;
+    public int RangedFireChance = 100;
+
+    public bool RangedAttackCanFreez = false;
+    public bool RangedPowerAttackCanFreez = false;
+    public int RangedFreezDuration = 0;
+    public int RangedFreezChance = 100;
+
+    public bool RangedAttackCanPush = false;
+    public bool RangedPowerAttackCanPush = false;
+    public int RangedPushDistance = 0;
+
+    public bool RangedAttackCanThroughShoot = false;
+    public bool RangedPowerAttackCanThroughShoot = false;
+
+	#endregion  
+	
     [Header("Facing Direction")]
     public Facings Facing;  // Facing Direction
     [Header("Wall Slide Direction")]
@@ -180,7 +184,7 @@ public class Player : Actor
     private float dashCooldownTimer = 0f; // Timer to store how much cooldown has the dash
     private float rollCooldownTimer = 0f; // Timer to store how much cooldown has the roll
     private bool canStick = false; // Helper variable for the wall sticking functionality
-    private bool sticking = false; // Variable to store if the player is currently sticking to a wall
+    public bool sticking = false; // Variable to store if the player is currently sticking to a wall
     private float stickTimer = 0f; // Timer to store the time left sticking to a wall 
     private float jumpGraceTimer = 0f; // Timer to store the time left to perform a jump after leaving a platform/solid
     private float jumpBufferTimer = 0f; // Timer to store the time left in the JumpBuffer timer
@@ -211,10 +215,6 @@ public class Player : Actor
     public bool OnAttackMove = false;
     [HideInInspector]
     public bool tossingUp = false;
-
-
-    private bool hasSeries = false;
-    private bool hasBlock = false;
 
 
     //[Header("Objects")]
@@ -249,6 +249,8 @@ public class Player : Actor
     List<Health> healthsDamaged = new List<Health>();
 	public List<ItemParameters> parameters = new List<ItemParameters>();
 
+	#region Properties
+	
     // Check if we should duck (on the ground and moveY is pointing down and moveX is 0)
     public bool CanDuck
     {
@@ -342,6 +344,8 @@ public class Player : Actor
         }
     }
 
+	#endregion
+	
     [Header("Squash & Stretch")]
     public Transform SpriteHolder; // Reference to the transform of the child object which holds the sprite renderer of the player
     public Vector2 SpriteScale = Vector2.one; // The current X and Y scale of the sprite holder (used for Squash & Stretch)
@@ -455,6 +459,7 @@ public class Player : Actor
                 InitialWeapon.GetComponent<PickupMeleeWeapons>().OnPlayerTrigger(this);
         }
     }
+	
     private void SelectWeapon()
     {
         if (Input.GetKeyDown(KeyCode.Tab) && hasBow && hasSword)
@@ -674,7 +679,6 @@ public class Player : Actor
             Speed.y = 0;
         }
 
-        // Update the sprite
         UpdateSprite();
 
         // kill Box
@@ -1926,13 +1930,14 @@ public class Player : Actor
     //}
 
     public bool PickUpMeleeWeapon(MeleeWeapon type, int minDamage, int maxDamage, 
-    float attackCooldown, int critMultiply, int critChance, int stepUpAfterHit, 
+    float attackCooldown, float attackPowerCooldown, int critMultiply, int critChance, int stepUpAfterHit, 
     bool series, bool block, bool hasThirdAttackCriticalDamage, 
-    bool hasPoison, bool hasPowerAttackPoison, int poisonAmount, int poisonFrequency, int poisonTick,
-	bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick,
-    bool hasFreez, bool hasPowerAttackFreez, int freezDuration,  
+    bool hasPoison, bool hasPowerAttackPoison, int poisonAmount, int poisonFrequency, int poisonTick, int poisonChance,
+	bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick, int fireChance,
+    bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance, 
     bool hasPush, bool hasPowerAttackPush, int pushDistance,
-    int meleePowerAttackMinDamage, int meleePowerAttackMaxDamage, bool hasTossingUp, int popUpAfterHit) // TODO не доделано
+    int meleePowerAttackMinDamage, int meleePowerAttackMaxDamage, 
+	bool hasTossingUp, int popUpAfterHit) //meleePowerAttackMaxDamage  meleePowerAttackMinDamage
     {
         if (!hasSword)
         {
@@ -1950,42 +1955,62 @@ public class Player : Actor
             MeleeAttackMinDamage = minDamage;
             MeleeAttackMaxDamage = maxDamage;
             MeleeAttackCooldownTime = attackCooldown;
+			MeleePowerAttackCooldownTime = attackPowerCooldown;
             MeleeCriticalDamageMultiply = critMultiply;
             MeleeCriticalDamageChance = critChance;
             StepUpAfterHit = stepUpAfterHit;
-            MeleeAttackCanThirdAttackCriticalDamage = hasThirdAttackCriticalDamage;
+            MeleeCanThirdAttackCriticalDamage = hasThirdAttackCriticalDamage;
             hasSeries = series;
             hasBlock = block;
-            tossingUp = hasTossingUp;
-            PopUpAfterHit = popUpAfterHit;
 
             MeleeAttackCanPoison = hasPoison;
+			MeleePowerAttackCanPoison = hasPowerAttackPoison;
 		    MeleePoisonDamaged = poisonAmount;
 		    MeleePoisonFrequency = poisonFrequency;
 		    MeleePoisonTick = poisonTick;
+			MeleePoisonChance = poisonChance;
+			
 		    MeleeAttackCanFire = hasFire;
+			MeleePowerAttackCanFire = hasPowerAttackFire;
 		    MeleeFireDamaged = fireAmount;
 		    MeleeFireFrequency = fireFrequency;
 		    MeleeFireTick = fireTick;
-		    MeleeAttackCanPush = hasPush;
-            MeleePushDistance = pushDistance;
-            MeleeAttackCanFreez = hasFreez;
+			MeleeFireChance = fireChance;
+			
+			MeleeAttackCanFreez = hasFreez;
+			MeleePowerAttackCanFreez = hasPowerAttackFreez;
             MeleeFreezDuration = freezDuration;
+			MeleeFreezChance = freezChance;
+			
+		    MeleeAttackCanPush = hasPush;
+			MeleePowerAttackCanPush = hasPowerAttackPush;
+            MeleePushDistance = pushDistance;
+			
+			MeleePowerAttackMinDamage = meleePowerAttackMinDamage;
+			MeleePowerAttackMaxDamage = meleePowerAttackMaxDamage;
+			tossingUp = hasTossingUp;
+            PopUpAfterHit = popUpAfterHit;
 
             activeWeapon = ActiveWeapon.Sword;
             hasSword = true;
 
             var col = GetComponentInChildren<HitBoxManager>();
             col.ChangeCollider((int)type);
-
+			//col.ChangeCollider((int)typepower); // отдельные колайдеры для power attack // TODO
+			
             return false;
         }
         return true;
     }
-    public bool PickUpRangedWeapon(string type, int minDamage, int maxDamage, int shellsCount,
-	bool hasPoison, int poisonAmount, int poisonFrequency, int poisonTick,
-	bool hasFire, int fireAmount, int fireFrequency, int fireTick,
-	bool hasPush, bool hasThroughShoot)
+
+	public bool PickUpRangedWeapon(RangedWeapon type, int minDamage, int maxDamage, int shellsCount,
+    float attackCooldown, float attackPowerCooldown, int critMultiply, int critChance,
+    bool hasPoison, bool hasPowerAttackPoison, int poisonAmount, int poisonFrequency, int poisonTick, int poisonChance,
+	bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick, int fireChance,
+    bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance, 
+    bool hasPush, bool hasPowerAttackPush, int pushDistance,
+    int rangedPowerAttackMinDamage, int rangedPowerAttackMaxDamage, 
+	bool hasTossingUp, int popUpAfterHit, bool hasThroughShoot, bool hasPowerAttackThroughShoot)  //hasTossingUp  popUpAfterHit  rangedPowerAttackMinDamage  rangedPowerAttackMaxDamage
     {
         if (!hasBow)
         {
@@ -1997,24 +2022,41 @@ public class Player : Actor
                 }
             }
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
-            RangedWeaponType = type;
+			
+            RangedWeaponType = type.ToString();
             RangedAttackMinDamage = minDamage;
             RangedAttackMaxDamage = maxDamage;
             ShellsCount = shellsCount;
-            //RangedAttackCooldownTime = attackCooldown;
-            //RangedCriticalDamageMultiply = critMultiply;
-            //RangedCriticalDamageMultiplyChance = critChance;
-
+            RangedAttackCooldownTime = attackCooldown;
+			RangedPowerAttackCooldownTime = attackPowerCooldown;
+            RangedCriticalDamageMultiply = critMultiply;
+            RangedCriticalDamageChance = critChance;
+			
             RangedAttackCanPoison = hasPoison;
+			RangedPowerAttackCanPoison = hasPowerAttackPoison;
 		    RangedPoisonDamaged = poisonAmount;
 		    RangedPoisonFrequency = poisonFrequency;
 		    RangedPoisonTick = poisonTick;
+			RangedPoisonChance = poisonChance;
+			
 		    RangedAttackCanFire = hasFire;
+			RangedPowerAttackCanFire = hasPowerAttackFire;
 		    RangedFireDamaged = fireAmount;
 		    RangedFireFrequency = fireFrequency;
 		    RangedFireTick = fireTick;
+			RangedFireChance = fireChance;
+			
+			RangedAttackCanFreez = hasFreez;
+			RangedPowerAttackCanFreez = hasPowerAttackFreez;
+		    RangedFreezDuration = freezDuration;
+			RangedFreezChance = freezChance;
+			
 		    RangedAttackCanPush = hasPush;
+			RangedPowerAttackCanPush = hasPowerAttackPush;
+			RangedPushDistance = pushDistance;
+			
             RangedAttackCanThroughShoot = hasThroughShoot;
+            RangedPowerAttackCanThroughShoot = hasPowerAttackThroughShoot;
 
             activeWeapon = ActiveWeapon.Bow;
             hasBow = true;
@@ -2109,7 +2151,7 @@ public class Player : Actor
         MeleePowerAttackMinDamage = MeleePowerAttackMinDamage+ item.MeleePowerAttackMinDamage;
 
         //MeleeAttackCanPowerAttackCriticalDamage = item.MeleeAttackCanPowerAttackCriticalDamage;
-        MeleeAttackCanThirdAttackCriticalDamage = item.MeleeAttackCanThirdAttackCriticalDamage;
+        //MeleeCanThirdAttackCriticalDamage = item.MeleeCanThirdAttackCriticalDamage;
         MeleeAttackCanPoison = item.MeleeAttackCanPoison;
         MeleePoisonDamaged = MeleePoisonDamaged+ item.MeleePoisonDamaged;
         MeleePoisonFrequency = MeleePoisonFrequency+ item.MeleePoisonFrequency;
@@ -2192,7 +2234,7 @@ public class Player : Actor
         MeleePowerAttackMinDamage = MeleePowerAttackMinDamage - item.MeleePowerAttackMinDamage;
 
         //MeleeAttackCanPowerAttackCriticalDamage = false;
-        MeleeAttackCanThirdAttackCriticalDamage = false;
+        MeleeCanThirdAttackCriticalDamage = false;
         MeleeAttackCanPoison = false;
         MeleePoisonDamaged = MeleePoisonDamaged - item.MeleePoisonDamaged;
         MeleePoisonFrequency = MeleePoisonFrequency - item.MeleePoisonFrequency;
@@ -2765,7 +2807,7 @@ public class Player : Actor
         if (component != null && component != owner && !healthsDamaged.Contains(component) && worm != null && fsm.State == States.Roll)
         {
             // Try to Apply the damage
-            var didDamage = component.TakeDamage(3, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
+            var didDamage = component.TakeDamage(3, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
 
             if (didDamage)
             {

@@ -14,32 +14,55 @@ public class PickupRangedWeapons : MonoBehaviour
     public GameObject itemButton;
 	
 	[Header("RangedWeapons")]
-	public int RangedAttackMinDamage = 2;
-	public int RangedAttackMaxDamage = 5;
+	public int RangedAttackMinDamage = 0;
+	public int RangedAttackMaxDamage = 0;
 	public float RangedAttackCooldownTime = 1;
     [Range(1, 10)]
     public int CriticalDamageMultiply = 1;
     [Range(0, 99)]
     public int ChanceCriticalDamage = 0;
     public int StepUpAfterHit = 0;
-    public int ShellsCount = 30;
+    public int ShellsCount = 0;
 	[Range(1, 10)]
 	public int level = 1;  // Multiply damage
+	[Header("PowerAttack")]
+	public int RangedPowerAttackMinDamage = 0;
+	public int RangedPowerAttackMaxDamage = 0;
+	public float RangedPowerAttackCooldownTime = 10f;
+	public bool CanPowerAttackThroughShoot = false;
 	
 	[Header("Poison")]
 	public bool CanPoison = false;
+	public bool CanPowerAttackPoison = false;
 	public int PoisonDamaged = 0;
 	public int PoisonFrequency = 0;
 	public int PoisonTick = 0;
+	[Range(0, 99)]
+	public int PoisonChance = 100;
 	[Header("Fire")]
 	public bool CanFire = false;
+	public bool CanPowerAttackFire = false;
 	public int FireDamaged = 0;
 	public int FireFrequency = 0;
 	public int FireTick = 0;
-	[Header("Other")]
+	[Range(0, 99)]
+	public int FireChance = 100;
+	[Header("Freez")]
+	public bool CanFreez = false;
+	public bool CanPowerAttackFreez = false;
+	public int FreezDuration = 0;
+	[Range(0, 99)]
+	public int FreezChance = 100;
+	[Header("Push")]
 	public bool CanPush = false;
+	public bool CanPowerAttackPush  = false;
+	public int PushDistance = 0;
+	[Header("Other")]
     public bool CanThroughShoot = false;
-
+	public bool RangedTossingUp = false;
+	public int RangedUpAfterHit = 0;
+	
+	
 	public RangedWeapon Type = RangedWeapon.Bow;
 	
     [SerializeField]
@@ -92,11 +115,15 @@ public class PickupRangedWeapons : MonoBehaviour
     {
         inventory = FindObjectOfType<Inventory>();
         if (inventory.isFull[1] == false && player.CompareTag("Player"))
-                {
-                if (player.PickUpRangedWeapon(Type.ToString(), RangedAttackMinDamage, RangedAttackMaxDamage, ShellsCount, 
-				CanPoison, PoisonDamaged, PoisonFrequency, PoisonTick,
-				CanFire, FireDamaged, FireFrequency, FireTick,
-				CanPush, CanThroughShoot))
+                {							
+                if (player.PickUpRangedWeapon(Type, RangedAttackMinDamage, RangedAttackMaxDamage, ShellsCount, 
+				RangedAttackCooldownTime, RangedPowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage,
+				CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
+				CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
+				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
+				CanPush, CanPowerAttackPush, PushDistance,
+				RangedPowerAttackMinDamage, RangedPowerAttackMaxDamage,			
+				CanThroughShoot, RangedUpAfterHit, CanThroughShoot, CanPowerAttackThroughShoot))
                     {
                         Pickable = false;
                         // Disable
@@ -131,10 +158,14 @@ public class PickupRangedWeapons : MonoBehaviour
     public void OnPlayer(Player player)
     {
         inventory = FindObjectOfType<Inventory>();
-        if (player.PickUpRangedWeapon(Type.ToString(), RangedAttackMinDamage, RangedAttackMaxDamage, ShellsCount,
-            CanPoison, PoisonDamaged, PoisonFrequency, PoisonTick,
-            CanFire, FireDamaged, FireFrequency, FireTick,
-            CanPush, CanThroughShoot))
+                if (player.PickUpRangedWeapon(Type, RangedAttackMinDamage, RangedAttackMaxDamage, ShellsCount, 
+				RangedAttackCooldownTime, RangedPowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage,
+				CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
+				CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
+				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
+				CanPush, CanPowerAttackPush, PushDistance,
+				RangedPowerAttackMinDamage, RangedPowerAttackMaxDamage,			
+				CanThroughShoot, RangedUpAfterHit, CanThroughShoot, CanPowerAttackThroughShoot))
             {
                 inventory.isFull[1] = true;
                 Instantiate(itemButton, inventory.slots[1].transform, false);
