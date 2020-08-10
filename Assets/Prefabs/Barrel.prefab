@@ -61,6 +61,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPushedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamageBlockEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnTakeHealEvent:
     m_PersistentCalls:
       m_Calls:
@@ -93,6 +117,7 @@ MonoBehaviour:
   health: 2
   dead: 0
   invincible: 0
+  block: 0
   becomeInvincibleOnHit: 0
   invincibleTimeOnHit: 0.5
   DieEventsAfterTime: 0
@@ -183,7 +208,8 @@ MonoBehaviour:
   Gravity: 900
   MaxFall: -240
   animator: {fileID: 6656287820248964733}
-  Dropout: {fileID: 1884471767846222, guid: 08530e980059863448a83fd5e1ef477e, type: 3}
+  Dropout:
+  - {fileID: 4031173482301100791, guid: 2918280c379e0b94a8f123152498316e, type: 3}
 --- !u!1 &6656287820248964735
 GameObject:
   m_ObjectHideFlags: 0

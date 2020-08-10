@@ -151,11 +151,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.000101127625, y: 0.22000499}
-      - {x: 0.007525215, y: -0.20996158}
-      - {x: 1.5095689, y: -0.19724059}
-      - {x: 1.4987425, y: 0.55903774}
-      - {x: 0.56260204, y: 0.5648188}
+    - - {x: -0.0076760766, y: 0.5768881}
+      - {x: -0.013988027, y: -0.19989204}
+      - {x: 2.8364534, y: -0.18156868}
+      - {x: 2.825627, y: 0.57993346}
 --- !u!1 &2779457703483430024
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,7 +166,7 @@ GameObject:
   - component: {fileID: 2779457703483430025}
   - component: {fileID: 2779457703483430027}
   - component: {fileID: 2779457703483430026}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: ImpactZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,8 +289,8 @@ PolygonCollider2D:
     m_Paths:
     - - {x: -0.87305784, y: 0.5245052}
       - {x: -0.88264495, y: -0.27040485}
-      - {x: 0.873629, y: -0.28656715}
-      - {x: 0.87553084, y: 0.5180799}
+      - {x: 2.9350252, y: -0.2587102}
+      - {x: 2.9228036, y: 0.5447782}
 --- !u!114 &2779457703753932021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,7 +346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2779457705057275360}
   - component: {fileID: 2779457705057275361}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: AttackHitbox1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -652,7 +651,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8858342365644427224}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.3, y: 2.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8854726495046487572}
@@ -672,7 +671,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -1}
+  m_Offset: {x: 0, y: -1.1258621}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -683,7 +682,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 11.2146, y: 43.66298}
+  m_Size: {x: 11.2146, y: 43.914703}
   m_EdgeRadius: 0
 --- !u!50 &8816050055459789930
 Rigidbody2D:
@@ -743,23 +742,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   myCollider: {fileID: 8806128988009965848}
+  TypeEnemy: 0
   Gravity: 900
   MaxFall: -160
   RunReduce: 5000
-  RunSpeed: 90
   WalkSpeed: 30
   RunAccel: 5000
   AirMult: 0.65
-  TurnCooldownTime: 1.5
-  StunedCooldownTime: 0.25
+  TurnCooldownTime: 1
   OnStun: 0
+  OnAggression: 0
   Facing: -1
   SpriteHolder: {fileID: 8854726495046487572}
   SpriteScale: {x: 1, y: 1}
   animator: {fileID: 8914901679629788032}
   BloodParticle: {fileID: 1145837783617200, guid: d34108a4353e0b94bb2f012ea46eb1b1,
     type: 3}
-  MeleeAttackDamage: 1
   MeleeCriticalDamage: 0
   MeleeAttackCooldownTime: 1.5
   MeleeAttackMaxDamage: 0
@@ -770,15 +768,17 @@ MonoBehaviour:
   MeleePoisonDamaged: 0
   MeleePoisonFrequency: 0
   MeleePoisonTick: 0
+  MeleePoisonChance: 100
   MeleeAttackCanFire: 0
   MeleeFireDamaged: 0
   MeleeFireFrequency: 0
   MeleeFireTick: 0
+  MeleeFireChance: 100
   MeleeAttackCanFreez: 0
   MeleeFreezDuration: 0
+  MeleeFreezChance: 100
   MeleeAttackCanPush: 0
   MeleePushDistance: 0
-  RangedMeleeAttackDamage: 0
   BowAttackCooldownTime: 4
   CastAttackCooldownTime: 2
   RangedCriticalDamage: 0
@@ -791,18 +791,19 @@ MonoBehaviour:
   RangedPoisonDamaged: 0
   RangedPoisonFrequency: 0
   RangedPoisonTick: 0
+  RangedPoisonChance: 100
   RangedAttackCanFire: 0
   RangedFireDamaged: 0
   RangedFireFrequency: 0
   RangedFireTick: 0
+  RangedFireChance: 100
   RangedAttackCanFreez: 0
   RangedFreezDuration: 0
+  RangedFreezChance: 100
   RangedAttackCanPush: 0
   RangedPushDistance: 0
-  MyGUI: {fileID: 0}
   EnemyHP: {fileID: 6886868313733489362, guid: 6affc755d48261040900328762443f74, type: 3}
   metka: {fileID: 7306876309933235557}
-  Mycamera: {fileID: 0}
   AttackType: 0
   BehaivourType: 1
   DetectionZone: {fileID: 2779457703753932019}

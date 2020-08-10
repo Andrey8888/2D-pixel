@@ -103,7 +103,7 @@ MonoBehaviour:
   movementCounter: {x: 0, y: 0}
   solid_layer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4352
   bumper_layer:
     serializedVersion: 2
     m_Bits: 0
@@ -139,6 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd37be0d7dee8c41842ddcdef3bb527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 8
   Gravity: 0
   MaxFall: 0
   FastFall: 0
@@ -157,6 +158,7 @@ MonoBehaviour:
   WallSlideStartMax: 0
   WallSlideTime: 0
   DashSpeed: 0
+  RollSpeed: 0
   EndDashSpeed: 0
   EndRollSpeed: 0
   EndDashUpMult: 0

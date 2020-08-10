@@ -354,7 +354,7 @@ MonoBehaviour:
   JumpSpeed: 450
   JumpHBoost: 0
   VariableJumpTime: 0
-  SpringJumpSpeed: 275
+  SpringJumpSpeed: 500
   SpringJumpVariableTime: 0.05
   WallJumpForceTime: 0.16
   WallJumpHSpeed: 130
@@ -386,26 +386,38 @@ MonoBehaviour:
   StepUpAfterHit: 0
   PopUpAfterHit: 0
   MeleeAttackCooldownTime: 0.8
+  MeleePowerAttackCooldownTime: 0.8
+  MeleePowerAttackMaxDamage: 0
+  MeleePowerAttackMinDamage: 0
+  SpeedOnSwordAttack: 20
   ChangeCollider: 0
-  MeleeAttackCanThirdAttackCriticalDamage: 0
+  hasSeries: 0
+  MeleeCanThirdAttackCriticalDamage: 0
+  MeleeAttackCanPowerAttackCriticalDamage: 0
   MeleeAttackCanPoison: 0
+  MeleePowerAttackCanPoison: 0
   MeleePoisonDamaged: 0
   MeleePoisonFrequency: 0
   MeleePoisonTick: 0
+  MeleePoisonChance: 100
   MeleeAttackCanFire: 0
+  MeleePowerAttackCanFire: 0
   MeleeFireDamaged: 0
   MeleeFireFrequency: 0
   MeleeFireTick: 0
-  MeleeAttackCanPush: 0
-  MeleePushDistance: 0
+  MeleeFireChance: 100
   MeleeAttackCanFreez: 0
+  MeleePowerAttackCanFreez: 0
   MeleeFreezDuration: 0
+  MeleeFreezChance: 100
+  MeleeAttackCanPush: 0
+  MeleePowerAttackCanPush: 0
+  MeleePushDistance: 0
   HandAttackCooldownTime: 0.8
   SecondSwordAttackCooldownTime: 0.4
   ThirdSwordAttackCooldownTime: 0.4
   MeleeBlockCooldownTime: 0.2
   RangedWeaponType: 
-  RangedAttackDamage: 0
   RangedCriticalDamage: 0
   RangedCriticalDamageMultiply: 0
   RangedCriticalDamageChance: 0
@@ -415,15 +427,26 @@ MonoBehaviour:
   RangedAttackCooldownTime: 1
   RangedPowerAttackCooldownTime: 10
   RangedAttackCanPoison: 0
+  RangedPowerAttackCanPoison: 0
   RangedPoisonDamaged: 0
   RangedPoisonFrequency: 0
   RangedPoisonTick: 0
+  RangedPoisonChance: 100
   RangedAttackCanFire: 0
+  RangedPowerAttackCanFire: 0
   RangedFireDamaged: 0
   RangedFireFrequency: 0
   RangedFireTick: 0
+  RangedFireChance: 100
+  RangedAttackCanFreez: 0
+  RangedPowerAttackCanFreez: 0
+  RangedFreezDuration: 0
+  RangedFreezChance: 100
   RangedAttackCanPush: 0
+  RangedPowerAttackCanPush: 0
+  RangedPushDistance: 0
   RangedAttackCanThroughShoot: 0
+  RangedPowerAttackCanThroughShoot: 0
   Facing: 1
   wallSlideDir: 0
   isInLadder: 0
@@ -432,6 +455,7 @@ MonoBehaviour:
   myDuckingCollider: {fileID: 8524039188666438507}
   DuckingFrictionMultiplier: 0.5
   curRun: 0
+  sticking: 0
   secondSwordAttackCooldownTimer: 0
   thirdSwordAttackCooldownTimer: 0
   hitCount: 0
@@ -452,8 +476,8 @@ MonoBehaviour:
     type: 3}
   BloodParticle: {fileID: 1145837783617200, guid: d34108a4353e0b94bb2f012ea46eb1b1,
     type: 3}
-  activeWeapon: 2
-  InitialWeapon: {fileID: 6013507851993815756, guid: baf233e0e1c6ae442b8f601b57093cc2,
+  activeWeapon: 1
+  InitialWeapon: {fileID: 7325081864335052826, guid: 7fcda9774c39b3d43a737f8f09c492ea,
     type: 3}
 --- !u!114 &8524039188666438500
 MonoBehaviour:

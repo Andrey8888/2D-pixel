@@ -5,7 +5,9 @@ using UnityEngine.Events;
 
 public class ItemParameters : MonoBehaviour {
 
- [Header("Movement Variables")]
+    [Header("Movement Variables")]
+
+    public Artifacts Type;
     // Gravity, Maximun fall speed & fastfall Speed
     public float Gravity = 900f; // Скорость, с которой игрок падает, пока находится в воздухе
     public float MaxFall = -160f; // Максимальная общая скорость, с которой вы можете упасть

@@ -194,9 +194,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: {x: 12, y: 0}
-  DamageOnHit: 2
-  ThroughShoot: 1
   solid_layer:
     serializedVersion: 2
     m_Bits: 256
   owner: {fileID: 0}
+  PopUpDamage: {fileID: 224758864541635820, guid: 3765d098280a78541a36bd56af3e1c44,
+    type: 3}

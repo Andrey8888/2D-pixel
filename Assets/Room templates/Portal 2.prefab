@@ -66,12 +66,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c4bdbbf5a3651f498b2114a8a7bb97b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DoorsList:
-  - From: {x: -1, y: 0, z: 0}
-    To: {x: -1, y: 3, z: 0}
-  - From: {x: 5, y: 0, z: 0}
-    To: {x: 5, y: 3, z: 0}
-  SelectedMode: 1
+  DoorsList: []
+  SelectedMode: 0
   DoorLength: 4
   DistanceFromCorners: 1
 --- !u!114 &7813742982488068936
@@ -563,12 +559,16 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 9027693184ca03e429e2e456cbc67464, type: 2}
   - m_RefCount: 12
     m_Data: {fileID: 11400000, guid: f8c83832a27493b409d94fabd4d04e1f, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileSpriteArray:
   - m_RefCount: 33
     m_Data: {fileID: -2002879894922022963, guid: bba15dcc4634a844dae4574e9cc32c6b,
       type: 3}
   - m_RefCount: 12
     m_Data: {fileID: 909372926773204461, guid: bba15dcc4634a844dae4574e9cc32c6b, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 45
     m_Data:
@@ -590,20 +590,20 @@ Tilemap:
       e33: 1
   - m_RefCount: 0
     m_Data:
-      e00: -2.4357766e+31
+      e00: -1.01102305e-19
       e01: NaN
       e02: 0
-      e03: -2.4357728e+31
-      e10: 3.57e-43
+      e03: -1.011022e-19
+      e10: 3.28e-43
       e11: NaN
       e12: 7.34684e-40
-      e13: 3.57e-43
+      e13: 3.28e-43
       e20: 0
-      e21: 7e-45
-      e22: -2.6314262e+21
+      e21: 2e-44
+      e22: -7.2378755e+12
       e23: 0
       e30: 0
-      e31: 6e-45
+      e31: 1e-45
       e32: 4.5904e-41
       e33: 0
   m_TileColorArray:
@@ -612,7 +612,7 @@ Tilemap:
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -11, y: -4, z: 0}
-  m_Size: {x: 20, y: 10, z: 1}
+  m_Size: {x: 27, y: 10, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -1131,17 +1131,17 @@ Tilemap:
   m_TileMatrixArray:
   - m_RefCount: 0
     m_Data:
-      e00: -2.4357766e+31
+      e00: -1.01102305e-19
       e01: NaN
       e02: 0
-      e03: -2.4357728e+31
-      e10: 3.57e-43
+      e03: -1.011022e-19
+      e10: 3.28e-43
       e11: NaN
       e12: 7.34684e-40
-      e13: 3.57e-43
-      e20: 1.63013e-40
-      e21: NaN
-      e22: -2.6314262e+21
+      e13: 3.28e-43
+      e20: 6.95593e-40
+      e21: 1.1e-44
+      e22: -7.2378755e+12
       e23: 0
       e30: 0
       e31: 7e-45
@@ -1171,7 +1171,7 @@ Tilemap:
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -9, y: -6, z: 0}
-  m_Size: {x: 20, y: 12, z: 1}
+  m_Size: {x: 27, y: 12, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -1294,32 +1294,38 @@ CompositeCollider2D:
   m_ColliderPaths:
   - m_Collider: {fileID: 916534293509672031}
     m_ColliderPaths:
-    - - X: 1919999942
+    - - X: 1919995099
         Y: -160000000
-      - X: 1919999942
+      - X: 1919997489
+        Y: 800000100
+      - X: 1599999900
+        Y: 799997489
+      - X: 1599997232
+        Y: 289
+      - X: 0
+        Y: 4901
+      - X: 4901
+        Y: 800000000
+      - X: 1919998500
+        Y: 800003464
+      - X: 1919995099
         Y: 960000000
       - X: -320000000
-        Y: 959999942
-      - X: -319999942
+        Y: 959995099
+      - X: -319995099
         Y: -160000000
-    - - X: 1600000000
-        Y: 58
-      - X: 0
-        Y: 58
-      - X: 58
-        Y: 800000000
-      - X: 1600000000
-        Y: 799999942
   m_CompositePaths:
     m_Paths:
-    - - {x: 191.99998, y: -16}
-      - {x: 191.99998, y: 96}
-      - {x: -32, y: 95.99999}
-      - {x: -31.99999, y: -16}
-    - - {x: 160, y: 0.0000087}
-      - {x: 0, y: 0.0000087}
-      - {x: 0.0000087, y: 80}
-      - {x: 160, y: 79.99999}
+    - - {x: 191.9995, y: -16}
+      - {x: 191.99974, y: 80.000015}
+      - {x: 159.99998, y: 79.99975}
+      - {x: 159.99973, y: 0.0000289}
+      - {x: 0, y: 0.000493}
+      - {x: 0.000493, y: 80}
+      - {x: 191.99985, y: 80.00035}
+      - {x: 191.9995, y: 96}
+      - {x: -32, y: 95.99951}
+      - {x: -31.999508, y: -16}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.000005
 --- !u!1 &3476708714607155470

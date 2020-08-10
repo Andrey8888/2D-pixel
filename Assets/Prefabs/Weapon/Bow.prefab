@@ -106,16 +106,32 @@ MonoBehaviour:
   StepUpAfterHit: 0
   ShellsCount: 30
   level: 1
+  RangedPowerAttackMinDamage: 0
+  RangedPowerAttackMaxDamage: 0
+  RangedPowerAttackCooldownTime: 10
+  CanPowerAttackThroughShoot: 0
   CanPoison: 0
+  CanPowerAttackPoison: 0
   PoisonDamaged: 0
   PoisonFrequency: 3
   PoisonTick: 3
+  PoisonChance: 100
   CanFire: 0
+  CanPowerAttackFire: 0
   FireDamaged: 0
   FireFrequency: 1
   FireTick: 2
+  FireChance: 100
+  CanFreez: 1
+  CanPowerAttackFreez: 0
+  FreezDuration: 3
+  FreezChance: 100
   CanPush: 0
+  CanPowerAttackPush: 0
+  PushDistance: 0
   CanThroughShoot: 0
+  RangedTossingUp: 0
+  RangedUpAfterHit: 0
   Type: 0
   Sprite: {fileID: 7445041374585675354}
 --- !u!61 &1636290072141247781

@@ -40,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2046564163862986114}
   - component: {fileID: 2046564163862986115}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: AttackHitbox1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,8 +181,8 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: -0.94155836, y: 0.54680586}
-      - {x: -0.94969493, y: -0.26967928}
-      - {x: 1.0449498, y: -0.26801044}
+      - {x: -0.93955964, y: 0.044516295}
+      - {x: 1.0449498, y: 0.061388396}
       - {x: 1.0495079, y: 0.55288404}
 --- !u!114 &2046564165174717591
 MonoBehaviour:
@@ -260,7 +260,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0072484463, y: 0.0528851}
+  m_Offset: {x: -0.0072484463, y: 0.05953347}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -271,7 +271,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.11687988, y: 0.4254044}
+  m_Size: {x: 0.11687988, y: 0.41210765}
   m_EdgeRadius: 0
 --- !u!1 &2046564165541303918
 GameObject:
@@ -344,11 +344,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.2}
-      - {x: 0, y: -0.2}
-      - {x: 3.342121, y: -0.20240551}
-      - {x: 3.3292766, y: 0.56676143}
-      - {x: 0.56260204, y: 0.5648188}
+    - - {x: 0.0030900955, y: 0.11901321}
+      - {x: 0.0043217847, y: 0.040117852}
+      - {x: 3.3399897, y: 0.02600359}
+      - {x: 3.3417664, y: 0.11313171}
 --- !u!1 &4619393866665443258
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,7 +396,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.56306076}
+  m_Offset: {x: 0, y: -0.9129753}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -408,7 +407,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 11.2146, y: 42.7891}
+  m_Size: {x: 11.2146, y: 43.48893}
   m_EdgeRadius: 0
 --- !u!50 &4660279609438235656
 Rigidbody2D:
@@ -451,7 +450,7 @@ MonoBehaviour:
   movementCounter: {x: 0, y: 0}
   solid_layer:
     serializedVersion: 2
-    m_Bits: 4352
+    m_Bits: 20736
   bumper_layer:
     serializedVersion: 2
     m_Bits: 1024
@@ -468,6 +467,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   myCollider: {fileID: 4666260164652505466}
+  TypeEnemy: 2
   Gravity: 900
   MaxFall: -160
   RunReduce: 5000
@@ -482,7 +482,6 @@ MonoBehaviour:
   SpriteScale: {x: 1, y: 1}
   animator: {fileID: 4705226514271851490}
   BloodParticle: {fileID: 0}
-  MeleeAttackDamage: 1
   MeleeCriticalDamage: 0
   MeleeAttackCooldownTime: 1.5
   MeleeAttackMaxDamage: 0
@@ -504,12 +503,11 @@ MonoBehaviour:
   MeleeFreezChance: 100
   MeleeAttackCanPush: 0
   MeleePushDistance: 0
-  RangedMeleeAttackDamage: 0
   BowAttackCooldownTime: 3
   CastAttackCooldownTime: 2
   RangedCriticalDamage: 0
   RangedAttackMinDamage: 1
-  RangedAttackMaxDamage: 2
+  RangedAttackMaxDamage: 1
   RangedCriticalDamageMultiply: 0
   RangedCriticalDamageChance: 0
   GunBarrel: {fileID: 975759024697816307}
@@ -795,7 +793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 4724158493650968390}
-  projectile: {fileID: 114021235920092806, guid: 183249d556e552943b1cef210c0bd512,
+  projectile: {fileID: 4757808578427572878, guid: 183249d556e552943b1cef210c0bd512,
     type: 3}
   gunBarrel: {fileID: 975759024697816307}
   DirectionShoot: 1

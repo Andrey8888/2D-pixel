@@ -18,6 +18,7 @@ public class Gold : MonoBehaviour
     private float pickupTimer = 1f; // Variable to store the timer of the respawn
     void Start()
     {
+        count = Random.Range(0, GoldSprite.Length);
         for (int i = 1; i < GoldSprite.Length + 1; i++)
         {
             if (count > i)

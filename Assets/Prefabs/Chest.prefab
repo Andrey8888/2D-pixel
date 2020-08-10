@@ -70,7 +70,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1152137593246941152, guid: 91af9eb48fb4e5e45b4da032910028e5,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -143,7 +143,7 @@ Transform:
   m_GameObject: {fileID: 7445499220527130678}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -240, y: 56, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children:
   - {fileID: 2784686948152935889}
   m_Father: {fileID: 0}
@@ -325,3 +325,5 @@ MonoBehaviour:
   - {fileID: 6013507851993815756, guid: baf233e0e1c6ae442b8f601b57093cc2, type: 3}
   - {fileID: 4765598502538143739, guid: 05bb5750d5056d94b982cf3b160bf6cb, type: 3}
   - {fileID: 5228130748185353716, guid: e342daec97ea5de4dbe3fa2791e1901b, type: 3}
+  - {fileID: 4130890836628939970, guid: cacc8611b32b99448b7f57656b2b39aa, type: 3}
+  - {fileID: 5228130748185353716, guid: 9f82371a63863e44fa6fbe9ae4dd39a4, type: 3}

@@ -35,11 +35,6 @@ public class DoorPlatform : MonoBehaviour
     public float MinDist = 0;           // Минимальное расстояние, на которое следует приблизиться к точке
     public float Timer = 0;             // Таймер на задержку в точке
 
-    // Helper Variables & Timer
-    [Header("Speed/Direction of the Movement")]
-    public Vector2 Speed;
-    public Vector2 movementCounter = Vector2.zero;
-
 
     [Header("Bumper Layer")]
     public LayerMask bumper_layer; // Layer of the bumper which makes this platform move
@@ -75,23 +70,6 @@ public class DoorPlatform : MonoBehaviour
                 PointDelayMassive[j] = 0;
             }
         }
-    }
-
-    void LateUpdate()
-    {
-
-        // Horizontal Movement
-        if (Speed.x != 0)
-        {
-            var MoveH = MoveHPlatform(Speed.x * Time.deltaTime);
-        }
-
-        // Vertical Movement
-        if (Speed.y != 0)
-        {
-            var MoveV = MoveVPlatform(Speed.y * Time.deltaTime);
-        }
-
     }
 
     void Update()
@@ -171,56 +149,6 @@ public class DoorPlatform : MonoBehaviour
         }
     }
 
-
-    public bool MoveHPlatform(float moveH)
-    {
-        this.movementCounter.x = this.movementCounter.x + moveH;
-        int num = (int)Mathf.Round(this.movementCounter.x);
-        if (num != 0)
-        {
-            this.movementCounter.x = this.movementCounter.x - (float)num;
-            return this.MoveHExactPlatform(num);
-        }
-        return false;
-    }
-
-    public bool MoveVPlatform(float moveV)
-    {
-        this.movementCounter.y = this.movementCounter.y + moveV;
-        int num = (int)Mathf.Round(this.movementCounter.y);
-        if (num != 0)
-        {
-            this.movementCounter.y = this.movementCounter.y - (float)num;
-            return this.MoveVExactPlatform(num);
-        }
-        return false;
-    }
-
-    public bool MoveHExactPlatform(int moveH)
-    {
-        int Mnum = (int)Mathf.Sign((float)moveH);
-        while (moveH != 0)
-        {
-
-            moveH -= Mnum;
-            // Move the platform
-            //transform.position = new Vector2 (transform.position.x + (float)Mnum, transform.position.y);
-        }
-        return false;
-    }
-
-    public bool MoveVExactPlatform(int moveV)
-    {
-        int num = (int)Mathf.Sign((float)moveV);
-        while (moveV != 0)
-        {
-
-            moveV -= num;
-            // Move the platform
-            //transform.position = new Vector2 (transform.position.x, transform.position.y + (float)num);
-        }
-        return false;
-    }
 
     public void CheckAllControls()
     {

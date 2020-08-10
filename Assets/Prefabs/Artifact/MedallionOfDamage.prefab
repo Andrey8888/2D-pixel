@@ -157,6 +157,7 @@ MonoBehaviour:
   WallSlideStartMax: 0
   WallSlideTime: 0
   DashSpeed: 0
+  RollSpeed: 0
   EndDashSpeed: 0
   EndRollSpeed: 0
   EndDashUpMult: 0
@@ -170,6 +171,7 @@ MonoBehaviour:
   JumpBufferTime: 0
   LadderClimbSpeed: 0
   MeleeWeaponType: 
+  StacksMeleeWeapon: []
   MeleeCriticalDamage: 0
   MeleeAttackMaxDamage: 10
   MeleeAttackMinDamage: 10
@@ -194,7 +196,8 @@ MonoBehaviour:
   MeleeAttackCanPush: 0
   MeleePushDistance: 0
   MeleeBlockCooldownTime: 0
-  RangedWeaponType: 0
+  RangedWeaponType: 
+  StacksRangedWeapon: []
   RangedAttackMinDamage: 0
   RangedAttackMaxDamage: 0
   RangedCriticalDamage: 0
@@ -215,6 +218,8 @@ MonoBehaviour:
   RangedAttackCanPush: 0
   RangedPushDistance: 0
   RangedAttackCanThroughShoot: 0
+  ArtifactsType: 
+  StacksArtifacts: []
 --- !u!61 &5523098073151036320
 BoxCollider2D:
   m_ObjectHideFlags: 0

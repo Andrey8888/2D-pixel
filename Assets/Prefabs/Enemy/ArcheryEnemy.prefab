@@ -132,7 +132,7 @@ MonoBehaviour:
   movementCounter: {x: 0, y: 0}
   solid_layer:
     serializedVersion: 2
-    m_Bits: 4352
+    m_Bits: 20736
   bumper_layer:
     serializedVersion: 2
     m_Bits: 1024
@@ -149,30 +149,68 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   myCollider: {fileID: 1802263289437663810}
+  TypeEnemy: 1
   Gravity: 900
   MaxFall: -160
   RunReduce: 5000
-  MaxRun: 50
+  WalkSpeed: 30
   RunAccel: 5000
   AirMult: 0.65
-  TurnCooldownTime: 1
-  StunedCooldownTime: 0.25
+  TurnCooldownTime: 2
   OnStun: 0
+  OnAggression: 0
   Facing: -1
   SpriteHolder: {fileID: 1861400158198977870}
   SpriteScale: {x: 1, y: 1}
   animator: {fileID: 1769734995006453978}
   BloodParticle: {fileID: 1145837783617200, guid: d34108a4353e0b94bb2f012ea46eb1b1,
     type: 3}
-  MeleeAttackDamage: 1
-  GunBarrel: {fileID: 6073554510267883467}
+  MeleeCriticalDamage: 0
   MeleeAttackCooldownTime: 1.5
+  MeleeAttackMaxDamage: 0
+  MeleeAttackMinDamage: 0
+  MeleeCriticalDamageMultiply: 0
+  MeleeCriticalDamageChance: 0
+  MeleeAttackCanPoison: 0
+  MeleePoisonDamaged: 0
+  MeleePoisonFrequency: 0
+  MeleePoisonTick: 0
+  MeleePoisonChance: 100
+  MeleeAttackCanFire: 0
+  MeleeFireDamaged: 0
+  MeleeFireFrequency: 0
+  MeleeFireTick: 0
+  MeleeFireChance: 100
+  MeleeAttackCanFreez: 0
+  MeleeFreezDuration: 0
+  MeleeFreezChance: 100
+  MeleeAttackCanPush: 0
+  MeleePushDistance: 0
   BowAttackCooldownTime: 3
-  CastAttackCooldownTime: 2
-  MyGUI: {fileID: 0}
+  CastAttackCooldownTime: 3
+  RangedCriticalDamage: 0
+  RangedAttackMinDamage: 1
+  RangedAttackMaxDamage: 1
+  RangedCriticalDamageMultiply: 1
+  RangedCriticalDamageChance: 0
+  GunBarrel: {fileID: 6073554510267883467}
+  RangedAttackCanPoison: 0
+  RangedPoisonDamaged: 0
+  RangedPoisonFrequency: 0
+  RangedPoisonTick: 0
+  RangedPoisonChance: 100
+  RangedAttackCanFire: 0
+  RangedFireDamaged: 0
+  RangedFireFrequency: 0
+  RangedFireTick: 0
+  RangedFireChance: 100
+  RangedAttackCanFreez: 0
+  RangedFreezDuration: 0
+  RangedFreezChance: 100
+  RangedAttackCanPush: 0
+  RangedPushDistance: 0
   EnemyHP: {fileID: 6886868313733489362, guid: 6affc755d48261040900328762443f74, type: 3}
   metka: {fileID: 4619071349243463617}
-  Mycamera: {fileID: 0}
   AttackType: 1
   BehaivourType: 2
   DetectionZone: {fileID: 5018651899252688809}
@@ -215,28 +253,126 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnPushedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnPoisonedEndEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDamageBlockEvent:
     m_PersistentCalls:
       m_Calls: []
   OnTakeHealEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1751258889770320112}
-        m_MethodName: Hit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   OnDeathEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1751258889770320112}
-        m_MethodName: Die
+      - m_Target: {fileID: 1863681160849627994}
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -246,8 +382,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  maxHealth: 14
-  health: 14
+  maxHealth: 20
+  health: 20
   dead: 0
   invincible: 0
   block: 0
@@ -417,7 +553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 1750944860740154494}
-  projectile: {fileID: 114021235920092806, guid: 1fd4fc2e0def42047a4c5a45fa540414,
+  projectile: {fileID: 6198954077320167956, guid: 1fd4fc2e0def42047a4c5a45fa540414,
     type: 3}
   gunBarrel: {fileID: 6073554510267883467}
   DirectionShoot: 1
@@ -431,7 +567,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5018651897940891322}
   - component: {fileID: 5018651897940891323}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: AttackHitbox1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -629,11 +765,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 0.2}
-      - {x: 0, y: -0.2}
-      - {x: 3.342121, y: -0.20240551}
-      - {x: 3.3292766, y: 0.56676143}
-      - {x: 0.56260204, y: 0.5648188}
+    - - {x: 0.0030900955, y: 0.11901321}
+      - {x: 0.0043217847, y: 0.040117852}
+      - {x: 3.3399897, y: 0.02600359}
+      - {x: 3.3417664, y: 0.11313171}
 --- !u!1 &5018651898926437370
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,7 +793,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5018651898926437370}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 770.7, y: -8.8, z: 0}
+  m_LocalPosition: {x: 909, y: -27.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1858759552895241798}
@@ -723,8 +858,8 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: -0.94155836, y: 0.54680586}
-      - {x: -0.94969493, y: -0.26967928}
-      - {x: 1.0449498, y: -0.26801044}
+      - {x: -0.93955964, y: 0.044516295}
+      - {x: 1.0449498, y: 0.061388396}
       - {x: 1.0495079, y: 0.55288404}
 --- !u!114 &5018651899252688815
 MonoBehaviour:

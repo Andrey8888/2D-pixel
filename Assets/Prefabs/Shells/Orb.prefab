@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4418301706929166}
   - component: {fileID: 212861325024857140}
-  - component: {fileID: 114021235920092806}
   - component: {fileID: 50720931562722542}
   - component: {fileID: 61047459505123360}
+  - component: {fileID: 4757808578427572878}
   m_Layer: 0
   m_Name: Orb
   m_TagString: Untagged
@@ -83,24 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &114021235920092806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1869060813793146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c89e6d7af8ccf042a52a76d461e9fb6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: {x: 8, y: 0}
-  DamageOnHit: 1
-  solid_layer:
-    serializedVersion: 2
-    m_Bits: 256
-  owner: {fileID: 0}
 --- !u!50 &50720931562722542
 Rigidbody2D:
   serializedVersion: 4
@@ -148,3 +130,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 7, y: 3}
   m_EdgeRadius: 0
+--- !u!114 &4757808578427572878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869060813793146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cce07933f3faf814f8007c65b49c8a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Speed: {x: 8, y: 0}
+  solid_layer:
+    serializedVersion: 2
+    m_Bits: 256
+  owner: {fileID: 0}
+  PopUpDamage: {fileID: 224758864541635820, guid: 3765d098280a78541a36bd56af3e1c44,
+    type: 3}

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Player : Actor
 {
-	#region Params
+    #region Params
     [Header("Movement Variables")]
     // Gravity, Maximun fall speed & fastfall Speed
     public float Gravity = 900f; // Скорость, с которой игрок падает, пока находится в воздухе
@@ -51,16 +51,16 @@ public class Player : Actor
     public float JumpBufferTime = 0.1f; // Если игрок ударяет об землю в течение этого времени после нажатия кнопки прыжка, прыжок будет выполнен, как только он коснется земли
                                         // Лестничные переменные
     public float LadderClimbSpeed = 60f;
-	#endregion
-	#region WeaponParams
-	
+    #endregion
+    #region WeaponParams
+
     [Header("Hands")]
     public int HandAttackMinDamage = 1;//new int[2] {1, 0, 0};
     public int HandAttackMaxDamage = 2;//new int[2] {2, 0, 0};
     public int HandStepUpAfterHit = 20; //new int[2] {20,0,0};
 
     [Header("MeleeAttacks")]
-	public string MeleeWeaponType;
+    public string MeleeWeaponType;
 
     public int MeleeAttackMaxDamage;
     public int MeleeAttackMinDamage;
@@ -112,7 +112,7 @@ public class Player : Actor
     public float MeleeBlockCooldownTime = 0.5f;
 
     [Header("RangedAttacks")]
-	public string RangedWeaponType;
+    public string RangedWeaponType;
     public int RangedCriticalDamage = 0;
     public int RangedCriticalDamageMultiply = 1;
     public int RangedCriticalDamageChance = 0;
@@ -148,8 +148,8 @@ public class Player : Actor
     public bool RangedAttackCanThroughShoot = false;
     public bool RangedPowerAttackCanThroughShoot = false;
 
-	#endregion  
-	
+    #endregion
+
     [Header("Facing Direction")]
     public Facings Facing;  // Facing Direction
     [Header("Wall Slide Direction")]
@@ -247,10 +247,10 @@ public class Player : Actor
     private Health owner;
 
     List<Health> healthsDamaged = new List<Health>();
-	public List<ItemParameters> parameters = new List<ItemParameters>();
+    public List<ItemParameters> parameters = new List<ItemParameters>();
 
-	#region Properties
-	
+    #region Properties
+
     // Check if we should duck (on the ground and moveY is pointing down and moveX is 0)
     public bool CanDuck
     {
@@ -344,8 +344,8 @@ public class Player : Actor
         }
     }
 
-	#endregion
-	
+    #endregion
+
     [Header("Squash & Stretch")]
     public Transform SpriteHolder; // Reference to the transform of the child object which holds the sprite renderer of the player
     public Vector2 SpriteScale = Vector2.one; // The current X and Y scale of the sprite holder (used for Squash & Stretch)
@@ -459,7 +459,7 @@ public class Player : Actor
                 InitialWeapon.GetComponent<PickupMeleeWeapons>().OnPlayerTrigger(this);
         }
     }
-	
+
     private void SelectWeapon()
     {
         if (Input.GetKeyDown(KeyCode.Tab) && hasBow && hasSword)
@@ -1366,7 +1366,7 @@ public class Player : Actor
         if (OnAttackMove)
         {
             if (tossingUp)
-             Speed.y = Calc.Approach(PopUpAfterHit, target, Gravity * Time.deltaTime);
+                Speed.y = Calc.Approach(PopUpAfterHit, target, Gravity * Time.deltaTime);
 
             if (!sticking && !CheckColAtPlace(Vector2.right * (int)Facing, solid_layer))
             {
@@ -1378,7 +1378,7 @@ public class Player : Actor
             }
         }
         if (hasSeries)
-        secondSwordAttackCooldownTimer = SecondSwordAttackCooldownTime;
+            secondSwordAttackCooldownTimer = SecondSwordAttackCooldownTime;
     }
 
     void SwordAttack_Exit()
@@ -1929,15 +1929,15 @@ public class Player : Actor
     //    hasBlock = false;
     //}
 
-    public bool PickUpMeleeWeapon(MeleeWeapon type, int minDamage, int maxDamage, 
-    float attackCooldown, float attackPowerCooldown, int critMultiply, int critChance, int stepUpAfterHit, 
-    bool series, bool block, bool hasThirdAttackCriticalDamage, 
+    public bool PickUpMeleeWeapon(MeleeWeapon type, int minDamage, int maxDamage,
+    float attackCooldown, float attackPowerCooldown, int critMultiply, int critChance, int stepUpAfterHit,
+    bool series, bool block, bool hasThirdAttackCriticalDamage,
     bool hasPoison, bool hasPowerAttackPoison, int poisonAmount, int poisonFrequency, int poisonTick, int poisonChance,
-	bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick, int fireChance,
-    bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance, 
+    bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick, int fireChance,
+    bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance,
     bool hasPush, bool hasPowerAttackPush, int pushDistance,
-    int meleePowerAttackMinDamage, int meleePowerAttackMaxDamage, 
-	bool hasTossingUp, int popUpAfterHit) //meleePowerAttackMaxDamage  meleePowerAttackMinDamage
+    int meleePowerAttackMinDamage, int meleePowerAttackMaxDamage,
+    bool hasTossingUp, int popUpAfterHit) //meleePowerAttackMaxDamage  meleePowerAttackMinDamage
     {
         if (!hasSword)
         {
@@ -1951,11 +1951,11 @@ public class Player : Actor
 
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
 
-			MeleeWeaponType = type.ToString();
+            MeleeWeaponType = type.ToString();
             MeleeAttackMinDamage = minDamage;
             MeleeAttackMaxDamage = maxDamage;
             MeleeAttackCooldownTime = attackCooldown;
-			MeleePowerAttackCooldownTime = attackPowerCooldown;
+            MeleePowerAttackCooldownTime = attackPowerCooldown;
             MeleeCriticalDamageMultiply = critMultiply;
             MeleeCriticalDamageChance = critChance;
             StepUpAfterHit = stepUpAfterHit;
@@ -1964,31 +1964,31 @@ public class Player : Actor
             hasBlock = block;
 
             MeleeAttackCanPoison = hasPoison;
-			MeleePowerAttackCanPoison = hasPowerAttackPoison;
-		    MeleePoisonDamaged = poisonAmount;
-		    MeleePoisonFrequency = poisonFrequency;
-		    MeleePoisonTick = poisonTick;
-			MeleePoisonChance = poisonChance;
-			
-		    MeleeAttackCanFire = hasFire;
-			MeleePowerAttackCanFire = hasPowerAttackFire;
-		    MeleeFireDamaged = fireAmount;
-		    MeleeFireFrequency = fireFrequency;
-		    MeleeFireTick = fireTick;
-			MeleeFireChance = fireChance;
-			
-			MeleeAttackCanFreez = hasFreez;
-			MeleePowerAttackCanFreez = hasPowerAttackFreez;
+            MeleePowerAttackCanPoison = hasPowerAttackPoison;
+            MeleePoisonDamaged = poisonAmount;
+            MeleePoisonFrequency = poisonFrequency;
+            MeleePoisonTick = poisonTick;
+            MeleePoisonChance = poisonChance;
+
+            MeleeAttackCanFire = hasFire;
+            MeleePowerAttackCanFire = hasPowerAttackFire;
+            MeleeFireDamaged = fireAmount;
+            MeleeFireFrequency = fireFrequency;
+            MeleeFireTick = fireTick;
+            MeleeFireChance = fireChance;
+
+            MeleeAttackCanFreez = hasFreez;
+            MeleePowerAttackCanFreez = hasPowerAttackFreez;
             MeleeFreezDuration = freezDuration;
-			MeleeFreezChance = freezChance;
-			
-		    MeleeAttackCanPush = hasPush;
-			MeleePowerAttackCanPush = hasPowerAttackPush;
+            MeleeFreezChance = freezChance;
+
+            MeleeAttackCanPush = hasPush;
+            MeleePowerAttackCanPush = hasPowerAttackPush;
             MeleePushDistance = pushDistance;
-			
-			MeleePowerAttackMinDamage = meleePowerAttackMinDamage;
-			MeleePowerAttackMaxDamage = meleePowerAttackMaxDamage;
-			tossingUp = hasTossingUp;
+
+            MeleePowerAttackMinDamage = meleePowerAttackMinDamage;
+            MeleePowerAttackMaxDamage = meleePowerAttackMaxDamage;
+            tossingUp = hasTossingUp;
             PopUpAfterHit = popUpAfterHit;
 
             activeWeapon = ActiveWeapon.Sword;
@@ -1996,65 +1996,65 @@ public class Player : Actor
 
             var col = GetComponentInChildren<HitBoxManager>();
             col.ChangeCollider((int)type);
-			//col.ChangeCollider((int)typepower); // отдельные колайдеры для power attack // TODO
-			
+            //col.ChangeCollider((int)typepower); // отдельные колайдеры для power attack // TODO
+
             return false;
         }
         return true;
     }
 
-	public bool PickUpRangedWeapon(RangedWeapon type, int minDamage, int maxDamage, int shellsCount,
+    public bool PickUpRangedWeapon(RangedWeapon type, int minDamage, int maxDamage, int shellsCount,
     float attackCooldown, float attackPowerCooldown, int critMultiply, int critChance,
     bool hasPoison, bool hasPowerAttackPoison, int poisonAmount, int poisonFrequency, int poisonTick, int poisonChance,
-	bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick, int fireChance,
-    bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance, 
+    bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick, int fireChance,
+    bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance,
     bool hasPush, bool hasPowerAttackPush, int pushDistance,
-    int rangedPowerAttackMinDamage, int rangedPowerAttackMaxDamage, 
-	bool hasTossingUp, int popUpAfterHit, bool hasThroughShoot, bool hasPowerAttackThroughShoot)  //hasTossingUp  popUpAfterHit  rangedPowerAttackMinDamage  rangedPowerAttackMaxDamage
+    int rangedPowerAttackMinDamage, int rangedPowerAttackMaxDamage,
+    bool hasTossingUp, int popUpAfterHit, bool hasThroughShoot, bool hasPowerAttackThroughShoot)  //hasTossingUp  popUpAfterHit  rangedPowerAttackMinDamage  rangedPowerAttackMaxDamage
     {
         if (!hasBow)
         {
             if (parameters != null)
-            { 
+            {
                 foreach (var item in parameters)
                 {
                     TakeItem(item);
                 }
             }
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
-			
+
             RangedWeaponType = type.ToString();
             RangedAttackMinDamage = minDamage;
             RangedAttackMaxDamage = maxDamage;
             ShellsCount = shellsCount;
             RangedAttackCooldownTime = attackCooldown;
-			RangedPowerAttackCooldownTime = attackPowerCooldown;
+            RangedPowerAttackCooldownTime = attackPowerCooldown;
             RangedCriticalDamageMultiply = critMultiply;
             RangedCriticalDamageChance = critChance;
-			
+
             RangedAttackCanPoison = hasPoison;
-			RangedPowerAttackCanPoison = hasPowerAttackPoison;
-		    RangedPoisonDamaged = poisonAmount;
-		    RangedPoisonFrequency = poisonFrequency;
-		    RangedPoisonTick = poisonTick;
-			RangedPoisonChance = poisonChance;
-			
-		    RangedAttackCanFire = hasFire;
-			RangedPowerAttackCanFire = hasPowerAttackFire;
-		    RangedFireDamaged = fireAmount;
-		    RangedFireFrequency = fireFrequency;
-		    RangedFireTick = fireTick;
-			RangedFireChance = fireChance;
-			
-			RangedAttackCanFreez = hasFreez;
-			RangedPowerAttackCanFreez = hasPowerAttackFreez;
-		    RangedFreezDuration = freezDuration;
-			RangedFreezChance = freezChance;
-			
-		    RangedAttackCanPush = hasPush;
-			RangedPowerAttackCanPush = hasPowerAttackPush;
-			RangedPushDistance = pushDistance;
-			
+            RangedPowerAttackCanPoison = hasPowerAttackPoison;
+            RangedPoisonDamaged = poisonAmount;
+            RangedPoisonFrequency = poisonFrequency;
+            RangedPoisonTick = poisonTick;
+            RangedPoisonChance = poisonChance;
+
+            RangedAttackCanFire = hasFire;
+            RangedPowerAttackCanFire = hasPowerAttackFire;
+            RangedFireDamaged = fireAmount;
+            RangedFireFrequency = fireFrequency;
+            RangedFireTick = fireTick;
+            RangedFireChance = fireChance;
+
+            RangedAttackCanFreez = hasFreez;
+            RangedPowerAttackCanFreez = hasPowerAttackFreez;
+            RangedFreezDuration = freezDuration;
+            RangedFreezChance = freezChance;
+
+            RangedAttackCanPush = hasPush;
+            RangedPowerAttackCanPush = hasPowerAttackPush;
+            RangedPushDistance = pushDistance;
+
             RangedAttackCanThroughShoot = hasThroughShoot;
             RangedPowerAttackCanThroughShoot = hasPowerAttackThroughShoot;
 
@@ -2105,10 +2105,53 @@ public class Player : Actor
         else activeWeapon = ActiveWeapon.Hands;
         hasBow = false;
     }
-	
-	public bool TakeItem(ItemParameters item) // TODO переделать логику
+
+    public bool TakeItem(ItemParameters item) // TODO переделать логику
     {
-	    Gravity = Gravity + item.Gravity;
+        AddParametrs(item);
+        parameters.Add(item);
+
+
+
+            for (int j = 0; j < item.ArtifactsType.Length; j++)
+            {
+                for (int i = 1; i < parameters.Count; i++)
+                {
+                if (item.ArtifactsType.Length != 0)
+                    if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
+                    {
+                        {
+                            AddParametrs(item.StacksArtifacts[j]);
+                            Debug.Log("plus param");
+                        }
+                    }
+            }
+        }
+
+
+
+                //if (item.StacksRangedWeapon == stack.StacksRangedWeapon)
+                //{
+                //    for (int i = 0; i < item.StacksRangedWeapon.Length; i++)
+                //    {
+                //        AddParametrs(item.StacksRangedWeapon[i]);
+                //    } 
+                //}
+
+                //if (item.StacksMeleeWeapon == stack.StacksMeleeWeapon)
+                //{
+                //    for (int i = 0; i < item.StacksMeleeWeapon.Length; i++)
+                //    {
+                //        AddParametrs(item.StacksMeleeWeapon[i]);
+                //    }
+                //}
+
+        return true;
+    }
+
+    public void AddParametrs(ItemParameters item)
+    {
+        Gravity = Gravity + item.Gravity;
         MaxFall = MaxFall + item.MaxFall;
         FastFall = FastFall + item.FastFall;
         curRun = MaxRun + item.MaxRun;
@@ -2118,77 +2161,111 @@ public class Player : Actor
         AirMult = AirMult + item.AirMult;
         JumpSpeed = JumpSpeed + item.JumpSpeed;
         JumpHBoost = JumpHBoost + item.JumpHBoost;
-	    VariableJumpTime = VariableJumpTime + item.VariableJumpTime;
-	    SpringJumpSpeed = SpringJumpSpeed + item.SpringJumpSpeed;
-	    SpringJumpVariableTime = SpringJumpVariableTime + item.SpringJumpVariableTime;
-	    WallJumpForceTime = WallJumpForceTime + item.WallJumpForceTime;
-	    WallJumpHSpeed = WallJumpHSpeed + item.WallJumpHSpeed;
-	    WallJumpCheckDist = WallJumpCheckDist + item.WallJumpCheckDist;
-	    WallSlideStartMax = WallSlideStartMax + item.WallSlideStartMax;
-	    WallSlideTime = WallSlideTime + item.WallSlideTime;
-	    DashSpeed = DashSpeed + item.DashSpeed;
+        VariableJumpTime = VariableJumpTime + item.VariableJumpTime;
+        SpringJumpSpeed = SpringJumpSpeed + item.SpringJumpSpeed;
+        SpringJumpVariableTime = SpringJumpVariableTime + item.SpringJumpVariableTime;
+        WallJumpForceTime = WallJumpForceTime + item.WallJumpForceTime;
+        WallJumpHSpeed = WallJumpHSpeed + item.WallJumpHSpeed;
+        WallJumpCheckDist = WallJumpCheckDist + item.WallJumpCheckDist;
+        WallSlideStartMax = WallSlideStartMax + item.WallSlideStartMax;
+        WallSlideTime = WallSlideTime + item.WallSlideTime;
+        DashSpeed = DashSpeed + item.DashSpeed;
         RollSpeed = RollSpeed + item.RollSpeed;
         EndDashSpeed = EndDashSpeed + item.EndDashSpeed;
-	    EndRollSpeed = EndRollSpeed + item.EndRollSpeed;
-	    EndDashUpMult = EndDashUpMult + item.EndDashUpMult;
-	    EndRollUpMult = EndRollUpMult + item.EndRollUpMult;
-	    DashTime = DashTime + item.DashTime;
-	    RollTime = RollTime + item.RollTime;
-	    DashCooldown = DashCooldown + item.DashCooldown;
-	    RollCooldown = RollCooldown + item.RollCooldown;
-	    clingTime = RollCooldown + item.clingTime;
-	    JumpGraceTime = JumpGraceTime + item.JumpGraceTime;
-	    JumpBufferTime = JumpBufferTime + item.JumpBufferTime;
-	    LadderClimbSpeed = LadderClimbSpeed + item.LadderClimbSpeed;
+        EndRollSpeed = EndRollSpeed + item.EndRollSpeed;
+        EndDashUpMult = EndDashUpMult + item.EndDashUpMult;
+        EndRollUpMult = EndRollUpMult + item.EndRollUpMult;
+        DashTime = DashTime + item.DashTime;
+        RollTime = RollTime + item.RollTime;
+        DashCooldown = DashCooldown + item.DashCooldown;
+        RollCooldown = RollCooldown + item.RollCooldown;
+        clingTime = RollCooldown + item.clingTime;
+        JumpGraceTime = JumpGraceTime + item.JumpGraceTime;
+        JumpBufferTime = JumpBufferTime + item.JumpBufferTime;
+        LadderClimbSpeed = LadderClimbSpeed + item.LadderClimbSpeed;
 
-        MeleeAttackMaxDamage = MeleeAttackMaxDamage+ item.MeleeAttackMaxDamage;
-        MeleeAttackMinDamage = MeleeAttackMinDamage+ item.MeleeAttackMinDamage;
+        MeleeAttackMaxDamage = MeleeAttackMaxDamage + item.MeleeAttackMaxDamage;
+        MeleeAttackMinDamage = MeleeAttackMinDamage + item.MeleeAttackMinDamage;
         MeleeCriticalDamageMultiply = MeleeCriticalDamageMultiply + item.MeleeCriticalDamageMultiply;
         MeleeCriticalDamageChance = MeleeCriticalDamageChance + item.MeleeCriticalDamageChance;
-        StepUpAfterHit = StepUpAfterHit+ item.StepUpAfterHit;
-        MeleeAttackCooldownTime = MeleeAttackCooldownTime+ item.MeleeAttackCooldownTime;
-        MeleePowerAttackMaxDamage = MeleePowerAttackMaxDamage+ item.MeleePowerAttackMaxDamage;
-        MeleePowerAttackMinDamage = MeleePowerAttackMinDamage+ item.MeleePowerAttackMinDamage;
+        StepUpAfterHit = StepUpAfterHit + item.StepUpAfterHit;
+        MeleeAttackCooldownTime = MeleeAttackCooldownTime + item.MeleeAttackCooldownTime;
+        MeleePowerAttackMaxDamage = MeleePowerAttackMaxDamage + item.MeleePowerAttackMaxDamage;
+        MeleePowerAttackMinDamage = MeleePowerAttackMinDamage + item.MeleePowerAttackMinDamage;
 
         //MeleeAttackCanPowerAttackCriticalDamage = item.MeleeAttackCanPowerAttackCriticalDamage;
         //MeleeCanThirdAttackCriticalDamage = item.MeleeCanThirdAttackCriticalDamage;
         MeleeAttackCanPoison = item.MeleeAttackCanPoison;
-        MeleePoisonDamaged = MeleePoisonDamaged+ item.MeleePoisonDamaged;
-        MeleePoisonFrequency = MeleePoisonFrequency+ item.MeleePoisonFrequency;
-        MeleePoisonTick = MeleePoisonTick+ item.MeleePoisonTick;
+        MeleePoisonDamaged = MeleePoisonDamaged + item.MeleePoisonDamaged;
+        MeleePoisonFrequency = MeleePoisonFrequency + item.MeleePoisonFrequency;
+        MeleePoisonTick = MeleePoisonTick + item.MeleePoisonTick;
         MeleeAttackCanFire = item.MeleeAttackCanFire;
-        MeleeFireDamaged = MeleeFireDamaged+ item.MeleeFireDamaged;
-        MeleeFireFrequency = MeleeFireFrequency+ item.MeleeFireFrequency;
-        MeleeFireTick = MeleeFireTick+ item.MeleeFireTick;
+        MeleeFireDamaged = MeleeFireDamaged + item.MeleeFireDamaged;
+        MeleeFireFrequency = MeleeFireFrequency + item.MeleeFireFrequency;
+        MeleeFireTick = MeleeFireTick + item.MeleeFireTick;
         MeleeAttackCanPush = item.MeleeAttackCanPush;
         MeleeAttackCanFreez = item.MeleeAttackCanFreez;
-        MeleeFreezDuration = MeleeFreezDuration+ item.MeleeFreezDuration;
-        MeleePushDistance = MeleePushDistance+ item.MeleePushDistance;
-        MeleeBlockCooldownTime = MeleeBlockCooldownTime+ item.MeleeBlockCooldownTime;
+        MeleeFreezDuration = MeleeFreezDuration + item.MeleeFreezDuration;
+        MeleePushDistance = MeleePushDistance + item.MeleePushDistance;
+        MeleeBlockCooldownTime = MeleeBlockCooldownTime + item.MeleeBlockCooldownTime;
 
-        RangedAttackMinDamage = RangedAttackMinDamage+ item.RangedAttackMinDamage;
-        RangedAttackMaxDamage = RangedAttackMaxDamage+ item.RangedAttackMaxDamage;
-        RangedAttackCooldownTime = RangedAttackCooldownTime+ item.RangedAttackCooldownTime;
-        RangedPowerAttackCooldownTime = RangedPowerAttackCooldownTime+ item.RangedPowerAttackCooldownTime;
+        RangedAttackMinDamage = RangedAttackMinDamage + item.RangedAttackMinDamage;
+        RangedAttackMaxDamage = RangedAttackMaxDamage + item.RangedAttackMaxDamage;
+        RangedAttackCooldownTime = RangedAttackCooldownTime + item.RangedAttackCooldownTime;
+        RangedPowerAttackCooldownTime = RangedPowerAttackCooldownTime + item.RangedPowerAttackCooldownTime;
         RangedCriticalDamageMultiply = RangedCriticalDamageMultiply + item.RangedCriticalDamageMultiply;
         RangedCriticalDamageChance = RangedCriticalDamageChance + item.RangedCriticalDamageChance;
         RangedCriticalDamage = RangedCriticalDamage + item.RangedCriticalDamage;
 
         RangedAttackCanPoison = item.RangedAttackCanPoison;
-        RangedPoisonDamaged = RangedPoisonDamaged+ item.RangedPoisonDamaged;
-        RangedPoisonFrequency = RangedPoisonFrequency+ item.RangedPoisonFrequency;
-        RangedPoisonTick = RangedPoisonTick+ item.RangedPoisonTick;
+        RangedPoisonDamaged = RangedPoisonDamaged + item.RangedPoisonDamaged;
+        RangedPoisonFrequency = RangedPoisonFrequency + item.RangedPoisonFrequency;
+        RangedPoisonTick = RangedPoisonTick + item.RangedPoisonTick;
         RangedAttackCanFire = item.RangedAttackCanFire;
-        RangedFireDamaged = RangedFireDamaged+ item.RangedFireDamaged;
-        RangedFireFrequency = RangedFireFrequency+ item.RangedFireFrequency;
-        RangedFireTick = RangedFireTick+ item.RangedFireTick;
+        RangedFireDamaged = RangedFireDamaged + item.RangedFireDamaged;
+        RangedFireFrequency = RangedFireFrequency + item.RangedFireFrequency;
+        RangedFireTick = RangedFireTick + item.RangedFireTick;
         RangedAttackCanPush = item.RangedAttackCanPush;
         RangedAttackCanThroughShoot = item.RangedAttackCanThroughShoot;
-
-		return true;
     }
 
-        public void DropItem(ItemParameters item) // TODO переделать логику
+    public void DropItem(ItemParameters item) // TODO переделать логику
+    {
+        DecreaseParameters(item);
+        parameters.Remove(item);
+
+        if (parameters != null)
+        {
+            foreach (var stack in parameters)
+            {
+                if (item.StacksArtifacts == stack.StacksArtifacts)
+                {
+                    for (int i = 0; i < item.StacksArtifacts.Length; i++)
+                    {
+                        DecreaseParameters(item.StacksArtifacts[i]);
+                    }
+                }
+
+                if (item.StacksRangedWeapon == stack.StacksRangedWeapon)
+                {
+                    for (int i = 0; i < item.StacksRangedWeapon.Length; i++)
+                    {
+                        DecreaseParameters(item.StacksRangedWeapon[i]);
+                    }
+                }
+
+                if (item.StacksMeleeWeapon == stack.StacksMeleeWeapon)
+                {
+                    for (int i = 0; i < item.StacksMeleeWeapon.Length; i++)
+                    {
+                        DecreaseParameters(item.StacksMeleeWeapon[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    public void DecreaseParameters(ItemParameters item)
     {
         Gravity = Gravity - item.Gravity;
         MaxFall = MaxFall - item.MaxFall;
@@ -2217,7 +2294,7 @@ public class Player : Actor
         DashTime = DashTime - item.DashTime;
         RollTime = RollTime - item.RollTime;
         DashCooldown = DashCooldown - item.DashCooldown;
-        RollCooldown = - item.RollCooldown;
+        RollCooldown = -item.RollCooldown;
         clingTime = RollCooldown - item.clingTime;
         JumpGraceTime = JumpGraceTime - item.JumpGraceTime;
         JumpBufferTime = JumpBufferTime - item.JumpBufferTime;
@@ -2267,7 +2344,6 @@ public class Player : Actor
         RangedFireTick = RangedFireTick - item.RangedFireTick;
         RangedAttackCanPush = false;
         RangedAttackCanThroughShoot = false;
-
     }
 
     // Function to update the sprite scale, facing direction and animations 
@@ -2788,17 +2864,17 @@ public class Player : Actor
     {
         fsm.ChangeState(States.Action, StateTransition.Overwrite);
     }
-	
+
     public void DamageBlocked()
     {
         GameManager.instance.Emit(SparkParticle, Random.Range(5, 8), new Vector2(transform.position.x, transform.position.y + 10) + new Vector2(wallSlideDir * 2.5f, 4), Vector2.one * 1f);
     }
 
-		public void Pushed()
+    public void Pushed()
     {
-		transform.position = new Vector2(transform.position.x + Speed.x * 2, transform.position.y);	
+        transform.position = new Vector2(transform.position.x + Speed.x * 2, transform.position.y);
     }
-	
+
     void OnTriggerEnter2D(Collider2D col)
     {
         var component = col.GetComponent<Health>();
