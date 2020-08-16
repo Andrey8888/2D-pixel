@@ -7,6 +7,7 @@ public class Button : MonoBehaviour
 
     public enum ButtonSort
     {
+        TriggerEnter,   // Ловушка - попадание в триггер объекта
         OnWallButton,   // Настенная (на пейзаже)
         OnBorderButton, // Боковая (на объектах)
         Lever
@@ -27,6 +28,7 @@ public class Button : MonoBehaviour
         PolyPress,      // Множество нажатий
         Holding         // Удержание
     }
+    public HowWork WorkType = HowWork.OnlyPress;
 
     public enum TypeAction
     {
@@ -34,9 +36,8 @@ public class Button : MonoBehaviour
         appearAction,
         disappearAction
     }
-
-    public HowWork WorkType = HowWork.OnlyPress;
     public TypeAction typeAction = TypeAction.moveAction;
+
     public float ActiveTime = 5;
     public Sprite[] sprites = new Sprite[2];
     [Header("Управляемые объекты")]
@@ -195,6 +196,16 @@ public class Button : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        if (ButtonType == ButtonSort.TriggerEnter)
+        {
+            if (col.CompareTag("Player"))
+            {
+                Active = true;
+                Activation(DependObjects, Active);
+                this.gameObject.SetActive(false);
+            }
+        }
+
         if ((Active == false) && (WorkType == HowWork.OnlyPress) && (InteractType == Interact.ByArrow) && (col.tag.CompareTo("Arrow") == 0))
         {
             Active = !Active;
@@ -298,22 +309,19 @@ public class Button : MonoBehaviour
     public void Activation(GameObject[] GameObjects, bool Active)
     {
         int i;
-        DoorPlatform SetWork;
         for (i = 0; i < GameObjects.Length; i++)
         {
-            if (typeAction == TypeAction.disappearAction)
+            switch (typeAction)
             {
-                GameObjects[i].SetActive(!Active);
-            }
-            else if (typeAction == TypeAction.appearAction)
-            {
-                GameObjects[i].SetActive(Active);
-            }
-            else
-            {
-
-                SetWork = GameObjects[i].GetComponentInChildren<DoorPlatform>();
-                SetWork.Active = !SetWork.Active;
+                case TypeAction.appearAction:
+                    GameObjects[i].SetActive(Active);
+                    break;
+                case TypeAction.disappearAction:
+                    GameObjects[i].SetActive(!Active);
+                    break;
+                case TypeAction.moveAction:
+                    GameObjects[i].GetComponent<DoorPlatform>().Active = true;
+                    break;
             }
         }
         ButtonMove(Active);
@@ -323,20 +331,26 @@ public class Button : MonoBehaviour
     {
         if (Active)
         {
-            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
-            // Screenshake
-            if (PixelCameraController.instance != null)
+            if (ButtonType != ButtonSort.TriggerEnter)
             {
-                PixelCameraController.instance.DirectionalShake(Vector2.right, 0.1f);
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+                // Screenshake
+                if (PixelCameraController.instance != null)
+                {
+                    PixelCameraController.instance.DirectionalShake(Vector2.right, 0.1f);
+                }
             }
         }
         else
         {
-            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
-            // Screenshake
-            if (PixelCameraController.instance != null)
+            if (ButtonType != ButtonSort.TriggerEnter)
             {
-                PixelCameraController.instance.DirectionalShake(Vector2.right, 0.1f);
+                gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
+                // Screenshake
+                if (PixelCameraController.instance != null)
+                {
+                    PixelCameraController.instance.DirectionalShake(Vector2.right, 0.1f);
+                }
             }
         }
     }
