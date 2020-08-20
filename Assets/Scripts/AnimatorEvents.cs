@@ -39,6 +39,17 @@ public class AnimatorEvents : MonoBehaviour {
         }
     }
 
+    public void EnemyBlink()
+    {
+        var enemy = GetComponentInParent<Enemy>();
+
+        if (enemy != null)
+        {
+            //enemy.OnStun = false;
+            enemy.Blink();
+        }
+    }
+
     public void HitablePushBlockBackToNormalState()
     {
         var pushblock = GetComponentInParent<HitablePushBlock>();

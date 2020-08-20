@@ -472,16 +472,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   myCollider: {fileID: 8524039188666438504}
-  Gravity: 1050
+  Gravity: 1100
   MaxFall: -350
   FastFall: -300
   MaxRun: 140
   RunAccel: 1200
   RunReduce: 1200
   AirMult: 1
-  JumpSpeed: 450
-  JumpHBoost: 0
-  VariableJumpTime: 0
+  JumpSpeed: 300
+  JumpHBoost: 100
+  VariableJumpTime: 0.2
   SpringJumpSpeed: 600
   SpringJumpVariableTime: 0.05
   WallJumpForceTime: 0.16

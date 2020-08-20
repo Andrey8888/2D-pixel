@@ -14,8 +14,8 @@ public class Enemy : Actor
         ArcherySceleton,
         MagicSceleton,
         Snake,
-		SandDemon,
-		Bat
+        SandDemon,
+        Bat
     }
 
     public Type TypeEnemy = Type.MeleeSceleton;
@@ -31,18 +31,18 @@ public class Enemy : Actor
     public float AirMult = 0.65f;               // Multiplier for the air horizontal movement (friction) the higher the more air control you'll have
     public float TurnCooldownTime = 1f;
     private float AggressionCooldownTime = 10f;
-	private float BlinkCooldownTime = 10f;
+    private float BlinkCooldownTime = 10f;
     private float ExpectationCooldownTime = 2f;
     private float turnCooldownTimer = 0f;
     private float aggressionCooldownTimer = 0f;
-	private float blinkCooldownTimer = 0f;
+    private float blinkCooldownTimer = 0f;
     private float expectationCooldownTimer = 0f;
     //public float StunedCooldownTime = 0.25f;
     private float stunedCooldownTimer = 0f;
     public bool OnStun = false;
     public bool OnAggression = false;
-	public bool OnBlink = false;
-	
+    public bool OnBlink = false;
+
     // Helper private Variables
     private int moveX;                          // Variable to store the horizontal Input each frame
 
@@ -146,7 +146,7 @@ public class Enemy : Actor
         Stun,
         Death,
         Cast,
-		Blink
+        Blink
     }
 
     public enum Attack
@@ -172,7 +172,7 @@ public class Enemy : Actor
 
     private EnemyVisibility EnemyVisibility;// Скрипт видимости
     private EnemyDetection EnemyDetection;  // Скрипт обнаружения
-	private EnemyAttacking EnemyAttacking;// Скрипт зоны для атаки
+    private EnemyAttacking EnemyAttacking;// Скрипт зоны для атаки
     public float PatrolTimer = 0;
 
     public bool CanShoot
@@ -214,7 +214,7 @@ public class Enemy : Actor
     {
         get
         {
-            return !(TypeEnemy == Type.Snake) && OnAggression; 
+            return !(TypeEnemy == Type.Snake) && OnAggression;
         }
     }
 
@@ -226,14 +226,14 @@ public class Enemy : Actor
         }
     }
 
-	public bool CanBlink
+    public bool CanBlink
     {
         get
         {
-            return (TypeEnemy == Type.SandDemon) && OnBlink && blinkCooldownTimer <= 0f; 
+            return (TypeEnemy == Type.SandDemon) && OnBlink && blinkCooldownTimer <= 0f;
         }
     }
-	
+
     // State Machine
     public StateMachine<States> fsm;
 
@@ -292,11 +292,11 @@ public class Enemy : Actor
             aggressionCooldownTimer -= Time.deltaTime;
         }
 
-		if (blinkCooldownTimer > 0f)
+        if (blinkCooldownTimer > 0f)
         {
             blinkCooldownTimer -= Time.deltaTime;
         }
-		
+
         if (expectationCooldownTimer > 0f)
         {
             expectationCooldownTimer -= Time.deltaTime;
@@ -396,15 +396,15 @@ public class Enemy : Actor
             BehaivourType = Behaivour.Idle;
             return;
         }
-		
-		if (CanBlink)
+
+        if (CanBlink)
         {
             blinkCooldownTimer = BlinkCooldownTime;
-			OnBlink = false;
+            OnBlink = false;
             fsm.ChangeState(States.Blink, StateTransition.Overwrite);
             return;
         }
-		
+
         else if (BehaivourType == Behaivour.Idle)//if (expectationCooldownTimer >= 0f)
         {
             //expectationCooldownTimer = ExpectationCooldownTime;
@@ -424,7 +424,7 @@ public class Enemy : Actor
             if (InDetectionZone)
             {
                 OnAggression = true;
-				OnBlink = true;
+                OnBlink = true;
             }
             // патрулироавние
             else if (!InVisibilityZone)
@@ -457,7 +457,7 @@ public class Enemy : Actor
             if (InDetectionZone)
             {
                 OnAggression = true;
-				OnBlink = true;
+                OnBlink = true;
             }
             // патрулироавние
             else if (!InVisibilityZone)
@@ -909,6 +909,44 @@ public class Enemy : Actor
             // If there is horizontal movement input
         }
 
+
+        if (TypeEnemy == Type.SandDemon)
+        {
+
+            if (fsm.State == States.Death)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SandDemonDeath"))
+                {
+                    animator.Play("SandDemonDeath");
+                }
+            }
+            else if (fsm.State == States.Attack)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SandDemonAttack"))
+                {
+                    animator.Play("SandDemonAttack");
+                }
+            }
+            //else if (fsm.State == States.Blink)
+            //{
+            //    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SandDemonBlink"))
+            //    {
+            //        animator.Play("SandDemonBlink");
+            //    }
+            //}
+            // If the is nohorizontal movement input
+            else
+            {
+                // Idle Animation
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SandDemonIdle"))
+                {
+                    animator.Play("SandDemonIdle");
+                }
+                // If there is horizontal movement input
+            }
+            // If there is horizontal movement input
+        }
+
     }
 
     void Stun_Update()
@@ -925,7 +963,7 @@ public class Enemy : Actor
         }
     }
 
-	void Blink_Update()
+    void Blink_Update()
     {
         // Horizontal Speed Update Section
         float num = onGround ? 1f : 0.65f;
@@ -938,19 +976,22 @@ public class Enemy : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
-	
-	void Blink_Enter()
-    {
-		Debug.Log(blinkCooldownTimer);
-        //animator.Play("Blink");
 
+    void Blink_Enter()
+    {
         transform.position = Vector2.Lerp(transform.position, new Vector3(EnemyDetection.PlayerPos.x - 5, EnemyDetection.PlayerPos.y + 25, 0), 2); // домножить на направление игрока 
-	}
-	
+        Debug.Log(blinkCooldownTimer);
+        //animator.Play("Blink");
+    }
+
+    public void Blink()
+    {
+        transform.position = Vector2.Lerp(transform.position, new Vector3(EnemyDetection.PlayerPos.x - 5, EnemyDetection.PlayerPos.y + 25, 0), 2); // домножить на направление игрока 
+    }
 	void Blink_Exit()
     {
         //animator.Play("Reveal");
-	}
+    }
 	
     public void Freez()
     {

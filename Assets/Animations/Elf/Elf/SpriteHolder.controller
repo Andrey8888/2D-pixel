@@ -598,6 +598,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &-3015940009580444594
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GreenSwordRun
+  m_Speed: 0.4
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: c584c86d9ba57e44c97279cbf5af4402, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &-2751138595925851081
 AnimatorState:
   serializedVersion: 5
@@ -645,6 +671,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 9067ced4e87c5614e8ff541e430475e9, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &-1645434006124306816
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: GreenSwordIdle
+  m_Speed: 0.25
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 633eecb51ef632341a2a7ebcad8a820a, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -1070,13 +1122,13 @@ AnimatorStateMachine:
     m_Position: {x: 1405, y: 1325, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7899639830518221492}
-    m_Position: {x: 1120, y: 180, z: 0}
+    m_Position: {x: 1110, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5910350363084026037}
     m_Position: {x: 1060, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3750297480169651895}
-    m_Position: {x: 1180, y: 290, z: 0}
+    m_Position: {x: 1160, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5462566550825090393}
     m_Position: {x: 1410, y: 180, z: 0}
@@ -1088,19 +1140,25 @@ AnimatorStateMachine:
     m_Position: {x: 1360, y: 80, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4788746617671112978}
-    m_Position: {x: 1740, y: 270, z: 0}
+    m_Position: {x: 1790, y: 290, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5167107969644852556}
     m_Position: {x: 1630, y: 70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3725063987466083266}
-    m_Position: {x: 1700, y: 180, z: 0}
+    m_Position: {x: 1840, y: 360, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8827099871174483029}
-    m_Position: {x: 1735, y: 245, z: 0}
+    m_Position: {x: 1460, y: 1540, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5303731685934685959}
-    m_Position: {x: 1770, y: 310, z: 0}
+    m_Position: {x: 1510, y: 1610, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -1645434006124306816}
+    m_Position: {x: 1960, y: 60, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -3015940009580444594}
+    m_Position: {x: 2010, y: 170, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -1108,7 +1166,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: -72, y: 108, z: 0}
-  m_ExitPosition: {x: 2100, y: 160, z: 0}
+  m_ExitPosition: {x: 2400, y: 150, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 1102542174911593312}
 --- !u!1102 &1271536219873318465
@@ -1509,7 +1567,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ScytheRun
-  m_Speed: 1
+  m_Speed: 0.4
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []
@@ -1561,7 +1619,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ScytheIdle
-  m_Speed: 1
+  m_Speed: 0.25
   m_CycleOffset: 0
   m_Transitions: []
   m_StateMachineBehaviours: []

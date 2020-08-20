@@ -6,7 +6,7 @@ public enum MeleeWeapon
 {
     Sword,
     Katana,
-    Green_Sword,
+    GreenSword,
     Knife,
     Sickle,
     Claw,
