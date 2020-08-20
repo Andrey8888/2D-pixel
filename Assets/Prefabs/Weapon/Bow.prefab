@@ -122,7 +122,7 @@ MonoBehaviour:
   FireFrequency: 1
   FireTick: 2
   FireChance: 100
-  CanFreez: 1
+  CanFreez: 0
   CanPowerAttackFreez: 0
   FreezDuration: 3
   FreezChance: 100

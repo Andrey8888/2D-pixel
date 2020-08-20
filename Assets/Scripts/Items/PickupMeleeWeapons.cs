@@ -41,6 +41,7 @@ public class PickupMeleeWeapons : Actor
     public int PoisonDamaged = 0;
 	public int PoisonFrequency = 0;
 	public int PoisonTick = 0;
+    [Range(0, 99)]
     public int PoisonChance = 0;
     [Header("Fire")]
 	public bool CanFire = false;
@@ -48,11 +49,13 @@ public class PickupMeleeWeapons : Actor
     public int FireDamaged = 0;
 	public int FireFrequency = 0;
 	public int FireTick = 0;
+    [Range(0, 99)]
     public int FireChance = 0;
     [Header("Freez")]
     public bool CanFreez = false;
     public bool CanPowerAttackFreez = false;
     public int FreezDuration = 0;
+    [Range(0, 99)]
     public int FreezChance = 0;
     [Header("Push")]
     public bool CanPush = false;
@@ -80,6 +83,7 @@ public class PickupMeleeWeapons : Actor
     {
         OnMouse = false;
         Sprite.enabled = true;
+        player = FindObjectOfType<Player>();
     }
     void OnMouseEnter()
     {
@@ -104,8 +108,7 @@ public class PickupMeleeWeapons : Actor
                 Debug.Log("This refill has no spriterenderer attached to it");
             }
         }
-        player = FindObjectOfType<Player>();
-        inventory = GameObject.FindGameObjectWithTag("Player").GetComponent<Inventory>();
+        inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
     }
 
     // Update is called once per frame
@@ -120,7 +123,6 @@ public class PickupMeleeWeapons : Actor
             float target = MaxFall;
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
-
         dist = Vector3.Distance(player.transform.position, transform.position);
         if (pickupTimer > 0f)
         {
@@ -171,7 +173,7 @@ public class PickupMeleeWeapons : Actor
                     pickupTimer = PickupTime;
 
                     inventory.isFull[0] = false;
-                    player.GetComponent<Inventory>().slots[0].GetComponent<Slot>().DropItem();
+                    inventory.GetComponent<Inventory>().slots[0].GetComponent<Slot>().DropItem();
                     player.DropMeleeWeapon();
                 }
             }
@@ -244,7 +246,7 @@ public class PickupMeleeWeapons : Actor
                         pickupTimer = PickupTime;
 
                         inventory.isFull[0] = false;
-                        player.GetComponent<Inventory>().slots[0].GetComponent<Slot>().DropItem();
+                        inventory.GetComponent<Inventory>().slots[0].GetComponent<Slot>().DropItem();
                         player.DropMeleeWeapon();
                     }
                 }
@@ -252,6 +254,8 @@ public class PickupMeleeWeapons : Actor
 
     public void OnPlayer(Player player)
     {
+        inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
+        inventory.isFull[0] = true;
         inventory = FindObjectOfType<Inventory>();
         if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
             MeleeAttackCooldownTime, MeleePowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage, StepUpAfterHit,
@@ -261,8 +265,7 @@ public class PickupMeleeWeapons : Actor
             CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
             CanPush, CanPowerAttackPush, PushDistance,
             MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage, MeleeTossingUp, MeleePopUpAfterHit))
-        {
-                inventory.isFull[0] = true;
+            {
                 Instantiate(itemButton, inventory.slots[0].transform, false);
             }
     }

@@ -139,6 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd37be0d7dee8c41842ddcdef3bb527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 0
   Gravity: 0
   MaxFall: 0
   FastFall: 0
@@ -187,12 +188,15 @@ MonoBehaviour:
   MeleePoisonDamaged: 0
   MeleePoisonFrequency: 0
   MeleePoisonTick: 0
+  MeleePoisonChance: 0
   MeleeAttackCanFire: 1
   MeleeFireDamaged: 2
   MeleeFireFrequency: 1
   MeleeFireTick: 3
+  MeleeFireChance: 100
   MeleeAttackCanFreez: 0
   MeleeFreezDuration: 0
+  MeleeFreezChance: 0
   MeleeAttackCanPush: 0
   MeleePushDistance: 0
   MeleeBlockCooldownTime: 0
@@ -205,16 +209,19 @@ MonoBehaviour:
   RangedCriticalDamageChance: 0
   RangedAttackCooldownTime: 0
   RangedPowerAttackCooldownTime: 0
-  RangedAttackCanPoison: 0
-  RangedPoisonDamaged: 0
-  RangedPoisonFrequency: 0
-  RangedPoisonTick: 0
+  RangedAttackCanPoison: 1
+  RangedPoisonDamaged: 2
+  RangedPoisonFrequency: 1
+  RangedPoisonTick: 3
+  RangedPoisonChance: 50
   RangedAttackCanFire: 0
   RangedFireDamaged: 0
   RangedFireFrequency: 0
   RangedFireTick: 0
+  RangedFireChance: 0
   RangedAttackCanFreez: 0
   RangedFreezDuration: 0
+  RangedFreezChance: 0
   RangedAttackCanPush: 0
   RangedPushDistance: 0
   RangedAttackCanThroughShoot: 0

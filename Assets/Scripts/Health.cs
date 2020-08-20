@@ -209,6 +209,7 @@ IEnumerator DeathEventsRoutine(float time)
     yield return new WaitForSeconds(time);
     if (OnDeathEvent != null)
         OnDeathEvent.Invoke();
+        StopAllCoroutines();
 }
 
 public void SetUIHealthBar()

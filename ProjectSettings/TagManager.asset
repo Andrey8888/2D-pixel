@@ -12,6 +12,7 @@ TagManager:
   - Inventory
   - Canvas
   - ArrowCount
+  - Weapon
   layers:
   - Default
   - TransparentFX

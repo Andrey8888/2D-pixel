@@ -9,8 +9,6 @@ public class PickupArtifact : Actor
     public float MaxFall = -240f; // Maximun fall speed
 
     private bool Pickable = true;
-    private float RespawnTimer = 0f;
-    public float recoveryTime = 2.5f;
 
     private GameObject inventory;
     public GameObject itemButton;
@@ -53,15 +51,6 @@ public class PickupArtifact : Actor
         {
             pickupTimer -= Time.deltaTime;
         }
-
-        if (this.RespawnTimer > 0f)
-        {
-            this.RespawnTimer -= Time.deltaTime;
-            if (this.RespawnTimer <= 0f)
-            {
-                this.Respawn();
-            }
-        }
     }
     void LateUpdate()
     {
@@ -86,13 +75,10 @@ public class PickupArtifact : Actor
     void OnPlayerTrigger(Player player)
     {
         inventory = GameObject.FindGameObjectWithTag("Inventory");
-        if (player.TakeItem(GetComponent<ItemParameters>()))
-            {
-                player.parameters.Add(GetComponent<ItemParameters>());
+        player.PickUpArtifacts(GetComponent<ItemParameters>());
                 Pickable = false;
                 // Disable
                 Sprite.enabled = false;
-                this.RespawnTimer = recoveryTime;
 
                 // Screenshake
                 if (PixelCameraController.instance != null)
@@ -100,16 +86,6 @@ public class PickupArtifact : Actor
                     PixelCameraController.instance.Shake(0.1f);
                 }
             Instantiate(itemButton, inventory.transform, false);
-            Destroy(gameObject);
-        }
-    }
-
-    private void Respawn()
-    {
-        if (!Pickable)
-        {
-            Pickable = true;
-            Sprite.enabled = true;
-        }
+        this.gameObject.SetActive(true);
     }
 }

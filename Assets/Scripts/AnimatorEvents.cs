@@ -16,6 +16,18 @@ public class AnimatorEvents : MonoBehaviour {
         }
     }
 
+    public void PlayerBackToDuckingState()
+    {
+        var player = GetComponentInParent<Player>();
+
+        if (player != null)
+        {
+            var health = GetComponentInParent<Health>();
+            health.block = false;
+            player.fsm.ChangeState(Player.States.Ducking, MonsterLove.StateMachine.StateTransition.Overwrite);
+        }
+    }
+
     public void MeleeEnemyBackToNormalState()
     {
         var enemy = GetComponentInParent<Enemy>();

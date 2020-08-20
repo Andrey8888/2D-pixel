@@ -79,6 +79,7 @@ public class PickupRangedWeapons : MonoBehaviour
                 Debug.Log("This refill has no spriterenderer attached to it");
             }
         }
+        inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
     }
 
     // Update is called once per frame
@@ -113,7 +114,6 @@ public class PickupRangedWeapons : MonoBehaviour
 
     public void OnPlayerTrigger(Player player)
     {
-        inventory = FindObjectOfType<Inventory>();
         if (inventory.isFull[1] == false && player.CompareTag("Player"))
                 {							
                 if (player.PickUpRangedWeapon(Type, RangedAttackMinDamage, RangedAttackMaxDamage, ShellsCount, 
@@ -149,7 +149,7 @@ public class PickupRangedWeapons : MonoBehaviour
                         pickupTimer = PickupTime;
 
                         inventory.isFull[1] = false;
-                        player.GetComponent<Inventory>().slots[1].GetComponent<Slot>().DropItem();
+                        inventory.GetComponent<Inventory>().slots[1].GetComponent<Slot>().DropItem();
                         player.DropRangedWeapon();
                     }
                 }
@@ -157,8 +157,9 @@ public class PickupRangedWeapons : MonoBehaviour
 
     public void OnPlayer(Player player)
     {
-        inventory = FindObjectOfType<Inventory>();
-                if (player.PickUpRangedWeapon(Type, RangedAttackMinDamage, RangedAttackMaxDamage, ShellsCount, 
+        inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
+        inventory.isFull[1] = true;
+        if (player.PickUpRangedWeapon(Type, RangedAttackMinDamage, RangedAttackMaxDamage, ShellsCount, 
 				RangedAttackCooldownTime, RangedPowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage,
 				CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
 				CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
@@ -167,7 +168,6 @@ public class PickupRangedWeapons : MonoBehaviour
 				RangedPowerAttackMinDamage, RangedPowerAttackMaxDamage,			
 				CanThroughShoot, RangedUpAfterHit, CanThroughShoot, CanPowerAttackThroughShoot))
             {
-                inventory.isFull[1] = true;
                 Instantiate(itemButton, inventory.slots[1].transform, false);
             }
     }

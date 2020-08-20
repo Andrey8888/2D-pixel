@@ -15,7 +15,7 @@ public class Player : Actor
     public float MaxFall = -160f; // Максимальная общая скорость, с которой вы можете упасть
     public float FastFall = -240f; // Максимальная скорость падения при быстром падении
     // Скорость бега и ускорение
-    public float MaxRun = 90f; //  Максимальная скорость бега по горизонтали
+    public float MaxRun = 140f; //  Максимальная скорость бега по горизонтали
 
     public float RunAccel = 1000f; // Скорость горизонтального ускорения
     public float RunReduce = 400f; // Горизонтальное ускорение, когда ваша горизонтальная скорость выше или равна максимальной
@@ -170,8 +170,7 @@ public class Player : Actor
     // Helper private Variables
     private int moveX; // Variable to store the horizontal Input each frame
     private int moveY; // Variable to store the vectical Input each frame
-    [HideInInspector]
-    public float curRun = 0;
+    public float curRun = 140;
     private int oldMoveY; // Variable to store the he vertical Input for the last frame
     private float varJumpSpeed; // Vertical Speed to apply on each frame of the variable jump
     private float varJumpTimer = 0f; // Variable to store the time left on the variable jump
@@ -344,6 +343,22 @@ public class Player : Actor
         }
     }
 
+    public bool CanDuckPrepare
+    {
+        get
+        {
+            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && ShellsCount > 0 && activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack") && rangedAttackCooldownTimer <= 0f;
+        }
+    }
+
+    public bool CanDuckShoot
+    {
+        get
+        {
+            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack"); ;
+        }
+    }
+
     #endregion
 
     [Header("Squash & Stretch")]
@@ -379,7 +394,9 @@ public class Player : Actor
         BowPowerAttack,
         Roll,
         Action,
-        PowerSwordAttack
+        PowerSwordAttack,
+        DuckShoot,
+        DuckPrepare
     }
 
     // State Machine
@@ -421,19 +438,7 @@ public class Player : Actor
     {
         fsm.ChangeState(States.LadderClimb);
         ChangeWeapon(activeWeapon);
-
-        if (activeWeapon != ActiveWeapon.Sword)
-        {
-            MeleeAttackMaxDamage = HandAttackMaxDamage;
-            MeleeAttackMinDamage = HandAttackMinDamage;
-        }
-
-        if (InitialWeapon.GetComponent<PickupRangedWeapons>() != null)
-            InitialWeapon.GetComponent<PickupRangedWeapons>().OnPlayer(this);
-        if (InitialWeapon.GetComponent<PickupMeleeWeapons>() != null)
-            InitialWeapon.GetComponent<PickupMeleeWeapons>().OnPlayer(this);
         curRun = MaxRun;
-        countText.GetComponent<Text>().text = ShellsCount.ToString();
     }
 
     private void ChangeWeapon(ActiveWeapon activeWeapon) // удалить вместе с вызовом
@@ -448,16 +453,18 @@ public class Player : Actor
             hasSeries = false;
             hasBlock = false;
         }
-        if (activeWeapon == ActiveWeapon.Bow)
+
+        if (activeWeapon != ActiveWeapon.Sword)
         {
-            if (InitialWeapon.GetComponent<PickupRangedWeapons>() != null)
-                InitialWeapon.GetComponent<PickupRangedWeapons>().OnPlayerTrigger(this);
+            MeleeAttackMaxDamage = HandAttackMaxDamage;
+            MeleeAttackMinDamage = HandAttackMinDamage;
         }
-        if (activeWeapon == ActiveWeapon.Sword)
-        {
-            if (InitialWeapon.GetComponent<PickupMeleeWeapons>() != null)
-                InitialWeapon.GetComponent<PickupMeleeWeapons>().OnPlayerTrigger(this);
-        }
+
+        if (InitialWeapon.GetComponent<PickupRangedWeapons>() != null)
+            InitialWeapon.GetComponent<PickupRangedWeapons>().OnPlayer(this);
+        if (InitialWeapon.GetComponent<PickupMeleeWeapons>() != null)
+            InitialWeapon.GetComponent<PickupMeleeWeapons>().OnPlayer(this);
+        countText.GetComponent<Text>().text = ShellsCount.ToString();
     }
 
     private void SelectWeapon()
@@ -701,7 +708,6 @@ public class Player : Actor
             fsm.ChangeState(States.Ducking, StateTransition.Overwrite);
             return;
         }
-
         // Dash over here
         if (CanDash)
         {
@@ -995,6 +1001,13 @@ public class Player : Actor
         {
             float target = MaxFall;
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+
+        if (CanDuckPrepare)
+        {
+            rangedAttackCooldownTimer = RangedAttackCooldownTime;
+            fsm.ChangeState(States.DuckPrepare, StateTransition.Overwrite);
+            return;
         }
     }
 
@@ -1523,6 +1536,115 @@ public class Player : Actor
     //    health.invincible = false;
     //}
 
+    void DuckPrepare_Update()
+    {
+
+        //if(canAim) // прицеливание
+        //{
+        //    AimLine.gameObject.SetActive(true);
+        //    //mouseMotion.x += Input.GetAxis("Mouse X") * mouseSens;
+        //    //mouseMotion.y += Input.GetAxis("Mouse Y") * mouseSens;
+        //    //AimPoints[0] += mouseMotion;
+
+        //    var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
+        //    var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
+        //    var aimAngle2 = aimAngle * Mathf.Rad2Deg;
+        //    //Debug.Log(aimAngle2);
+        //    if (aimAngle < 0f)
+        //    {
+        //        aimAngle = Mathf.PI * 2 + aimAngle;
+        //    }
+        //    bool Flip = ((Mathf.Abs(aimAngle2) > 91) && (transform.localScale.x > 0) || (Mathf.Abs(aimAngle2) < 89) && (transform.localScale.x < 0));
+        //    if (Flip)
+        //    {
+        //        if (Facing != (Facings)(-1))
+        //            Facing = (Facings)(-1);
+        //        else
+        //            Facing = (Facings)(1);
+        //    }
+        //    AimLine.transform.rotation = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg);
+        //    var aimAngle3 = aimAngle - 89.6f;
+        //    var aimAngle4 = 180;
+        //    //Bow.transform.rotation = Quaternion.Euler(aimAngle4, aimAngle4, aimAngle3 * Mathf.Rad2Deg - bowSpriteAngle);
+        //    if (delayTimer >= AttackDelay)
+        //    {
+        //        if (Velocity < maxVel)
+        //        {
+        //            Velocity += delVel * Time.deltaTime;
+        //            //Debug.Log("Скорость: " + Velocity);
+        //        }
+        //        else
+        //        {
+        //            Velocity = maxVel;
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    /*if (Input.GetMouseButtonUp(0))
+        //    {
+        //        Instantiate(Arrow, AimPosition, AimLine.transform.rotation);
+        //        delayTimer = 0;
+        //    }*/
+
+        //    if (ChangeDirection)
+        //    {
+        //        //AimLine.transform.localScale = new Vector3(-AimLine.transform.localScale.x, AimLine.transform.localScale.y, AimLine.transform.localScale.z);
+        //        //AimPoints[1] = -AimPoints[1];
+        //        ChangeDirection = !ChangeDirection;
+        //    }
+        //    AimLine.transform.Rotate(Vector3.forward, -AimLine.transform.localEulerAngles.z);
+        //    AimLine.gameObject.SetActive(false);
+        //}
+        //mouseMotion = Vector2.zero;
+        //delayTimer += Time.deltaTime;
+
+        // Bow Attack over here
+        if (CanDuckShoot)
+        {
+            //AimLine.gameObject.SetActive(false);
+            fsm.ChangeState(States.DuckShoot, StateTransition.Overwrite);
+            return;
+        }
+
+        if (!(onGround && moveX == 0 && moveY < 0 && !jumpIsInsideBuffer))
+        {
+            //AimLine.gameObject.SetActive(false);
+            fsm.ChangeState(States.Normal, StateTransition.Overwrite);
+            return;
+        }
+
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+    }
+
+    void DuckShoot_Update()
+    {
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+    }
+    void DuckShoot_Exit()
+    {
+        ShellsCount--;
+        countText.GetComponent<Text>().text = ShellsCount.ToString();
+    }
+
     void BowPrepare_Update()
     {
 
@@ -1941,14 +2063,6 @@ public class Player : Actor
     {
         if (!hasSword)
         {
-            if (parameters != null)
-            {
-                foreach (var item in parameters)
-                {
-                    TakeItem(item);
-                }
-            }
-
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
 
             MeleeWeaponType = type.ToString();
@@ -1998,6 +2112,16 @@ public class Player : Actor
             col.ChangeCollider((int)type);
             //col.ChangeCollider((int)typepower); // отдельные колайдеры для power attack // TODO
 
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                DropItem(parameters[i]);
+            }
+
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                TakeItem(parameters[i]);
+            }
+
             return false;
         }
         return true;
@@ -2014,13 +2138,6 @@ public class Player : Actor
     {
         if (!hasBow)
         {
-            if (parameters != null)
-            {
-                foreach (var item in parameters)
-                {
-                    TakeItem(item);
-                }
-            }
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
 
             RangedWeaponType = type.ToString();
@@ -2061,6 +2178,17 @@ public class Player : Actor
             activeWeapon = ActiveWeapon.Bow;
             hasBow = true;
             countText.GetComponent<Text>().text = ShellsCount.ToString();
+
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                DropItem(parameters[i]);
+            }
+
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                TakeItem(parameters[i]);
+            }
+
             return false;
         }
         return true;
@@ -2068,14 +2196,14 @@ public class Player : Actor
 
     public void DropMeleeWeapon()
     {
-        foreach (var item in parameters) // перебор всех предметов и вычитание хар-тик
+        for (int i = 0; i < parameters.Count; i++)
         {
-            DropItem(item);
+            DropItem(parameters[i]);
         }
 
-        foreach (var item in parameters) // перебор всех предметов и прибавление хар-тик
+        for (int i = 0; i < parameters.Count; i++)
         {
-            TakeItem(item);
+            TakeItem(parameters[i]);
         }
 
         if (hasBow)
@@ -2088,14 +2216,14 @@ public class Player : Actor
 
     public void DropRangedWeapon()
     {
-        foreach (var item in parameters) // перебор всех предметов и вычитание хар-тик
+        for (int i = 0; i < parameters.Count; i++)
         {
-            DropItem(item);
+            DropItem(parameters[i]);
         }
 
-        foreach (var item in parameters) // перебор всех предметов и прибавление хар-тик
+        for (int i = 0; i < parameters.Count; i++)
         {
-            TakeItem(item);
+            TakeItem(parameters[i]);
         }
 
         if (hasSword)
@@ -2105,18 +2233,15 @@ public class Player : Actor
         else activeWeapon = ActiveWeapon.Hands;
         hasBow = false;
     }
-
-    public bool TakeItem(ItemParameters item) // TODO переделать логику
+    public void PickUpArtifacts(ItemParameters item)
     {
-        AddParametrs(item);
         parameters.Add(item);
+        TakeItem(item);
 
-
-
-            for (int j = 0; j < item.ArtifactsType.Length; j++)
+        for (int j = 0; j < item.ArtifactsType.Length; j++)
+        {
+            for (int i = 0; i < parameters.Count; i++)
             {
-                for (int i = 1; i < parameters.Count; i++)
-                {
                 if (item.ArtifactsType.Length != 0)
                     if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
                     {
@@ -2128,33 +2253,51 @@ public class Player : Actor
             }
         }
 
-
-
-                //if (item.StacksRangedWeapon == stack.StacksRangedWeapon)
-                //{
-                //    for (int i = 0; i < item.StacksRangedWeapon.Length; i++)
+    }
+    public bool TakeItem(ItemParameters item) // TODO переделать логику
+    {
+        //for (int j = 0; j < item.ArtifactsType.Length; j++)
+        //{
+            //for (int i = 0; i < parameters.Count; i++)
+            //{
+                //if (item.ArtifactsType.Length != 0)
+                //    if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
                 //    {
-                //        AddParametrs(item.StacksRangedWeapon[i]);
-                //    } 
-                //}
+                //        {
+        AddParametrs(item);
+        //Debug.Log(item.ToString());
+        //Debug.Log("plus param");
+        //    }
+        //}
+        //}
+        //}
 
-                //if (item.StacksMeleeWeapon == stack.StacksMeleeWeapon)
-                //{
-                //    for (int i = 0; i < item.StacksMeleeWeapon.Length; i++)
-                //    {
-                //        AddParametrs(item.StacksMeleeWeapon[i]);
-                //    }
-                //}
+
+
+        //if (item.StacksRangedWeapon == stack.StacksRangedWeapon)
+        //{
+        //    for (int i = 0; i < item.StacksRangedWeapon.Length; i++)
+        //    {
+        //        AddParametrs(item.StacksRangedWeapon[i]);
+        //    } 
+        //}
+
+        //if (item.StacksMeleeWeapon == stack.StacksMeleeWeapon)
+        //{
+        //    for (int i = 0; i < item.StacksMeleeWeapon.Length; i++)
+        //    {
+        //        AddParametrs(item.StacksMeleeWeapon[i]);
+        //    }
+        //}
 
         return true;
     }
 
-    public void AddParametrs(ItemParameters item)
+    public bool AddParametrs(ItemParameters item) // TODO переделать логику
     {
         Gravity = Gravity + item.Gravity;
         MaxFall = MaxFall + item.MaxFall;
         FastFall = FastFall + item.FastFall;
-        curRun = MaxRun + item.MaxRun;
         MaxRun = MaxRun + item.MaxRun;
         RunAccel = RunAccel + item.RunAccel;
         RunReduce = RunReduce + item.RunReduce;
@@ -2194,18 +2337,25 @@ public class Player : Actor
         MeleePowerAttackMinDamage = MeleePowerAttackMinDamage + item.MeleePowerAttackMinDamage;
 
         //MeleeAttackCanPowerAttackCriticalDamage = item.MeleeAttackCanPowerAttackCriticalDamage;
-        //MeleeCanThirdAttackCriticalDamage = item.MeleeCanThirdAttackCriticalDamage;
-        MeleeAttackCanPoison = item.MeleeAttackCanPoison;
+        MeleeCanThirdAttackCriticalDamage = item.MeleeAttackCanThirdAttackCriticalDamage;
+        if (!MeleeAttackCanPoison)
+            MeleeAttackCanPoison = item.MeleeAttackCanPoison;
         MeleePoisonDamaged = MeleePoisonDamaged + item.MeleePoisonDamaged;
         MeleePoisonFrequency = MeleePoisonFrequency + item.MeleePoisonFrequency;
         MeleePoisonTick = MeleePoisonTick + item.MeleePoisonTick;
-        MeleeAttackCanFire = item.MeleeAttackCanFire;
+        MeleePoisonChance = item.MeleePoisonChance;
+        if (!MeleeAttackCanFire)
+            MeleeAttackCanFire = item.MeleeAttackCanFire;
         MeleeFireDamaged = MeleeFireDamaged + item.MeleeFireDamaged;
         MeleeFireFrequency = MeleeFireFrequency + item.MeleeFireFrequency;
         MeleeFireTick = MeleeFireTick + item.MeleeFireTick;
-        MeleeAttackCanPush = item.MeleeAttackCanPush;
-        MeleeAttackCanFreez = item.MeleeAttackCanFreez;
+        MeleeFireChance = item.MeleeFireChance;
+        if (!MeleeAttackCanPush)
+            MeleeAttackCanPush = item.MeleeAttackCanPush;
+        if (!MeleeAttackCanFreez)
+            MeleeAttackCanFreez = item.MeleeAttackCanFreez;
         MeleeFreezDuration = MeleeFreezDuration + item.MeleeFreezDuration;
+        MeleeFreezChance = item.MeleeFreezChance;
         MeleePushDistance = MeleePushDistance + item.MeleePushDistance;
         MeleeBlockCooldownTime = MeleeBlockCooldownTime + item.MeleeBlockCooldownTime;
 
@@ -2217,60 +2367,72 @@ public class Player : Actor
         RangedCriticalDamageChance = RangedCriticalDamageChance + item.RangedCriticalDamageChance;
         RangedCriticalDamage = RangedCriticalDamage + item.RangedCriticalDamage;
 
-        RangedAttackCanPoison = item.RangedAttackCanPoison;
+        if (!RangedAttackCanPoison)
+            RangedAttackCanPoison = item.RangedAttackCanPoison;
         RangedPoisonDamaged = RangedPoisonDamaged + item.RangedPoisonDamaged;
         RangedPoisonFrequency = RangedPoisonFrequency + item.RangedPoisonFrequency;
         RangedPoisonTick = RangedPoisonTick + item.RangedPoisonTick;
-        RangedAttackCanFire = item.RangedAttackCanFire;
+        RangedPoisonChance = item.RangedPoisonChance;
+        if (!RangedAttackCanFire)
+            RangedAttackCanFire = item.RangedAttackCanFire;
+        RangedFireChance = item.RangedFireChance;
         RangedFireDamaged = RangedFireDamaged + item.RangedFireDamaged;
         RangedFireFrequency = RangedFireFrequency + item.RangedFireFrequency;
         RangedFireTick = RangedFireTick + item.RangedFireTick;
-        RangedAttackCanPush = item.RangedAttackCanPush;
-        RangedAttackCanThroughShoot = item.RangedAttackCanThroughShoot;
+        if (!RangedAttackCanFreez)
+            RangedAttackCanFreez = item.RangedAttackCanFreez;
+        RangedFreezDuration = RangedFreezDuration + item.RangedFreezDuration;
+        RangedFreezChance = item.RangedFreezChance;
+        if (!RangedAttackCanPush)
+            RangedAttackCanPush = item.RangedAttackCanPush;
+        if (!RangedAttackCanThroughShoot)
+            RangedAttackCanThroughShoot = item.RangedAttackCanThroughShoot;
+
+        return true;
     }
 
     public void DropItem(ItemParameters item) // TODO переделать логику
     {
         DecreaseParameters(item);
-        parameters.Remove(item);
+        Debug.Log(item.ToString());
 
-        if (parameters != null)
-        {
-            foreach (var stack in parameters)
-            {
-                if (item.StacksArtifacts == stack.StacksArtifacts)
-                {
-                    for (int i = 0; i < item.StacksArtifacts.Length; i++)
-                    {
-                        DecreaseParameters(item.StacksArtifacts[i]);
-                    }
-                }
+        //for (int j = 0; j < item.ArtifactsType.Length; j++)
+        //{
+        //    for (int i = 0; i < parameters.Count; i++)
+        //    {
+        //        if (item.ArtifactsType.Length != 0)
+        //            if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
+        //            {
+        //                {
+        //                    parameters.Remove(parameters[j]);
+        //                    Debug.Log("Remove " + parameters[j]);
+        //                }
+        //            }
+        //    }
+        //}
 
-                if (item.StacksRangedWeapon == stack.StacksRangedWeapon)
-                {
-                    for (int i = 0; i < item.StacksRangedWeapon.Length; i++)
-                    {
-                        DecreaseParameters(item.StacksRangedWeapon[i]);
-                    }
-                }
 
-                if (item.StacksMeleeWeapon == stack.StacksMeleeWeapon)
-                {
-                    for (int i = 0; i < item.StacksMeleeWeapon.Length; i++)
-                    {
-                        DecreaseParameters(item.StacksMeleeWeapon[i]);
-                    }
-                }
-            }
-        }
+        //for (int j = 0; j < item.ArtifactsType.Length; j++)
+        //{
+        //    for (int i = 0; i < parameters.Count; i++)
+        //    {
+        //        if (item.ArtifactsType.Length != 0)
+        //            if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
+        //            {
+        //                {
+        //                    DecreaseParameters(item.StacksArtifacts[j]);
+        //                    Debug.Log("minus param");
+        //                }
+        //            }
+        //    }
+        //}
     }
 
-    public void DecreaseParameters(ItemParameters item)
+    public void DecreaseParameters(ItemParameters item) // TODO переделать логику
     {
         Gravity = Gravity - item.Gravity;
         MaxFall = MaxFall - item.MaxFall;
         FastFall = FastFall - item.FastFall;
-        curRun = MaxRun - item.MaxRun;
         MaxRun = MaxRun - item.MaxRun;
         RunAccel = RunAccel - item.RunAccel;
         RunReduce = RunReduce - item.RunReduce;
@@ -2316,13 +2478,16 @@ public class Player : Actor
         MeleePoisonDamaged = MeleePoisonDamaged - item.MeleePoisonDamaged;
         MeleePoisonFrequency = MeleePoisonFrequency - item.MeleePoisonFrequency;
         MeleePoisonTick = MeleePoisonTick - item.MeleePoisonTick;
+        MeleePoisonChance = 0;
         MeleeAttackCanFire = false;
         MeleeFireDamaged = MeleeFireDamaged - item.MeleeFireDamaged;
         MeleeFireFrequency = MeleeFireFrequency - item.MeleeFireFrequency;
         MeleeFireTick = MeleeFireTick - item.MeleeFireTick;
+        MeleeFireChance = 0;
         MeleeAttackCanPush = false;
         MeleeAttackCanFreez = false;
         MeleeFreezDuration = MeleeFreezDuration - item.MeleeFreezDuration;
+        MeleeFreezChance = 0;
         MeleePushDistance = MeleePushDistance - item.MeleePushDistance;
         MeleeBlockCooldownTime = MeleeBlockCooldownTime - item.MeleeBlockCooldownTime;
 
@@ -2338,12 +2503,17 @@ public class Player : Actor
         RangedPoisonDamaged = RangedPoisonDamaged - item.RangedPoisonDamaged;
         RangedPoisonFrequency = RangedPoisonFrequency - item.RangedPoisonFrequency;
         RangedPoisonTick = RangedPoisonTick - item.RangedPoisonTick;
+        RangedPoisonChance = 0;
         RangedAttackCanFire = false;
+        RangedFireChance = 0;
         RangedFireDamaged = RangedFireDamaged - item.RangedFireDamaged;
         RangedFireFrequency = RangedFireFrequency - item.RangedFireFrequency;
         RangedFireTick = RangedFireTick - item.RangedFireTick;
+        RangedAttackCanFreez = false;
+        RangedFreezChance = 0;
         RangedAttackCanPush = false;
         RangedAttackCanThroughShoot = false;
+
     }
 
     // Function to update the sprite scale, facing direction and animations 
@@ -2733,7 +2903,14 @@ public class Player : Actor
                 }
                 // If on the attack state
             }
-
+            else if (fsm.State == States.DuckPrepare)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("BowDuckPrepare"))
+                {
+                    animator.Play("BowDuckPrepare");
+                }
+                // If on the attack state
+            }
             else if (fsm.State == States.BowAttack)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("BowShoot"))
@@ -2742,7 +2919,14 @@ public class Player : Actor
                 }
                 // If on the attack state
             }
-
+            else if (fsm.State == States.DuckShoot)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("BowDuckShoot"))
+                {
+                    animator.Play("BowDuckShoot");
+                }
+                // If on the attack state
+            }
             else if (fsm.State == States.BowPowerAttack)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("BowPowerShoot"))

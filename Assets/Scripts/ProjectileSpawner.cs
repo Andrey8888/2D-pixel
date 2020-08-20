@@ -17,6 +17,7 @@ public class ProjectileSpawner : MonoBehaviour
 
     [Header("Place to spawn the projectile at")]
     public Transform gunBarrel;
+    public Transform gunBarrelDuck;
 
     void Awake()
     {
@@ -35,6 +36,32 @@ public class ProjectileSpawner : MonoBehaviour
     {
         //Instantiate the projectile prefab
         var p = Instantiate(projectile, gunBarrel.position, Quaternion.identity) as Projectile;
+
+        // Shoot based on the X scale of our parent object (base facing), which should be 1 for right and -1 for left 
+        var parentXScale = Mathf.Sign(transform.parent.localScale.x);
+
+        // Set the localscale so the projectiles faces the right direction based on the parent object (base)
+        p.transform.localScale = new Vector3(parentXScale * p.transform.localScale.x, p.transform.localScale.y, p.transform.localScale.z);
+
+        if (owner != null)
+        {
+            p.owner = owner; // Set it's owner 
+        }
+
+        // Change the X speed based on the facing of the parent object
+        p.Speed.x *= parentXScale;
+
+        // Do a small screenshake to add a little bit of extra "feel"
+        if (PixelCameraController.instance != null)
+        {
+            PixelCameraController.instance.DirectionalShake(new Vector2(parentXScale, 0f), .05f);
+        }
+    }
+
+    public void DuckInstantiateProjectile()
+    {
+        //Instantiate the projectile prefab
+        var p = Instantiate(projectile, gunBarrelDuck.position, Quaternion.identity) as Projectile;
 
         // Shoot based on the X scale of our parent object (base facing), which should be 1 for right and -1 for left 
         var parentXScale = Mathf.Sign(transform.parent.localScale.x);

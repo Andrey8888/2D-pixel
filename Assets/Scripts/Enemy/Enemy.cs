@@ -13,7 +13,9 @@ public class Enemy : Actor
         MeleeSceleton,
         ArcherySceleton,
         MagicSceleton,
-        Snake
+        Snake,
+		SandDemon,
+		Bat
     }
 
     public Type TypeEnemy = Type.MeleeSceleton;
@@ -29,16 +31,18 @@ public class Enemy : Actor
     public float AirMult = 0.65f;               // Multiplier for the air horizontal movement (friction) the higher the more air control you'll have
     public float TurnCooldownTime = 1f;
     private float AggressionCooldownTime = 10f;
+	private float BlinkCooldownTime = 10f;
     private float ExpectationCooldownTime = 2f;
     private float turnCooldownTimer = 0f;
     private float aggressionCooldownTimer = 0f;
+	private float blinkCooldownTimer = 0f;
     private float expectationCooldownTimer = 0f;
     //public float StunedCooldownTime = 0.25f;
     private float stunedCooldownTimer = 0f;
     public bool OnStun = false;
     public bool OnAggression = false;
-
-
+	public bool OnBlink = false;
+	
     // Helper private Variables
     private int moveX;                          // Variable to store the horizontal Input each frame
 
@@ -141,7 +145,8 @@ public class Enemy : Actor
         Hit,
         Stun,
         Death,
-        Cast
+        Cast,
+		Blink
     }
 
     public enum Attack
@@ -167,6 +172,7 @@ public class Enemy : Actor
 
     private EnemyVisibility EnemyVisibility;// Скрипт видимости
     private EnemyDetection EnemyDetection;  // Скрипт обнаружения
+	private EnemyAttacking EnemyAttacking;// Скрипт зоны для атаки
     public float PatrolTimer = 0;
 
     public bool CanShoot
@@ -189,10 +195,9 @@ public class Enemy : Actor
     {
         get
         {
-            return AttackType == Attack.Melee && 
-                EnemyVisibility.InVisibilityZone && 
-                ((CheckColAtPlace(Vector2.right * 18, player_layer)) || (CheckColAtPlace(Vector2.left * 18, player_layer))) && 
-                meleeAttackCooldownTimer <= 0f;
+            return AttackType == Attack.Melee && EnemyVisibility.InVisibilityZone &&
+            ((CheckColAtPlace(Vector2.right * 18, player_layer)) || CheckColAtPlace(Vector2.left * 18, player_layer)) &&
+             meleeAttackCooldownTimer <= 0f;
         }
     }
 
@@ -209,7 +214,7 @@ public class Enemy : Actor
     {
         get
         {
-            return !(TypeEnemy == Type.Snake) && OnAggression;
+            return !(TypeEnemy == Type.Snake) && OnAggression; 
         }
     }
 
@@ -221,6 +226,14 @@ public class Enemy : Actor
         }
     }
 
+	public bool CanBlink
+    {
+        get
+        {
+            return (TypeEnemy == Type.SandDemon) && OnBlink && blinkCooldownTimer <= 0f; 
+        }
+    }
+	
     // State Machine
     public StateMachine<States> fsm;
 
@@ -279,6 +292,11 @@ public class Enemy : Actor
             aggressionCooldownTimer -= Time.deltaTime;
         }
 
+		if (blinkCooldownTimer > 0f)
+        {
+            blinkCooldownTimer -= Time.deltaTime;
+        }
+		
         if (expectationCooldownTimer > 0f)
         {
             expectationCooldownTimer -= Time.deltaTime;
@@ -370,24 +388,28 @@ public class Enemy : Actor
             BehaivourType = Behaivour.Aggression;
             OnAggression = false;
             aggressionCooldownTimer = AggressionCooldownTime;
-            Debug.Log("агр");
         }
 
         if (CanIdle)
         {
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
             BehaivourType = Behaivour.Idle;
-            //Debug.Log("Ожидание");
             return;
         }
+		
+		if (CanBlink)
+        {
+            blinkCooldownTimer = BlinkCooldownTime;
+			OnBlink = false;
+            fsm.ChangeState(States.Blink, StateTransition.Overwrite);
+            return;
+        }
+		
         else if (BehaivourType == Behaivour.Idle)//if (expectationCooldownTimer >= 0f)
         {
             //expectationCooldownTimer = ExpectationCooldownTime;
-            ////Debug.Log("Подход");
-            if (AttackType == Attack.Melee)
-                //{
+            if (AttackType == Attack.Melee && TypeEnemy != Type.Snake)
                 BehaivourType = Behaivour.Patroling;
-            //}
             if (AttackType == Attack.Archery || AttackType == Attack.Magic)
             {
                 BehaivourType = Behaivour.FreeWalking;
@@ -402,6 +424,7 @@ public class Enemy : Actor
             if (InDetectionZone)
             {
                 OnAggression = true;
+				OnBlink = true;
             }
             // патрулироавние
             else if (!InVisibilityZone)
@@ -434,6 +457,7 @@ public class Enemy : Actor
             if (InDetectionZone)
             {
                 OnAggression = true;
+				OnBlink = true;
             }
             // патрулироавние
             else if (!InVisibilityZone)
@@ -505,21 +529,19 @@ public class Enemy : Actor
                 {
                     if (turnCooldownTimer <= 0f)
                     {
-                        Debug.Log("разворот за игроком");
-
                         CharacterRotation();
                         moveX *= -1;
                         turnCooldownTimer = TurnCooldownTime;
                     }
                 }
-                            if (!onGround)
-            {
-                float target = MaxFall;
-                Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
-            }
+                if (!onGround)
+                {
+                    float target = MaxFall;
+                    Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+                }
             }
 
-        if (AttackType == Attack.Melee)
+            if (AttackType == Attack.Melee)
             {
                 Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
 
@@ -529,8 +551,6 @@ public class Enemy : Actor
                 {
                     if (turnCooldownTimer <= 0f)
                     {
-                        Debug.Log("разворот за игроком");
-
                         CharacterRotation();
                         moveX *= -1;
                         turnCooldownTimer = TurnCooldownTime;
@@ -877,39 +897,19 @@ public class Enemy : Actor
                     animator.Play("SnakeAttack");
                 }
             }
-                // If the is nohorizontal movement input
-                if (Speed.x == 0)
+            // If the is nohorizontal movement input
+            else {
+                // Idle Animation
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SnakeIdle"))
                 {
-                    // Idle Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SnakeIdle"))
-                    {
-                        animator.Play("SnakeIdle");
-                    }
-                    // If there is horizontal movement input
+                    animator.Play("SnakeIdle");
                 }
-                else
-                {
-                    // Walk Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SnakeIdle"))
-                    {
-                        animator.Play("SnakeIdle");
-                    }
-                }
+                // If there is horizontal movement input
+            }
             // If there is horizontal movement input
         }
 
     }
-
-
-    //IEnumerator Poisoned()
-    //{
-    //        var health = GetComponent<Health>();
-    //        if (health != null)
-    //        {
-    //             health.TakeDamage(2);
-    //       }
-    //   yield return new WaitForSeconds(3);
-    // }
 
     void Stun_Update()
     {
@@ -925,6 +925,33 @@ public class Enemy : Actor
         }
     }
 
+	void Blink_Update()
+    {
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : 0.65f;
+
+        Speed.x = Calc.Approach(0, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+    }
+	
+	void Blink_Enter()
+    {
+		Debug.Log(blinkCooldownTimer);
+        //animator.Play("Blink");
+
+        transform.position = Vector2.Lerp(transform.position, new Vector3(EnemyDetection.PlayerPos.x - 5, EnemyDetection.PlayerPos.y + 25, 0), 2); // домножить на направление игрока 
+	}
+	
+	void Blink_Exit()
+    {
+        //animator.Play("Reveal");
+	}
+	
     public void Freez()
     {
         walkSpeed = 0;
@@ -943,6 +970,7 @@ public class Enemy : Actor
     public void Hit()
     {
         OnAggression = true;
+		OnBlink = true;
         var health = GetComponent<Health>();
         // показываем текущие здоровье на полосе хп
         ShowHP.value = health.health;

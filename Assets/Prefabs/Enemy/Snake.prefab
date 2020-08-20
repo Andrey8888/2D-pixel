@@ -105,7 +105,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1367007530464643826}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -38.8, y: -3.4, z: 0}
+  m_LocalPosition: {x: 0.9, y: -1.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1367007531478599918}
@@ -136,12 +136,12 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.4482088, y: 23.40085}
-      - {x: 12.847232, y: 23.338854}
-      - {x: 21.089664, y: 13.125917}
-      - {x: 20.546207, y: -2.860769}
-      - {x: 12.691012, y: -11.459234}
-      - {x: -0.37115192, y: -11.745047}
+    - - {x: 0.65450764, y: 10.325762}
+      - {x: 17.730679, y: 15.304758}
+      - {x: 31.801785, y: 10.605422}
+      - {x: 31.888454, y: 0.91997683}
+      - {x: 16.944363, y: -4.055273}
+      - {x: 0.5740328, y: 0.38485122}
 --- !u!1 &1367007530536868784
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,6 +376,7 @@ MonoBehaviour:
   TurnCooldownTime: 1
   OnStun: 0
   OnAggression: 0
+  OnBlink: 0
   Facing: -1
   SpriteHolder: {fileID: 1367007531478599918}
   SpriteScale: {x: 1, y: 1}
@@ -390,9 +391,9 @@ MonoBehaviour:
   MeleeCriticalDamageChance: 0
   MeleeAttackCanPoison: 1
   MeleePoisonDamaged: 1
-  MeleePoisonFrequency: 3
-  MeleePoisonTick: 1
-  MeleePoisonChance: 100
+  MeleePoisonFrequency: 1
+  MeleePoisonTick: 3
+  MeleePoisonChance: 50
   MeleeAttackCanFire: 0
   MeleeFireDamaged: 0
   MeleeFireFrequency: 0

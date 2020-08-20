@@ -73,14 +73,20 @@ public class ItemParameters : MonoBehaviour {
 	public int MeleePoisonDamaged = 0;
 	public int MeleePoisonFrequency = 0;
 	public int MeleePoisonTick = 0;
+    [Range(0, 99)]
+    public int MeleePoisonChance = 0;
     [Header("Fire")]
     public bool MeleeAttackCanFire = false;
 	public int MeleeFireDamaged = 0;
 	public int MeleeFireFrequency = 0;
 	public int MeleeFireTick = 0;
+    [Range(0, 99)]
+    public int MeleeFireChance = 0;
     [Header("Freez")]
     public bool MeleeAttackCanFreez = false;
     public int MeleeFreezDuration = 0;
+    [Range(0, 99)]
+    public int MeleeFreezChance = 0;
     [Header("Push")]
     public bool MeleeAttackCanPush = false;
     public int MeleePushDistance = 0;
@@ -108,14 +114,20 @@ public class ItemParameters : MonoBehaviour {
     public int RangedPoisonDamaged = 0;
     public int RangedPoisonFrequency = 0;
     public int RangedPoisonTick = 0;
+    [Range(0, 99)]
+    public int RangedPoisonChance = 0;
     [Header("Fire")]
     public bool RangedAttackCanFire = false;
     public int RangedFireDamaged = 0;
     public int RangedFireFrequency = 0;
     public int RangedFireTick = 0;
+    [Range(0, 99)]
+    public int RangedFireChance = 0;
     [Header("Freez")]
     public bool RangedAttackCanFreez = false;
     public int RangedFreezDuration = 0;
+    [Range(0, 99)]
+    public int RangedFreezChance = 0;
     [Header("Push")]
     public bool RangedAttackCanPush = false;
     public int RangedPushDistance = 0;

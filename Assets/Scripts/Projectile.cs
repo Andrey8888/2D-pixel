@@ -86,28 +86,30 @@ public class Projectile : MonoBehaviour
 			
 				if (Random.Range(0, 100) < PlayerComponent.RangedCriticalDamageChance)
 				{
-					CriticalDamage(PlayerComponent, component, didDamage);
-				}
+					CriticalDamage(PlayerComponent, component);
+                    didDamage = true;
+                }
 				else
 				{
-					Damage(PlayerComponent, component, didDamage);
-				}
+					Damage(PlayerComponent, component);
+                    didDamage = true;
+                }
 			
 			
             // Apply the damage
             //var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
             // Destroy the projectile after applying damage
-            if (didDamage )
+            if (didDamage)
             {
                 DestroyMe();
             }
         }
     }
 	
-	private void Damage(Player PlayerComponent, Health component, bool didDamage)
+	private void Damage(Player PlayerComponent, Health component)
     {
         int dmg = (Random.Range(PlayerComponent.RangedAttackMinDamage, PlayerComponent.RangedAttackMaxDamage ));
-        didDamage = component.TakeDamage(dmg, PlayerComponent.RangedAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
+        component.TakeDamage(dmg, PlayerComponent.RangedAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
         PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedAttackCanFire,
         PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
         PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez, 
@@ -122,11 +124,11 @@ public class Projectile : MonoBehaviour
 		}
     }
 	
-	private void CriticalDamage(Player PlayerComponent, Health component, bool didDamage)
+	private void CriticalDamage(Player PlayerComponent, Health component)
     {
         int dmg = (Random.Range(PlayerComponent.RangedAttackMinDamage, PlayerComponent.RangedAttackMaxDamage ))
         * PlayerComponent.RangedCriticalDamageMultiply;
-        didDamage = component.TakeDamage(dmg, PlayerComponent.RangedAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
+        component.TakeDamage(dmg, PlayerComponent.RangedAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
         PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedAttackCanFire,
         PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
         PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez, 
