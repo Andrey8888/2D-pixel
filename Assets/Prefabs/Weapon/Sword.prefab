@@ -128,32 +128,37 @@ MonoBehaviour:
   MeleeAttackMinDamage: 3
   MeleeAttackMaxDamage: 6
   MeleeAttackCooldownTime: 0.4
-  MeleeAttackCriticalDamage: 0
+  MeleePowerAttackCooldownTime: 0
   CanThirdAttackCriticalDamage: 0
   CriticalDamageMultiply: 2
   ChanceCriticalDamage: 10
-  StepUpAfterHit: 60
   level: 1
+  MeleePowerAttackMinDamage: 0
+  MeleePowerAttackMaxDamage: 0
   CanPoison: 0
   CanPowerAttackPoison: 0
   PoisonDamaged: 0
   PoisonFrequency: 3
   PoisonTick: 3
+  PoisonChance: 0
   CanFire: 0
   CanPowerAttackFire: 0
   FireDamaged: 0
   FireFrequency: 1
   FireTick: 2
+  FireChance: 0
   CanFreez: 0
   CanPowerAttackFreez: 0
   FreezDuration: 0
+  FreezChance: 0
   CanPush: 0
-  CanPowerAttackPush: 0
-  PushDistance: 0
-  MeleePowerAttackMinDamage: 0
-  MeleePowerAttackMaxDamage: 0
+  CanPowerAttackPush: 1
+  PushDistance: -1
   hasBlock: 0
   hasSeries: 1
+  StepUpAfterHit: 60
+  MeleeTossingUp: 0
+  MeleePopUpAfterHit: 0
   Type: 0
   Sprite: {fileID: 5367164569111860148}
   spriteHighlight: {fileID: 21300000, guid: a90184bb1c4653d4494fdfc40143d432, type: 3}

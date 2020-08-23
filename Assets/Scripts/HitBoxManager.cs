@@ -7,6 +7,7 @@ public class HitBoxManager : MonoBehaviour
 
     // Set these in the editor
     public PolygonCollider2D[] attack;
+    public PolygonCollider2D[] powerAttack;
     public MeleeWeapon MeleeWeaponType; 
 
     // Used for organization
@@ -66,6 +67,24 @@ public class HitBoxManager : MonoBehaviour
         localCollider.pathCount = 0; // Clear auto-generated polygons
     }
 
+    public void ChangePowerCollider(int i)
+    {
+        if (owner == null)
+        {
+            owner = GetComponentInParent<Health>();
+            if (owner == null)
+            {
+                Debug.Log("There is no owner health component asigned to this HitBoxManager");
+            }
+        }
+        colliders = new PolygonCollider2D[] { powerAttack[i] };
+        // Create a polygon collider
+        localCollider = gameObject.AddComponent<PolygonCollider2D>();
+        localCollider.isTrigger = true; // Set as a trigger so it doesn't collide with our environment
+        localCollider.pathCount = 0; // Clear auto-generated polygons
+    }
+    
+
     void OnTriggerEnter2D(Collider2D col)
     {
         var component = col.GetComponent<Health>();
@@ -76,7 +95,7 @@ public class HitBoxManager : MonoBehaviour
             var PlayerComponent = GetComponentInParent<Player>();
             var didDamage = false;
 
-            if (PlayerComponent.CanPowerSwordAttack == false)
+            if (PlayerComponent.PowerSwordAttack == false)
             { 
                 if (PlayerComponent.MeleeCanThirdAttackCriticalDamage == true)
                 {
@@ -110,8 +129,8 @@ public class HitBoxManager : MonoBehaviour
                 }
             }
             else
-                { 
-
+                {
+                PowerDamage(PlayerComponent, component, didDamage);
                 }
         }
         damageShow = false;
@@ -125,6 +144,23 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
         PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, 
 		PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
+
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, false);
+            damageShow = true;
+        }
+    }
+    private void PowerDamage(Player PlayerComponent, Health component, bool didDamage)
+    {
+        int dmg = (Random.Range(PlayerComponent.MeleePowerAttackMinDamage, PlayerComponent.MeleePowerAttackMaxDamage + 1));
+        didDamage = component.TakeDamage(dmg, PlayerComponent.MeleeAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
+        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
+        PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
+        PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
 
         if (!damageShow)
         {

@@ -61,6 +61,7 @@ public class Player : Actor
 
     [Header("MeleeAttacks")]
     public string MeleeWeaponType;
+    private MeleeWeapon MeleeWeaponClass;
 
     public int MeleeAttackMaxDamage;
     public int MeleeAttackMinDamage;
@@ -214,6 +215,7 @@ public class Player : Actor
     public bool OnAttackMove = false;
     [HideInInspector]
     public bool tossingUp = false;
+    public bool PowerSwordAttack = false;
 
 
     //[Header("Objects")]
@@ -1366,7 +1368,19 @@ public class Player : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
+    void PowerSwordAttack_Enter()
+    {
+        PowerSwordAttack = true;
+        var col = GetComponentInChildren<HitBoxManager>();
+        col.ChangePowerCollider((int)MeleeWeaponClass);
+    }
 
+    void PowerSwordAttack_Exit()
+    {
+        PowerSwordAttack = false;
+        var col = GetComponentInChildren<HitBoxManager>();
+        col.ChangeCollider((int)MeleeWeaponClass);
+    }
     void SwordAttack_Update()
     {
         // Horizontal Speed Update Section
@@ -2066,6 +2080,7 @@ public class Player : Actor
             fsm.ChangeState(States.Normal, StateTransition.Overwrite);
 
             MeleeWeaponType = type.ToString();
+            MeleeWeaponClass = type;
             MeleeAttackMinDamage = minDamage;
             MeleeAttackMaxDamage = maxDamage;
             MeleeAttackCooldownTime = attackCooldown;

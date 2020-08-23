@@ -176,7 +176,7 @@ public class Health : MonoBehaviour
     {
         if (OnPushedEvent != null)
             OnPushedEvent.Invoke();
-        transform.position = new Vector2(transform.position.x + pushDistance, 0);
+        transform.position = new Vector2(transform.position.x + (pushDistance * (int)GetComponentInParent<Enemy>().Facing), transform.position.y);
         PixelCameraController.instance.Shake(0.35f);
     }
 

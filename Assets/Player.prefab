@@ -30,6 +30,76 @@ Transform:
   m_Father: {fileID: 8524039187701114782}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6291718719933843832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2407393773214965148}
+  - component: {fileID: 7823641512262361762}
+  m_Layer: 13
+  m_Name: AttackHitboxGreenSwordPower
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2407393773214965148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6291718719933843832}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8524039187701114782}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &7823641512262361762
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6291718719933843832}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 11.44, y: -2.49}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 20.542362, y: -24.434774}
+      - {x: -12.567563, y: -21.28794}
+      - {x: -14.0726595, y: -16.032896}
+      - {x: -3.415326, y: -16.019766}
+      - {x: 5.5125303, y: -11.651152}
+      - {x: 5.7902403, y: -4.8302517}
+      - {x: -4.016507, y: 1.9596579}
+      - {x: -10.039914, y: 3.837519}
+      - {x: -11.461942, y: 7.564295}
+      - {x: 4.5039244, y: 6.334551}
+      - {x: 50.040867, y: 1.4738104}
+      - {x: 82.00981, y: -8.350195}
+      - {x: 82.288025, y: -16.60021}
+      - {x: 53.897587, y: -22.589354}
 --- !u!1 &6626830429048299786
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,6 +249,8 @@ Transform:
   - {fileID: 8524039187663459909}
   - {fileID: 6476105099182434584}
   - {fileID: 3291615047258261289}
+  - {fileID: 2407393773214965148}
+  - {fileID: 3048100042566361228}
   m_Father: {fileID: 8524039188666438505}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -265,6 +337,11 @@ MonoBehaviour:
   attack:
   - {fileID: 8524039189068760226}
   - {fileID: 8524039189096802808}
+  - {fileID: 8193851719194844124}
+  powerAttack:
+  - {fileID: 8524039189068760226}
+  - {fileID: 8524039189096802808}
+  - {fileID: 7823641512262361762}
   MeleeWeaponType: 0
   PopUpDamage: {fileID: 224758864541635820, guid: 3765d098280a78541a36bd56af3e1c44,
     type: 3}
@@ -591,6 +668,7 @@ MonoBehaviour:
   canAim: 0
   OnAttackMove: 0
   tossingUp: 0
+  PowerSwordAttack: 0
   owner: {fileID: 0}
   parameters: []
   SpriteHolder: {fileID: 8524039187701114782}
@@ -915,3 +993,67 @@ PolygonCollider2D:
       - {x: 27.866428, y: -5.477339}
       - {x: 27.715855, y: -14.124022}
       - {x: 17.339497, y: -20.182234}
+--- !u!1 &8663665164146771956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3048100042566361228}
+  - component: {fileID: 8193851719194844124}
+  m_Layer: 13
+  m_Name: AttackHitboxGreenSword
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3048100042566361228
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663665164146771956}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8524039187701114782}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &8193851719194844124
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663665164146771956}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 11.44, y: -2.49}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -12.63577, y: -27.295462}
+      - {x: -5.105359, y: -14.292349}
+      - {x: -4.7407045, y: 3.2969153}
+      - {x: -11.203458, y: 13.531565}
+      - {x: 4.733676, y: 13.631357}
+      - {x: 20.286503, y: 0.7285178}
+      - {x: 20.465153, y: -13.769026}
+      - {x: 3.737155, y: -27.115255}
