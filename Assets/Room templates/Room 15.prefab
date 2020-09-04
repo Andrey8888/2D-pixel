@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2768751930202671590}
   m_Layer: 0
   m_Name: Room 15
-  m_TagString: Untagged
+  m_TagString: BackGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4263,6 +4263,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5409875545732279380}
     m_Modifications:
+    - target: {fileID: 1200045045883473668, guid: 073092da0f7c3f345b063d193cee9350,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemySpawner (2)
+      objectReference: {fileID: 0}
     - target: {fileID: 6107252554707473283, guid: 073092da0f7c3f345b063d193cee9350,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4323,11 +4328,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1200045045883473668, guid: 073092da0f7c3f345b063d193cee9350,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemySpawner (2)
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 073092da0f7c3f345b063d193cee9350, type: 3}
 --- !u!4 &7510028530867873525 stripped
@@ -4343,6 +4343,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5409875545732279380}
     m_Modifications:
+    - target: {fileID: 1200045045883473668, guid: 073092da0f7c3f345b063d193cee9350,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemySpawner (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 6107252554707473283, guid: 073092da0f7c3f345b063d193cee9350,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4403,11 +4408,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1200045045883473668, guid: 073092da0f7c3f345b063d193cee9350,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemySpawner (1)
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 073092da0f7c3f345b063d193cee9350, type: 3}
 --- !u!4 &122871981058044166 stripped
@@ -4423,6 +4423,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5409875545732279380}
     m_Modifications:
+    - target: {fileID: 7902679099954292864, guid: 6e79aff0d200e0a47b7dd1fbeb33e968,
+        type: 3}
+      propertyPath: m_Name
+      value: Pot
+      objectReference: {fileID: 0}
     - target: {fileID: 7900293508519941874, guid: 6e79aff0d200e0a47b7dd1fbeb33e968,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4478,11 +4483,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7902679099954292864, guid: 6e79aff0d200e0a47b7dd1fbeb33e968,
-        type: 3}
-      propertyPath: m_Name
-      value: Pot
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e79aff0d200e0a47b7dd1fbeb33e968, type: 3}
 --- !u!4 &485606877243896252 stripped
@@ -4498,6 +4498,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5409875545732279380}
     m_Modifications:
+    - target: {fileID: 1200045045883473668, guid: 073092da0f7c3f345b063d193cee9350,
+        type: 3}
+      propertyPath: m_Name
+      value: EnemySpawner
+      objectReference: {fileID: 0}
     - target: {fileID: 6107252554707473283, guid: 073092da0f7c3f345b063d193cee9350,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4557,11 +4562,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1200045045883473668, guid: 073092da0f7c3f345b063d193cee9350,
-        type: 3}
-      propertyPath: m_Name
-      value: EnemySpawner
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 073092da0f7c3f345b063d193cee9350, type: 3}

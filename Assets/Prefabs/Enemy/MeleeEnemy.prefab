@@ -151,7 +151,8 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.0076760766, y: 0.5768881}
+    - - {x: -0.032675162, y: 0.5840308}
+      - {x: -0.028273305, y: -0.19632076}
       - {x: -0.013988027, y: -0.19989204}
       - {x: 2.8364534, y: -0.18156868}
       - {x: 2.825627, y: 0.57993346}
@@ -201,7 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InImpactZone: 0
   col: {fileID: 0}
-  DamageOnTouch: 1
+  DamageOnTouch: 0
   SlowPlayerSpeed: 20
   ImpactZoneActionType: 1
 --- !u!61 &2779457703483430026
@@ -217,7 +218,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.009201908, y: 0.0528851}
+  m_Offset: {x: -0.002948396, y: 0.0528851}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -228,7 +229,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.058276214, y: 0.4254044}
+  m_Size: {x: 0.11009216, y: 0.4254044}
   m_EdgeRadius: 0
 --- !u!1 &2779457703753932019
 GameObject:
@@ -752,6 +753,7 @@ MonoBehaviour:
   TurnCooldownTime: 1
   OnStun: 0
   OnAggression: 0
+  OnBlink: 0
   Facing: -1
   SpriteHolder: {fileID: 8854726495046487572}
   SpriteScale: {x: 1, y: 1}
@@ -760,8 +762,8 @@ MonoBehaviour:
     type: 3}
   MeleeCriticalDamage: 0
   MeleeAttackCooldownTime: 1.5
-  MeleeAttackMaxDamage: 0
-  MeleeAttackMinDamage: 0
+  MeleeAttackMaxDamage: 1
+  MeleeAttackMinDamage: 1
   MeleeCriticalDamageMultiply: 0
   MeleeCriticalDamageChance: 0
   MeleeAttackCanPoison: 0

@@ -19,10 +19,10 @@ public class Projectile : MonoBehaviour
     private Vector2 movementCounter = Vector2.zero;  // Counter for subpixel movement
     private Rigidbody2D rb2D; // Cached Rigidbody2D attached to the projectile
 
-	private bool damageShow = false;
+    private bool damageShow = false;
     [SerializeField]
     public Transform PopUpDamage;          // Всплывающий текст с уроном по монстру
-	
+
     List<Health> healthsDamaged = new List<Health>(); // List to store healths damaged
 
     void Awake()
@@ -81,21 +81,35 @@ public class Projectile : MonoBehaviour
             // Add the health component to the list of damaged healths
             healthsDamaged.Add(component);
 
-			var PlayerComponent = FindObjectOfType<Player>();
+            var PlayerComponent = FindObjectOfType<Player>();
             var didDamage = false;
-			
-				if (Random.Range(0, 100) < PlayerComponent.RangedCriticalDamageChance)
-				{
-					CriticalDamage(PlayerComponent, component);
+
+            if (PlayerComponent.PowerRangedAttack == false)
+            {
+                if (Random.Range(0, 100) < PlayerComponent.RangedCriticalDamageChance)
+                {
+                    CriticalDamage(PlayerComponent, component);
                     didDamage = true;
                 }
-				else
-				{
-					Damage(PlayerComponent, component);
+                else
+                {
+                    Damage(PlayerComponent, component);
                     didDamage = true;
                 }
-			
-			
+            }
+            else
+            {
+                if (Random.Range(0, 100) < PlayerComponent.RangedPowerChanceCriticalDamage)
+                {
+                    CriticalPowerDamage(PlayerComponent, component);
+                    didDamage = true;
+                }
+                else
+                {
+                    PowerDamage(PlayerComponent, component);
+                    didDamage = true;
+                }
+            }
             // Apply the damage
             //var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
             // Destroy the projectile after applying damage
@@ -105,40 +119,73 @@ public class Projectile : MonoBehaviour
             }
         }
     }
-	
-	private void Damage(Player PlayerComponent, Health component)
+
+    private void Damage(Player PlayerComponent, Health component)
     {
-        int dmg = (Random.Range(PlayerComponent.RangedAttackMinDamage, PlayerComponent.RangedAttackMaxDamage ));
+        int dmg = (Random.Range(PlayerComponent.RangedAttackMinDamage, PlayerComponent.RangedAttackMaxDamage));
         component.TakeDamage(dmg, PlayerComponent.RangedAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
         PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedAttackCanFire,
         PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
-        PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez, 
-		PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
-
-	if (!damageShow)
-		{
-			Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
-			DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
-			damagePopUp.Setup(dmg, false);
-			damageShow = true;
-		}
+        PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez,
+        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, false);
+            damageShow = true;
+        }
     }
-	
-	private void CriticalDamage(Player PlayerComponent, Health component)
+
+    private void CriticalDamage(Player PlayerComponent, Health component)
     {
-        int dmg = (Random.Range(PlayerComponent.RangedAttackMinDamage, PlayerComponent.RangedAttackMaxDamage ))
+        int dmg = (Random.Range(PlayerComponent.RangedAttackMinDamage, PlayerComponent.RangedAttackMaxDamage))
         * PlayerComponent.RangedCriticalDamageMultiply;
         component.TakeDamage(dmg, PlayerComponent.RangedAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
         PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedAttackCanFire,
         PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
-        PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez, 
-		PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
-
+        PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez,
+        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
             DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
             damagePopUp.Setup(dmg, true);
+            damageShow = true;
+        }
+    }
+
+    private void PowerDamage(Player PlayerComponent, Health component)
+    {
+        int dmg = (Random.Range(PlayerComponent.RangedPowerAttackMinDamage, PlayerComponent.RangedPowerAttackMaxDamage));
+        component.TakeDamage(dmg, PlayerComponent.RangedPowerAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
+        PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedPowerAttackCanFire,
+        PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
+        PlayerComponent.RangedPowerAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedPowerAttackCanFreez,
+        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, false);
+            damageShow = true;
+        }
+    }
+
+    private void CriticalPowerDamage(Player PlayerComponent, Health component)
+    {
+        int dmg = (Random.Range(PlayerComponent.RangedPowerAttackMinDamage, PlayerComponent.RangedPowerAttackMaxDamage))
+        * PlayerComponent.RangedPowerCriticalDamageMultiply;
+        component.TakeDamage(dmg, PlayerComponent.RangedPowerAttackCanPoison, PlayerComponent.RangedPoisonDamaged,
+        PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedPowerAttackCanFire,
+        PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
+        PlayerComponent.RangedPowerAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedPowerAttackCanFreez,
+        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, false);
             damageShow = true;
         }
     }

@@ -20,6 +20,10 @@
 			AddCompositeCollider(wallsTilemapObject);
 
 			var backTilemapObject = CreateTilemapGameObject("Back", gameObject, -3);
+            backTilemapObject.AddComponent<TilemapCollider2D>();
+            backTilemapObject.GetComponent<TilemapCollider2D>().isTrigger = true;
+            backTilemapObject.transform.tag = "BackGround";
+            //backTilemapObject.GetComponent<TilemapCollider2D>().isTrigger = true;
 
             var frontTilemapObject = CreateTilemapGameObject("Front", gameObject, 3);
 

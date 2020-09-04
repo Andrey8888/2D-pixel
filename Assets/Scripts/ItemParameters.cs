@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ItemParameters : MonoBehaviour {
+public class ItemParameters : MonoBehaviour
+{
 
     [Header("Movement Variables")]
 
@@ -50,88 +51,132 @@ public class ItemParameters : MonoBehaviour {
                                         // Лестничные переменные
     public float LadderClimbSpeed = 60f;
 
+    #region WeaponParams
+
+    [Header("Hands")]
+    public int HandAttackMinDamage = 1;//new int[2] {1, 0, 0};
+    public int HandAttackMaxDamage = 2;//new int[2] {2, 0, 0};
+    public int HandStepUpAfterHit = 20; //new int[2] {20,0,0};
+
     [Header("MeleeAttacks")]
-    public MeleeWeapon[] MeleeWeaponType = null; // TODO с чем стакается предмет
-    public ItemParameters[] StacksMeleeWeapon;
-    public int MeleeCriticalDamage = 0;
+    public string MeleeWeaponType;
+    private MeleeWeapon MeleeWeaponClass;
+
     public int MeleeAttackMaxDamage;
     public int MeleeAttackMinDamage;
-    [Range(1, 10)]
     public int MeleeCriticalDamageMultiply;
-    [Range(0, 99)]
     public int MeleeCriticalDamageChance;
+    private float MeleeAttackSpeed = 1f;
     public int StepUpAfterHit;
+    public int PopUpAfterHit = 0;
     public float MeleeAttackCooldownTime = 0.8f;
+    public float SpeedOnSwordAttack = 20;
+    [HideInInspector]
+    public bool ChangeCollider = false;
+    public bool hasSeries = false;
+    private bool hasBlock = false;
+    public bool MeleeCanThirdAttackCriticalDamage;
 
-    public int MeleePowerAttackMaxDamage;
-    public int MeleePowerAttackMinDamage;
-    public bool MeleeAttackCanPowerAttackCriticalDamage;
-    public bool MeleeAttackCanThirdAttackCriticalDamage;
+    [Header("MeleePowerAttack")]
+    public int MeleePowerAttackMinDamage = 0;
+    public int MeleePowerAttackMaxDamage = 0;
+    public float MeleePowerAttackCooldownTime = 0.8f;
+    [Range(1, 10)]
+    public int MeleePowerCriticalDamageMultiply = 1;
+    [Range(0, 99)]
+    public int MeleePowerChanceCriticalDamage = 0;
 
     [Header("Poison")]
     public bool MeleeAttackCanPoison = false;
-	public int MeleePoisonDamaged = 0;
-	public int MeleePoisonFrequency = 0;
-	public int MeleePoisonTick = 0;
-    [Range(0, 99)]
-    public int MeleePoisonChance = 0;
+    public bool MeleePowerAttackCanPoison = false;
+    public int MeleePoisonDamaged = 0;
+    public int MeleePoisonFrequency = 0;
+    public int MeleePoisonTick = 0;
+    public int MeleePoisonChance = 100;
     [Header("Fire")]
     public bool MeleeAttackCanFire = false;
-	public int MeleeFireDamaged = 0;
-	public int MeleeFireFrequency = 0;
-	public int MeleeFireTick = 0;
-    [Range(0, 99)]
-    public int MeleeFireChance = 0;
+    public bool MeleePowerAttackCanFire = false;
+    public int MeleeFireDamaged = 0;
+    public int MeleeFireFrequency = 0;
+    public int MeleeFireTick = 0;
+    public int MeleeFireChance = 100;
     [Header("Freez")]
     public bool MeleeAttackCanFreez = false;
+    public bool MeleePowerAttackCanFreez = false;
     public int MeleeFreezDuration = 0;
-    [Range(0, 99)]
-    public int MeleeFreezChance = 0;
+    public int MeleeFreezChance = 100;
     [Header("Push")]
     public bool MeleeAttackCanPush = false;
+    public bool MeleePowerAttackCanPush = false;
     public int MeleePushDistance = 0;
-
-    //public float HandAttackCooldownTime = 0.8f;
-    //public float SecondSwordAttackCooldownTime = 0.2f;
-    //public float ThirdSwordAttackCooldownTime = 0.2f;
+    [Header("Other")]
+    public float HandAttackCooldownTime = 0.8f;
+    public float SecondSwordAttackCooldownTime = 0.4f;
+    public float ThirdSwordAttackCooldownTime = 0.4f;
     public float MeleeBlockCooldownTime = 0.5f;
+    public bool MeleeAttackCanThirdAttackCriticalDamage;
+
 
     [Header("RangedAttacks")]
-    public RangedWeapon[] RangedWeaponType = null; // TODO с чем стакается предмет
-    public ItemParameters[] StacksRangedWeapon;
+    public string RangedWeaponType;
+    public int RangedCriticalDamage = 0;
+    public int RangedCriticalDamageMultiply = 1;
+    public int RangedCriticalDamageChance = 0;
     public int RangedAttackMinDamage = 1;//new int[2] {1, 0, 0};
     public int RangedAttackMaxDamage = 2;//new int[2] {2, 0, 0};
-    public int RangedCriticalDamage = 0;
-    [Range(1, 10)]
-    public int RangedCriticalDamageMultiply = 1;
-    [Range(0, 99)]
-    public int RangedCriticalDamageChance = 0;
+    public int ShellsCount = 0;
     public float RangedAttackCooldownTime = 1f;
+
+    [Header("RangedPowerAttack")]
+    public int RangedPowerAttackMinDamage = 0;
+    public int RangedPowerAttackMaxDamage = 0;
     public float RangedPowerAttackCooldownTime = 10f;
+    [Range(1, 10)]
+    public int RangedPowerCriticalDamageMultiply = 1;
+    [Range(0, 99)]
+    public int RangedPowerChanceCriticalDamage = 0;
+    public int RangedPowerShellsCount = 0;
 
     [Header("Poison")]
     public bool RangedAttackCanPoison = false;
+    public bool RangedPowerAttackCanPoison = false;
     public int RangedPoisonDamaged = 0;
     public int RangedPoisonFrequency = 0;
     public int RangedPoisonTick = 0;
-    [Range(0, 99)]
-    public int RangedPoisonChance = 0;
+    public int RangedPoisonChance = 100;
+
     [Header("Fire")]
     public bool RangedAttackCanFire = false;
+    public bool RangedPowerAttackCanFire = false;
     public int RangedFireDamaged = 0;
     public int RangedFireFrequency = 0;
     public int RangedFireTick = 0;
-    [Range(0, 99)]
-    public int RangedFireChance = 0;
+    public int RangedFireChance = 100;
+
     [Header("Freez")]
     public bool RangedAttackCanFreez = false;
+    public bool RangedPowerAttackCanFreez = false;
     public int RangedFreezDuration = 0;
-    [Range(0, 99)]
-    public int RangedFreezChance = 0;
+    public int RangedFreezChance = 100;
+
     [Header("Push")]
     public bool RangedAttackCanPush = false;
+    public bool RangedPowerAttackCanPush = false;
     public int RangedPushDistance = 0;
+
+    [Header("Other")]
     public bool RangedAttackCanThroughShoot = false;
+    public bool RangedTossingUp = false;
+    public bool RangedAttackAiming = false;
+    public int PowerAttackPopUpAfterHit = 0;
+    public int RangedStepUpAfterHit = 0;
+    public bool RangedAiming = false;
+
+    [Header("PowerAttackOther")]
+    public int RangedPowerAttackPopUpAfterHit = 0;
+    public bool RangedPowerAttackAiming = false;
+    public bool RangedPowerAttackCanThroughShoot = false;
+    #endregion
 
     [Header("Artifacts Stacks")]
     public Artifacts[] ArtifactsType = null; // TODO с чем стакается предмет

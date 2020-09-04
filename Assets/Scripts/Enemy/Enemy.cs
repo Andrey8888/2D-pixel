@@ -1008,6 +1008,15 @@ public class Enemy : Actor
         fsm.ChangeState(States.Stun, StateTransition.Overwrite);
     }
 
+	public void Push(int pushDistance)
+	{
+		if (!CheckColAtPlace(Vector2.right * (int)Facing * pushDistance, solid_layer))
+		{
+			Debug.Log(Vector2.right * (int)Facing * pushDistance);
+			transform.position = new Vector2(transform.position.x + (pushDistance * (int)Facing), transform.position.y);
+		}
+	}
+	
     public void Hit()
     {
         OnAggression = true;

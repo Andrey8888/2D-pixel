@@ -18,37 +18,46 @@ public class PickupMeleeWeapons : Actor
     private float pickupTimer = 1f; // Variable to store the timer of the respawn
     private Inventory inventory;
     public GameObject itemButton;
-	
-	[Header("MeleeWeapons")]
-	public int MeleeAttackMinDamage = 0;
-	public int MeleeAttackMaxDamage = 0;
+
+    [Header("MeleeWeapons")]
+    public int MeleeAttackMinDamage = 0;
+    public int MeleeAttackMaxDamage = 0;
     public float MeleeAttackCooldownTime = 0.2f;
-    public float MeleePowerAttackCooldownTime = 0f;
     public bool CanThirdAttackCriticalDamage = false; // or all attack
     //public bool CanPowerAttackCriticalDamage = false;
     [Range(1, 10)]
-    public int CriticalDamageMultiply = 1;
+    public int MeleeCriticalDamageMultiply = 1;
     [Range(0, 99)]
-    public int ChanceCriticalDamage = 0;
+    public int MeleeChanceCriticalDamage = 0;
     [Range(1, 10)]
     public int level = 1;  // Multiply damage
+    [Range(0, 3)]
+    public int Rarity = 1;
+
+    [Header("PowerAttack")]
     public int MeleePowerAttackMinDamage = 0;
     public int MeleePowerAttackMaxDamage = 0;
+    [Range(1, 10)]
+    public int MeleePowerCriticalDamageMultiply = 1;
+    [Range(0, 99)]
+    public int MeleePowerChanceCriticalDamage = 0;
+    public float MeleePowerAttackCooldownTime = 0.2f;
+
 
     [Header("Poison")]
-	public bool CanPoison = false;
+    public bool CanPoison = false;
     public bool CanPowerAttackPoison = false;
     public int PoisonDamaged = 0;
-	public int PoisonFrequency = 0;
-	public int PoisonTick = 0;
+    public int PoisonFrequency = 0;
+    public int PoisonTick = 0;
     [Range(0, 99)]
     public int PoisonChance = 0;
     [Header("Fire")]
-	public bool CanFire = false;
+    public bool CanFire = false;
     public bool CanPowerAttackFire = false;
     public int FireDamaged = 0;
-	public int FireFrequency = 0;
-	public int FireTick = 0;
+    public int FireFrequency = 0;
+    public int FireTick = 0;
     [Range(0, 99)]
     public int FireChance = 0;
     [Header("Freez")]
@@ -62,14 +71,15 @@ public class PickupMeleeWeapons : Actor
     public bool CanPowerAttackPush = false;
     public int PushDistance = 0;
     [Header("Other")]
-	public bool hasBlock = false;
+    public bool hasBlock = false;
     public bool hasSeries = false;
     public int StepUpAfterHit = 0;
     public bool MeleeTossingUp = false;
     public int MeleePopUpAfterHit = 0;
+    public int MeleePowerPopUpAfterHit = 0;
 
-	public MeleeWeapon Type = MeleeWeapon.Sword;
-	
+    public MeleeWeapon Type = MeleeWeapon.Sword;
+
     [SerializeField]
     public SpriteRenderer Sprite;
 
@@ -79,6 +89,7 @@ public class PickupMeleeWeapons : Actor
     private Player player;
     private bool OnMouse;
     public float dist = 50;
+
     void Start()
     {
         OnMouse = false;
@@ -133,19 +144,28 @@ public class PickupMeleeWeapons : Actor
         Cursor = Camera.main.ScreenToWorldPoint(Cursor);
         Cursor.z = 0;
 
-        if (dist < 50 && OnMouse)
+        if (pickupTimer <= 0f && dist < 50 && OnMouse)
         {
             Sprite.sprite = spriteHighlight;
+            if (inventory.isFull[0] == true && Input.GetKey(KeyCode.E) )
+            {
+                pickupTimer = PickupTime;
+                inventory.isFull[0] = false;
+                inventory.GetComponent<Inventory>().slots[0].GetComponent<Slot>().DropItem();
+                player.DropMeleeWeapon();
+            }
+
             if (inventory.isFull[0] == false && Input.GetKey(KeyCode.E))
             {
-                if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level, 
-                MeleeAttackCooldownTime, MeleePowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage,
+                if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
+                MeleeAttackCooldownTime, MeleeCriticalDamageMultiply, MeleeChanceCriticalDamage,
+                MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage,
+                MeleePowerAttackCooldownTime, MeleePowerCriticalDamageMultiply, MeleePowerChanceCriticalDamage,
                 StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
                 CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
                 CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
                 CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-                CanPush, CanPowerAttackPush, PushDistance, 
-                MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage, MeleeTossingUp, MeleePopUpAfterHit))
+                CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit))
                 {
                     this.RespawnTimer = recoveryTime;
 
@@ -163,18 +183,6 @@ public class PickupMeleeWeapons : Actor
                     Instantiate(itemButton, inventory.slots[0].transform, false);
 
                     Destroy(gameObject);
-                }
-            }
-
-            else
-            {
-                if (Input.GetKey(KeyCode.E) && pickupTimer <= 0f)
-                {
-                    pickupTimer = PickupTime;
-
-                    inventory.isFull[0] = false;
-                    inventory.GetComponent<Inventory>().slots[0].GetComponent<Slot>().DropItem();
-                    player.DropMeleeWeapon();
                 }
             }
         }
@@ -210,64 +218,63 @@ public class PickupMeleeWeapons : Actor
 
     public void OnPlayerTrigger(Player player)
     {
-        inventory = FindObjectOfType<Inventory>();
+        if (inventory.isFull[0] == true && Input.GetKey(KeyCode.E) && pickupTimer <= 0f)
+        {
+            pickupTimer = PickupTime;
+
+            inventory.isFull[0] = false;
+            inventory.GetComponent<Inventory>().slots[0].GetComponent<Slot>().DropItem();
+            player.DropMeleeWeapon();
+        }
+
         if (inventory.isFull[0] == false && player.CompareTag("Player"))
-                {
-                    if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
-                    MeleeAttackCooldownTime, MeleePowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage, StepUpAfterHit, 
-                    hasSeries, hasBlock, CanThirdAttackCriticalDamage,
-                    CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
-                    CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
-                    CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-                    CanPush, CanPowerAttackPush, PushDistance,
-                    MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage, MeleeTossingUp, MeleePopUpAfterHit))
+        {
+            if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
+                MeleeAttackCooldownTime, MeleeCriticalDamageMultiply, MeleeChanceCriticalDamage,
+                MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage,
+                MeleePowerAttackCooldownTime, MeleePowerCriticalDamageMultiply, MeleePowerChanceCriticalDamage,
+                StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
+                CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
+                CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
+                CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
+                CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit))
             {
-                            Pickable = false;
-                            // Disable
-                            Sprite.enabled = false;
-                            this.RespawnTimer = recoveryTime;
+                Pickable = false;
+                // Disable
+                Sprite.enabled = false;
+                this.RespawnTimer = recoveryTime;
 
-                            // Screenshake
-                            if (PixelCameraController.instance != null)
-                            {
-                                PixelCameraController.instance.Shake(0.1f);
-                            }
-
-                            inventory.isFull[0] = true;
-                            Instantiate(itemButton, inventory.slots[0].transform, false);
-
-                                Destroy(gameObject);
-                    }
-                }
-                else
+                // Screenshake
+                if (PixelCameraController.instance != null)
                 {
-                    if (Input.GetKey(KeyCode.E) && pickupTimer <= 0f)
-                    {
-                        pickupTimer = PickupTime;
-
-                        inventory.isFull[0] = false;
-                        inventory.GetComponent<Inventory>().slots[0].GetComponent<Slot>().DropItem();
-                        player.DropMeleeWeapon();
-                    }
+                    PixelCameraController.instance.Shake(0.1f);
                 }
+
+                inventory.isFull[0] = true;
+                Instantiate(itemButton, inventory.slots[0].transform, false);
+
+                Destroy(gameObject);
+            }
+        }
     }
 
     public void OnPlayer(Player player)
     {
         inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
         inventory.isFull[0] = true;
-        inventory = FindObjectOfType<Inventory>();
         if (player.PickUpMeleeWeapon(Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
-            MeleeAttackCooldownTime, MeleePowerAttackCooldownTime, CriticalDamageMultiply, ChanceCriticalDamage, StepUpAfterHit,
-            hasSeries, hasBlock, CanThirdAttackCriticalDamage,
+            MeleeAttackCooldownTime, MeleeCriticalDamageMultiply, MeleeChanceCriticalDamage,
+            MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage,
+            MeleePowerAttackCooldownTime, MeleePowerCriticalDamageMultiply, MeleePowerChanceCriticalDamage,
+            StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
             CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
             CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
             CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-            CanPush, CanPowerAttackPush, PushDistance,
-            MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage, MeleeTossingUp, MeleePopUpAfterHit))
-            {
-                Instantiate(itemButton, inventory.slots[0].transform, false);
-            }
+            CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit))
+        {
+
+        }
+        Instantiate(itemButton, inventory.slots[0].transform, false);
     }
 
     private void Respawn()

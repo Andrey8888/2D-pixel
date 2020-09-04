@@ -128,6 +128,7 @@ MonoBehaviour:
   MeleeAttackMinDamage: 5
   MeleeAttackMaxDamage: 10
   MeleeAttackCooldownTime: 1
+  MeleePowerAttackCooldownTime: 0
   CanThirdAttackCriticalDamage: 0
   CriticalDamageMultiply: 2
   ChanceCriticalDamage: 25
@@ -139,14 +140,17 @@ MonoBehaviour:
   PoisonDamaged: 0
   PoisonFrequency: 3
   PoisonTick: 3
+  PoisonChance: 99
   CanFire: 0
   CanPowerAttackFire: 0
   FireDamaged: 0
   FireFrequency: 1
   FireTick: 2
+  FireChance: 99
   CanFreez: 0
   CanPowerAttackFreez: 0
-  FreezDuration: 0
+  FreezDuration: 3
+  FreezChance: 99
   CanPush: 0
   CanPowerAttackPush: 0
   PushDistance: 0

@@ -31,11 +31,11 @@ AnimationClip:
       value: {fileID: 21300000, guid: a0ae0296ed743be4bb67c15be4753df2, type: 3}
     - time: 0.2
       value: {fileID: 21300000, guid: 2eb5d88cf59cded40aacf1e1203e6ba9, type: 3}
-    - time: 0.23333333
+    - time: 0.21666667
       value: {fileID: 21300000, guid: 15f696ff96fb24042ac6007a16fdaef3, type: 3}
-    - time: 0.26666668
+    - time: 0.23333333
       value: {fileID: 21300000, guid: 6852a7f96fa24b2449630b1300e9924b, type: 3}
-    - time: 0.3
+    - time: 0.25
       value: {fileID: 21300000, guid: 683c951b7c9d2294e8dcb1c210161ea3, type: 3}
     attribute: m_Sprite
     path: 
@@ -70,7 +70,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.36666667
+    m_StopTime: 0.26666668
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -104,6 +104,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.18333334
+    functionName: CanThirdSwordAttack
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.2
     functionName: PlayerSwordAttackMoveEnd
     data: 
@@ -111,7 +118,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.23333333
+  - time: 0.21666667
     functionName: setHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -119,13 +126,6 @@ AnimationClip:
     intParameter: 1
     messageOptions: 0
   - time: 0.26666668
-    functionName: CanThirdSwordAttack
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.36666667
     functionName: PlayerBackToNormalState
     data: 
     objectReferenceParameter: {fileID: 0}

@@ -13,6 +13,7 @@ TagManager:
   - Canvas
   - ArrowCount
   - Weapon
+  - BackGround
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - Box
   - Player
   - Enemy
-  - 
+  - BackGround
   - 
   - 
   - 

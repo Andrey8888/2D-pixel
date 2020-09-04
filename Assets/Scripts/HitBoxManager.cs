@@ -8,7 +8,7 @@ public class HitBoxManager : MonoBehaviour
     // Set these in the editor
     public PolygonCollider2D[] attack;
     public PolygonCollider2D[] powerAttack;
-    public MeleeWeapon MeleeWeaponType; 
+    public MeleeWeapon MeleeWeaponType;
 
     // Used for organization
     private PolygonCollider2D[] colliders;
@@ -83,7 +83,7 @@ public class HitBoxManager : MonoBehaviour
         localCollider.isTrigger = true; // Set as a trigger so it doesn't collide with our environment
         localCollider.pathCount = 0; // Clear auto-generated polygons
     }
-    
+
 
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -95,8 +95,8 @@ public class HitBoxManager : MonoBehaviour
             var PlayerComponent = GetComponentInParent<Player>();
             var didDamage = false;
 
-            if (PlayerComponent.PowerSwordAttack == false)
-            { 
+            if (PlayerComponent.PowerMeleeAttack == false)
+            {
                 if (PlayerComponent.MeleeCanThirdAttackCriticalDamage == true)
                 {
                     if (PlayerComponent.hitCount == 3)
@@ -129,9 +129,16 @@ public class HitBoxManager : MonoBehaviour
                 }
             }
             else
+            {
+                if (Random.Range(0, 100) < PlayerComponent.MeleePowerChanceCriticalDamage)
                 {
-                PowerDamage(PlayerComponent, component, didDamage);
+                    PowerCriticalDamage(PlayerComponent, component, didDamage);
                 }
+                else
+                {
+                    PowerDamage(PlayerComponent, component, didDamage);
+                }
+            }
         }
         damageShow = false;
     }
@@ -142,24 +149,7 @@ public class HitBoxManager : MonoBehaviour
         didDamage = component.TakeDamage(dmg, PlayerComponent.MeleeAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
         PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
-        PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, 
-		PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
-
-        if (!damageShow)
-        {
-            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
-            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
-            damagePopUp.Setup(dmg, false);
-            damageShow = true;
-        }
-    }
-    private void PowerDamage(Player PlayerComponent, Health component, bool didDamage)
-    {
-        int dmg = (Random.Range(PlayerComponent.MeleePowerAttackMinDamage, PlayerComponent.MeleePowerAttackMaxDamage + 1));
-        didDamage = component.TakeDamage(dmg, PlayerComponent.MeleeAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
-        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
-        PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
-        PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
+        PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
         PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
 
         if (!damageShow)
@@ -178,8 +168,8 @@ public class HitBoxManager : MonoBehaviour
         didDamage = component.TakeDamage(dmg, PlayerComponent.MeleeAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
         PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
-        PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez, 
-		PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
+        PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
 
         if (!damageShow)
         {
@@ -190,18 +180,56 @@ public class HitBoxManager : MonoBehaviour
         }
     }
 
+    private void PowerDamage(Player PlayerComponent, Health component, bool didDamage) // TODO Power ко всему доделать
+    {
+        int dmg = (Random.Range(PlayerComponent.MeleePowerAttackMinDamage, PlayerComponent.MeleePowerAttackMaxDamage + 1));
+        didDamage = component.TakeDamage(dmg, PlayerComponent.MeleePowerAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
+        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance,
+        PlayerComponent.MeleePowerAttackCanFire, PlayerComponent.MeleeFireDamaged,
+        PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
+        PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleePowerAttackCanFreez,
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
+
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, false);
+            damageShow = true;
+        }
+    }
+
+    private void PowerCriticalDamage(Player PlayerComponent, Health component, bool didDamage) // TODO Power ко всему доделать
+    {
+        int dmg = (Random.Range(PlayerComponent.MeleePowerAttackMinDamage, PlayerComponent.MeleePowerAttackMaxDamage + 1))
+        * PlayerComponent.MeleePowerCriticalDamageMultiply;
+        didDamage = component.TakeDamage(dmg, PlayerComponent.MeleeAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
+        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
+        PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
+        PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
+
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, false);
+            damageShow = true;
+        }
+    }
+
     public void setHitBox(hitBoxes val)
-	{
-		healthsDamaged.Clear (); // Clear the list of damaged healths everytime we start a new attack
+    {
+        healthsDamaged.Clear(); // Clear the list of damaged healths everytime we start a new attack
 
-		// Set the polygon collider to be equal as the target one
-		if(val != hitBoxes.clear)
-		{
-			localCollider.SetPath(0, colliders[(int)val].GetPath(0));
-			return;
-		}
+        // Set the polygon collider to be equal as the target one
+        if (val != hitBoxes.clear)
+        {
+            localCollider.SetPath(0, colliders[(int)val].GetPath(0));
+            return;
+        }
 
-		// If the value is Clear, set the pathcount of the polygoncollider2D to 0 (No Collisions)
-		localCollider.pathCount = 0;
-	}
+        // If the value is Clear, set the pathcount of the polygoncollider2D to 0 (No Collisions)
+        localCollider.pathCount = 0;
+    }
 }

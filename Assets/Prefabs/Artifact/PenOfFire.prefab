@@ -122,7 +122,6 @@ MonoBehaviour:
   myCollider: {fileID: 4918873826438345042}
   Gravity: 900
   MaxFall: -240
-  recoveryTime: 2.5
   itemButton: {fileID: 6996006999169400464, guid: 2502e8f1288ba2a42b6bf73cb1a21339,
     type: 3}
   PickupTime: 0
@@ -209,16 +208,16 @@ MonoBehaviour:
   RangedCriticalDamageChance: 0
   RangedAttackCooldownTime: 0
   RangedPowerAttackCooldownTime: 0
-  RangedAttackCanPoison: 1
-  RangedPoisonDamaged: 2
-  RangedPoisonFrequency: 1
-  RangedPoisonTick: 3
+  RangedAttackCanPoison: 0
+  RangedPoisonDamaged: 0
+  RangedPoisonFrequency: 0
+  RangedPoisonTick: 0
   RangedPoisonChance: 50
-  RangedAttackCanFire: 0
-  RangedFireDamaged: 0
-  RangedFireFrequency: 0
-  RangedFireTick: 0
-  RangedFireChance: 0
+  RangedAttackCanFire: 1
+  RangedFireDamaged: 2
+  RangedFireFrequency: 1
+  RangedFireTick: 3
+  RangedFireChance: 50
   RangedAttackCanFreez: 0
   RangedFreezDuration: 0
   RangedFreezChance: 0

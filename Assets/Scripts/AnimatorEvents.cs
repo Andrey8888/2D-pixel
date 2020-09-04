@@ -97,6 +97,7 @@ public class AnimatorEvents : MonoBehaviour {
         if (player != null)
         {
             player.secondSwordAttackCooldownTimer = player.SecondSwordAttackCooldownTime;
+            Debug.Log("CanSecondSwordAttack");
         }
     }
 
@@ -107,6 +108,7 @@ public class AnimatorEvents : MonoBehaviour {
         if (player != null)
         {
             player.thirdSwordAttackCooldownTimer = player.ThirdSwordAttackCooldownTime;
+            Debug.Log("CanThirdSwordAttack");
         }
     }
 }

@@ -122,7 +122,6 @@ MonoBehaviour:
   myCollider: {fileID: 1388248257219126199}
   Gravity: 900
   MaxFall: -240
-  recoveryTime: 2.5
   itemButton: {fileID: 6996006999169400464, guid: 6df0d9f352dab754ca31738392799c70,
     type: 3}
   PickupTime: 0
@@ -195,7 +194,7 @@ MonoBehaviour:
   MeleeFireTick: 0
   MeleeFireChance: 0
   MeleeAttackCanFreez: 1
-  MeleeFreezDuration: 3
+  MeleeFreezDuration: 0
   MeleeFreezChance: 100
   MeleeAttackCanPush: 0
   MeleePushDistance: 0
@@ -220,7 +219,7 @@ MonoBehaviour:
   RangedFireTick: 0
   RangedFireChance: 0
   RangedAttackCanFreez: 1
-  RangedFreezDuration: 3
+  RangedFreezDuration: 0
   RangedFreezChance: 50
   RangedAttackCanPush: 0
   RangedPushDistance: 0

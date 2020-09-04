@@ -9,7 +9,7 @@ public class EnemyImpact : MonoBehaviour
 
     [Header("Damage To Player")]
     public int DamageOnTouch = 1;
-    public float SlowPlayerSpeed = 10f;
+    public float SlowPlayerSpeed = 30f;
 
     public enum ImpactZoneAction
     {
@@ -43,7 +43,7 @@ public class EnemyImpact : MonoBehaviour
                 //collision.transform.position = new Vector2(collision.transform.position.x - 5, 0);
             if (!playercomponent.sticking && !playercomponent.CheckColAtPlace(Vector2.right * -(int)enemy.Facing, playercomponent.solid_layer))
             {
-                var MoveH = playercomponent.MoveHPlatform(400 * Time.deltaTime);
+                var MoveH = playercomponent.MoveHPlatform(-400 * -(int)playercomponent.Facing * Time.deltaTime);
             }
                 StartCoroutine(OnPlayerSlow(playercomponent));
             }
@@ -79,7 +79,7 @@ public class EnemyImpact : MonoBehaviour
 
                 if (!playercomponent.sticking && !playercomponent.CheckColAtPlace(Vector2.right * -(int)enemy.Facing, playercomponent.solid_layer))
                 {
-                    var MoveH = playercomponent.MoveHPlatform(400 * Time.deltaTime);
+                    var MoveH = playercomponent.MoveHPlatform(-400 * -(int)playercomponent.Facing * Time.deltaTime);
                 }
             }
         }
