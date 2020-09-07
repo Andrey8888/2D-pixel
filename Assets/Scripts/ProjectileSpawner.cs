@@ -44,14 +44,14 @@ public class ProjectileSpawner : MonoBehaviour
 
     public void Update()
     {
+        //Cursor.lockState = CursorLockMode.None;
+        //Cursor.visible = false;
+
         var playercomponent = GetComponentInParent<Player>();
         if (playercomponent.RangedPowerAttackAiming)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = false;
-
             float dist = Vector2.Distance(playercomponent.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            if (dist < 100)
+            if (dist < 200)
             {
                 playercomponent.aimSprite.GetComponent<SpriteRenderer>().sprite = playercomponent.AimSpriteGreen;
             }
@@ -104,13 +104,14 @@ public class ProjectileSpawner : MonoBehaviour
 
         if (playercomponent.RangedPowerAttackAiming)
         {
+
             var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             var hit2D = Physics2D.Raycast(cursor, Vector2.zero); // Vector2.zero если нужен рейкаст именно под курсором
 
             if (hit2D.collider.tag == "BackGround")
             {
                 float dist = Vector2.Distance(playercomponent.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                if (dist < 100)
+                if (dist < 200)
                 {
                     InstantiateFreePosition(cursor);
                 }

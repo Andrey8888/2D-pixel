@@ -125,26 +125,26 @@ MonoBehaviour:
   PickupTime: 0
   itemButton: {fileID: 2533529874395637400, guid: 88ed989f89da1704190382a14ffbbdff,
     type: 3}
-  RangedAttackMinDamage: 2
-  RangedAttackMaxDamage: 5
+  RangedAttackMinDamage: 5
+  RangedAttackMaxDamage: 10
   RangedAttackCooldownTime: 1
   RangedAttackCriticalDamageMultiply: 1
   RangedAttackChanceCriticalDamage: 0
   ShellsCount: 30
   level: 1
-  Rarity: 1
-  RangedPowerAttackMinDamage: 0
-  RangedPowerAttackMaxDamage: 0
-  RangedPowerAttackCooldownTime: 10
+  Rarity: 2
+  RangedPowerAttackMinDamage: 5
+  RangedPowerAttackMaxDamage: 10
+  RangedPowerAttackCooldownTime: 2
   RangedPowerCriticalDamageMultiply: 1
   RangedPowerChanceCriticalDamage: 0
-  PowerShellsCount: 0
+  PowerShellsCount: 5
   CanPoison: 0
-  CanPowerAttackPoison: 0
-  PoisonDamaged: 0
+  CanPowerAttackPoison: 1
+  PoisonDamaged: 1
   PoisonFrequency: 3
   PoisonTick: 3
-  PoisonChance: 100
+  PoisonChance: 99
   CanFire: 0
   CanPowerAttackFire: 0
   FireDamaged: 0

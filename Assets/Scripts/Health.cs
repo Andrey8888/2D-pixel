@@ -176,8 +176,12 @@ public class Health : MonoBehaviour
     {
         if (OnPushedEvent != null)
             OnPushedEvent.Invoke();
-        //transform.position = new Vector2(transform.position.x + (pushDistance * (int)GetComponentInParent<Enemy>().Facing), transform.position.y);
-        //PixelCameraController.instance.Shake(0.35f);
+        Debug.Log("push");
+        if (!GetComponentInParent<Enemy>().CheckColAtPlace(Vector2.right * (int)GetComponentInParent<Enemy>().Facing * pushDistance, GetComponentInParent<Enemy>().solid_layer))
+        {
+            transform.position = new Vector2(transform.position.x + (pushDistance * (int)GetComponentInParent<Enemy>().Facing), transform.position.y);
+            PixelCameraController.instance.Shake(0.35f);
+        }
     }
 
 

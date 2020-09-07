@@ -13,6 +13,13 @@ public class Projectile : MonoBehaviour
     [Header("Layers")]
     public LayerMask solid_layer;
 
+    public enum Type
+    {
+        Arrow,
+        Explosion                                       
+    }
+    public Type ShellType = Type.Arrow;
+
     [HideInInspector]
     public Health owner; // owner of the projectile
     private Vector2 Position; // Current position
@@ -60,7 +67,7 @@ public class Projectile : MonoBehaviour
         rb2D.MovePosition(Position);
     }
 
-    void DestroyMe()
+    public void DestroyMe()
     {
         Destroy(gameObject);
     }
@@ -68,7 +75,7 @@ public class Projectile : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         // if the projectile hit's a solid object, destroy it
-        if (col.gameObject.layer == (int)Mathf.Log(solid_layer.value, 2))
+        if (col.gameObject.layer == (int)Mathf.Log(solid_layer.value, 2) && ShellType == Type.Arrow)
         {
             DestroyMe();
             return;
@@ -113,7 +120,8 @@ public class Projectile : MonoBehaviour
             // Apply the damage
             //var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
             // Destroy the projectile after applying damage
-            if (didDamage)
+
+            if (didDamage && ShellType == Type.Arrow)
             {
                 DestroyMe();
             }

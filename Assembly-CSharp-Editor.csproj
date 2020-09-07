@@ -386,6 +386,9 @@
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>C:/Users/888/Documents/2D pixel/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
+    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+      <HintPath>C:/Users/888/Documents/2D pixel/Assets/AstarPathfindingProject/Plugins/DotNetZip/Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>C:/Users/888/Documents/2D pixel/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
@@ -748,6 +751,18 @@
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{E3364264-0223-9F09-1EC5-B155A0F681E2}</Project>
       <Name>Assembly-CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="AstarPathfindingProject.csproj">
+      <Project>{F22456DA-3258-A8FA-9273-1F9A1E1C0FBC}</Project>
+      <Name>AstarPathfindingProject</Name>
+    </ProjectReference>
+    <ProjectReference Include="PackageToolsEditor.csproj">
+      <Project>{37B47621-5A81-57CE-439F-F740C60A6092}</Project>
+      <Name>PackageToolsEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="AstarPathfindingProjectEditor.csproj">
+      <Project>{D009CB39-4718-B597-319F-BEF73AD3A531}</Project>
+      <Name>AstarPathfindingProjectEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,7 +15,8 @@ public class Enemy : Actor
         MagicSceleton,
         Snake,
         SandDemon,
-        Bat
+        Bat,
+        Golem
     }
 
     public Type TypeEnemy = Type.MeleeSceleton;
@@ -146,7 +147,8 @@ public class Enemy : Actor
         Stun,
         Death,
         Cast,
-        Blink
+        Blink,
+        Special
     }
 
     public enum Attack
@@ -195,11 +197,18 @@ public class Enemy : Actor
     {
         get
         {
+            if (TypeEnemy == Type.Golem)
+            {
+                return AttackType == Attack.Melee && EnemyVisibility.InVisibilityZone &&
+                  ((CheckColAtPlace(Vector2.right * 33, player_layer)) || CheckColAtPlace(Vector2.left * 33, player_layer)) &&
+                  meleeAttackCooldownTimer <= 0f;
+            }
             return AttackType == Attack.Melee && EnemyVisibility.InVisibilityZone &&
             ((CheckColAtPlace(Vector2.right * 18, player_layer)) || CheckColAtPlace(Vector2.left * 18, player_layer)) &&
              meleeAttackCooldownTimer <= 0f;
         }
     }
+
 
     public bool CanIdle
     {
@@ -947,6 +956,53 @@ public class Enemy : Actor
             // If there is horizontal movement input
         }
 
+
+        if (TypeEnemy == Type.Golem)
+        {
+
+            if (fsm.State == States.Death)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
+                {
+                    animator.Play("Death");
+                }
+            }
+            else if (fsm.State == States.Stun)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Stun"))
+                {
+                    animator.Play("Stun");
+                }
+            }
+            else if (fsm.State == States.Attack)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                {
+                    animator.Play("Attack");
+                }
+            } // If on the ground
+            else if (onGround)
+            {
+                // If the is nohorizontal movement input
+                if (Speed.x == 0)
+                {
+                    // Idle Animation
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    {
+                        animator.Play("Idle");
+                    }
+                    // If there is horizontal movement input
+                }
+                else
+                {
+                    // Walk Animation
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walk"))
+                    {
+                        animator.Play("Walk");
+                    }
+                }
+            }
+        }
     }
 
     void Stun_Update()

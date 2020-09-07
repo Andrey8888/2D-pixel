@@ -203,11 +203,20 @@ public class PickupRangedWeapons : Actor
     {
         if (other.CompareTag("Player") && Pickable)
         {
+            Sprite.sprite = spriteHighlight;
             var playercomponent = other.GetComponent<Player>();
             if (playercomponent != null)
             {
                 OnPlayerTrigger(playercomponent);
             }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && Pickable)
+        {
+            Sprite.sprite = spriteNormal;
         }
     }
 

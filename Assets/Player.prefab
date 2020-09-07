@@ -450,21 +450,27 @@ MonoBehaviour:
   projectile:
   - {fileID: 114021235920092806, guid: cecfd10b73b95c44dbb74bcd54868027, type: 3}
   - {fileID: 6968022802792312402, guid: 852031bc03ad313498049fd0eb444354, type: 3}
+  - {fileID: 8315733683099106912, guid: 5d1c2451f782af344914bdf936f1c835, type: 3}
   powerProjectile:
   - {fileID: 5801730819362278875, guid: 6bf4cd82bb6c657499f2b82553bd2413, type: 3}
-  - {fileID: 6968022802792312402, guid: 852031bc03ad313498049fd0eb444354, type: 3}
+  - {fileID: 8085262812505040281, guid: cdf44aed80bbba945a8e32fd2cf888eb, type: 3}
+  - {fileID: 8315733683099106912, guid: 5d1c2451f782af344914bdf936f1c835, type: 3}
   RangedWeaponType: 0
   gunBarrel:
   - {fileID: 8524039187663459909}
   - {fileID: 2403444942249462067}
+  - {fileID: 2403444942249462067}
   gunBarrelDuck:
   - {fileID: 3291615047258261289}
+  - {fileID: 8740590849487099045}
   - {fileID: 8740590849487099045}
   PowerGunBarrel:
   - {fileID: 8524039187663459909}
   - {fileID: 2403444942249462067}
+  - {fileID: 2403444942249462067}
   PowerGunBarrelDuck:
   - {fileID: 3291615047258261289}
+  - {fileID: 8740590849487099045}
   - {fileID: 8740590849487099045}
 --- !u!114 &6589543082364206000
 MonoBehaviour:

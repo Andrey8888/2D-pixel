@@ -130,17 +130,15 @@ MonoBehaviour:
   RangedAttackCooldownTime: 1
   RangedAttackCriticalDamageMultiply: 1
   RangedAttackChanceCriticalDamage: 0
-  StepUpAfterHit: 0
   ShellsCount: 30
   level: 1
   Rarity: 1
   RangedPowerAttackMinDamage: 0
   RangedPowerAttackMaxDamage: 0
-  RangedPowerAttackCooldownTime: 10
-  CanPowerAttackThroughShoot: 0
+  RangedPowerAttackCooldownTime: 2
   RangedPowerCriticalDamageMultiply: 1
   RangedPowerChanceCriticalDamage: 0
-  RangedPowerShellsCount: 0
+  PowerShellsCount: 10
   CanPoison: 0
   CanPowerAttackPoison: 0
   PoisonDamaged: 0
@@ -158,12 +156,17 @@ MonoBehaviour:
   FreezDuration: 3
   FreezChance: 100
   CanPush: 0
-  CanPowerAttackPush: 0
-  PushDistance: 0
+  CanPowerAttackPush: 1
+  PushDistance: 15
   CanThroughShoot: 0
-  RangedTossingUp: 0
+  TossingUp: 0
+  UpAfterHit: 0
+  Aiming: 0
+  StepUpAfterHit: 0
   RangedUpAfterHit: 0
-  RangedPowerPopUpAfterHit: 0
+  PowerAttackPopUpAfterHit: 0
+  CanPowerAttackThroughShoot: 0
+  PowerAttackAiming: 0
   Type: 0
   Sprite: {fileID: 7445041374585675354}
   spriteHighlight: {fileID: 21300000, guid: dc6c38049f3a5dd47b4e7adf31ea0370, type: 3}
@@ -186,7 +189,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 35, y: 35}
+    oldSize: {x: 30, y: 30}
     newSize: {x: 16, y: 16}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

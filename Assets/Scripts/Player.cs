@@ -62,7 +62,6 @@ public class Player : Actor
     [Header("MeleeAttacks")]
     public string MeleeWeaponType;
     private MeleeWeapon MeleeWeaponClass;
-    private RangedWeapon RangedWeaponClass;
 
     public int MeleeAttackMaxDamage;
     public int MeleeAttackMinDamage;
@@ -120,6 +119,8 @@ public class Player : Actor
 
     [Header("RangedAttacks")]
     public string RangedWeaponType;
+    private RangedWeapon RangedWeaponClass;
+
     public int RangedCriticalDamage = 0;
     public int RangedCriticalDamageMultiply = 1;
     public int RangedCriticalDamageChance = 0;
@@ -1794,7 +1795,9 @@ public class Player : Actor
         //}
         //mouseMotion = Vector2.zero;
         //delayTimer += Time.deltaTime;
-		
+
+        aimSprite.SetActive(true);
+
         var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
         var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
         var aimAngle2 = aimAngle * Mathf.Rad2Deg;
@@ -1845,6 +1848,7 @@ public class Player : Actor
     {
         ShellsCount--;
         countText.GetComponent<Text>().text = ShellsCount.ToString();
+        aimSprite.SetActive(false);
     }
 
     void BowPowerAttackPrepare_Update()
@@ -2389,7 +2393,7 @@ public class Player : Actor
             {
                 TakeItem(parameters[i]);
             }
-
+            Debug.Log(type.ToString());
             RangedWeaponType = type.ToString();
             return false;
         }
