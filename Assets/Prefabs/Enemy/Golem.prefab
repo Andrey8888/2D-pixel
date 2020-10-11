@@ -28,8 +28,70 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4490371273487345897}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1411657576800938390
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7970621649045826934}
+  - component: {fileID: 8390098535751917800}
+  m_Layer: 0
+  m_Name: AttackHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7970621649045826934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411657576800938390}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4490371273487345897}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &8390098535751917800
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411657576800938390}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 11.44, y: -2.49}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.952322, y: -6.5709934}
+      - {x: 24.89196, y: -13.635769}
+      - {x: 42.097893, y: -13.764713}
+      - {x: 42.67492, y: -33.112713}
+      - {x: 24.735771, y: -33.307873}
+      - {x: 0.74925804, y: -47.599224}
 --- !u!1 &4492663133245875965
 GameObject:
   m_ObjectHideFlags: 0
@@ -67,6 +129,7 @@ Transform:
   - {fileID: 7071161841735627380}
   - {fileID: 7071161840928127497}
   - {fileID: 7071161840084052765}
+  - {fileID: 7970621649045826934}
   - {fileID: 2437700286385568664}
   - {fileID: 8344498105309700716}
   - {fileID: 4950386404468055778}
@@ -178,7 +241,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203835e6c4242dd40bba52236d357086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack1: {fileID: 7071161840084052764}
+  attack:
+  - {fileID: 8390098535751917800}
+  - {fileID: 7071161840084052764}
+  - {fileID: 7071161840084052764}
+  - {fileID: 7071161840084052764}
   colliders: []
   owner: {fileID: 4596097588610779609}
 --- !u!114 &4950386403732759819
@@ -314,7 +381,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   myCollider: {fileID: 4505545335622471653}
-  TypeEnemy: 0
+  TypeEnemy: 6
   Gravity: 900
   MaxFall: -160
   RunReduce: 5000
@@ -325,6 +392,7 @@ MonoBehaviour:
   OnStun: 0
   OnAggression: 0
   OnBlink: 0
+  OnSpecial: 0
   Facing: -1
   SpriteHolder: {fileID: 4490371273487345897}
   SpriteScale: {x: 1, y: 1}
@@ -332,9 +400,13 @@ MonoBehaviour:
   BloodParticle: {fileID: 1145837783617200, guid: d34108a4353e0b94bb2f012ea46eb1b1,
     type: 3}
   MeleeCriticalDamage: 0
-  MeleeAttackCooldownTime: 10
-  MeleeAttackMaxDamage: 3
-  MeleeAttackMinDamage: 3
+  MeleeAttackCooldownTime: 4
+  FirstSpecialAttackCooldownTime: 10
+  FirstSpecialTimer: 10
+  SecondSpecialTimer: 10
+  ThirdSpecialTimer: 10
+  MeleeAttackMaxDamage: 1
+  MeleeAttackMinDamage: 1
   MeleeCriticalDamageMultiply: 0
   MeleeCriticalDamageChance: 0
   MeleeAttackCanPoison: 0
@@ -585,7 +657,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 4490371273487345897}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4950386404468055773
 SpriteRenderer:
@@ -647,7 +719,7 @@ GameObject:
   - component: {fileID: 7071161840084052765}
   - component: {fileID: 7071161840084052764}
   m_Layer: 0
-  m_Name: AttackHitbox1
+  m_Name: AttackHitboxFirstSpecial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -924,7 +996,7 @@ MonoBehaviour:
   InImpactZone: 0
   col: {fileID: 0}
   DamageOnTouch: 1
-  SlowPlayerSpeed: 20
+  SlowPlayerSpeed: 5
   ImpactZoneActionType: 1
 --- !u!61 &7071161841735627383
 BoxCollider2D:
@@ -980,5 +1052,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4490371273487345897}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

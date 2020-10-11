@@ -8,11 +8,14 @@ public class Health : MonoBehaviour
 
     public UnityEvent OnTakeDamageEvent;
     public UnityEvent OnPushedEvent;
+    public UnityEvent OnPushedUpEvent;
     public UnityEvent OnBurnedEvent;
+    public UnityEvent OnStunedEvent;
     public UnityEvent OnFreezedEvent;
     public UnityEvent OnPoisonedEvent;
     public UnityEvent OnBurnedEndEvent;
     public UnityEvent OnFreezedEndEvent;
+    public UnityEvent OnStunedEndEvent;
     public UnityEvent OnPoisonedEndEvent;
     public UnityEvent OnDamageBlockEvent;
     public UnityEvent OnTakeHealEvent;
@@ -36,8 +39,6 @@ public class Health : MonoBehaviour
     [Header("Perform Dead Events after x time")]
     public float DieEventsAfterTime = 1f;
 
-
-
     void Start()
     {
         health = maxHealth;
@@ -58,7 +59,8 @@ public class Health : MonoBehaviour
     }
 
     public bool TakeDamage(int amount, bool poison, int poisonAmount, int poisonFrequency, int poisonTick, int poisonChance,
-        bool fire, int fireAmount, int fireFrequency, int fireTick, int fireChance, bool push, int pushDistance, bool freez, int freezDuration, int freezChance)
+        bool fire, int fireAmount, int fireFrequency, int fireTick, int fireChance, bool push, int pushDistance,  
+		bool freez, int freezDuration, int freezChance, bool pushUp, int pushUpDistance, bool stun, int stunDuration, int stunChance)
     {
         if (block)
         {
@@ -107,11 +109,22 @@ public class Health : MonoBehaviour
             if (push)
                 Pushed(pushDistance);
 				
+			if (pushUp)
+                PushedUp(pushUpDistance);
+				
             if (freez)
 				{
 					if (Random.Range(0, 100) < freezChance)
 					{
 						 StartCoroutine(Freezed(freezDuration));
+					}
+				}
+				
+			if (stun)
+				{
+					if (Random.Range(0, 100) < stunChance)
+					{
+						 StartCoroutine(Stuned(stunDuration));
 					}
 				}
 				
@@ -172,10 +185,22 @@ public class Health : MonoBehaviour
             OnFreezedEndEvent.Invoke();
         yield return false;
     }
+	
+	IEnumerator Stuned(int duration)
+    {
+        if (OnStunedEvent != null)
+            OnStunedEvent.Invoke();
+        yield return new WaitForSeconds(duration);
+
+        if (OnStunedEndEvent != null)
+            OnStunedEndEvent.Invoke();
+        yield return false;
+    }
+	
     public void Pushed(int pushDistance)
     {
-        if (OnPushedEvent != null)
-            OnPushedEvent.Invoke();
+        if (OnPushedUpEvent != null)
+            OnPushedUpEvent.Invoke();
         Debug.Log("push");
         if (!GetComponentInParent<Enemy>().CheckColAtPlace(Vector2.right * (int)GetComponentInParent<Enemy>().Facing * pushDistance, GetComponentInParent<Enemy>().solid_layer))
         {
@@ -184,7 +209,18 @@ public class Health : MonoBehaviour
         }
     }
 
-
+    public void PushedUp(int pushUpDistance)
+    {
+        if (OnPushedEvent != null)
+            OnPushedEvent.Invoke();
+        Debug.Log("pushUp");
+        if (!GetComponentInParent<Enemy>().CheckColAtPlace(Vector2.up * pushUpDistance, GetComponentInParent<Enemy>().solid_layer))
+        {
+            transform.position = new Vector2(transform.position.x, transform.position.y + pushUpDistance);
+            PixelCameraController.instance.Shake(0.35f);
+        }
+    }
+	
 public bool TakeHeal(int amount)
 {
     if (dead || health == maxHealth)
@@ -221,6 +257,22 @@ public void SetUIHealthBar()
     if (UIHealthBar.instance != null)
     {
         UIHealthBar.instance.setHealthBar(health);
+    }
+}
+
+public void SetUIHealthBarFadeDamage()
+{
+    if (HealthBarFade.instance != null)
+    {
+        HealthBarFade.instance.Damage(health);
+    }
+}
+
+public void SetUIHealthBarFadeHeal()
+{
+    if (HealthBarFade.instance != null)
+    {
+        HealthBarFade.instance.Heal(health);
     }
 }
 }

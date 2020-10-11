@@ -125,20 +125,26 @@ MonoBehaviour:
   PickupTime: 0
   itemButton: {fileID: 1612796527615055428, guid: eb6f522bbe7fc9241bcf2e8c01f3f48f,
     type: 3}
+  tooltip: {fileID: 0}
+  tooltipDescription: {fileID: 0}
   RangedAttackMinDamage: 5
   RangedAttackMaxDamage: 10
   RangedAttackCooldownTime: 1
   RangedAttackCriticalDamageMultiply: 1
   RangedAttackChanceCriticalDamage: 0
-  ShellsCount: 30
+  ShellsCount: 0
+  ShellsCountMax: 30
   level: 1
   Rarity: 2
+  ManaCost: 2
   RangedPowerAttackMinDamage: 0
   RangedPowerAttackMaxDamage: 0
   RangedPowerAttackCooldownTime: 10
   RangedPowerCriticalDamageMultiply: 1
   RangedPowerChanceCriticalDamage: 0
   PowerShellsCount: 0
+  PowerShellsCountMax: 5
+  PowerManaCost: 8
   CanPoison: 0
   CanPowerAttackPoison: 0
   PoisonDamaged: 0
@@ -164,9 +170,20 @@ MonoBehaviour:
   Aiming: 0
   StepUpAfterHit: 0
   RangedUpAfterHit: 0
+  CanPushUp: 0
+  CanPowerAttackPushUp: 0
+  PushUpDistance: 0
+  CanStun: 0
+  CanPowerAttackStun: 0
+  StunDuration: 0
+  StunChance: 100
   PowerAttackPopUpAfterHit: 0
   CanPowerAttackThroughShoot: 0
-  PowerAttackAiming: 0
+  PowerAttackStepUpAfterHit: 0
+  PowerAttackAiming: 1
+  RangedBlink: 1
+  RangedHeal: 0
+  RangedHealCount: 0
   Type: 2
   Sprite: {fileID: 5765508453482255275}
   spriteHighlight: {fileID: 21300000, guid: 9a4633e3d19a97e4a8003fe30b658b4e, type: 3}

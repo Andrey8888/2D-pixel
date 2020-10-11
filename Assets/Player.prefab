@@ -130,6 +130,36 @@ PolygonCollider2D:
       - {x: 82.00981, y: -8.350195}
       - {x: 82.288025, y: -16.60021}
       - {x: 53.897587, y: -22.589354}
+--- !u!1 &6619267000718827828
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6289719203073900952}
+  m_Layer: 0
+  m_Name: GunBarrelScythe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6289719203073900952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6619267000718827828}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.2, y: -19, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8524039187701114782}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6626830429048299786
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,6 +344,7 @@ Transform:
   - {fileID: 2403444942249462067}
   - {fileID: 8740590849487099045}
   - {fileID: 3950792627055825262}
+  - {fileID: 6289719203073900952}
   m_Father: {fileID: 8524039188666438505}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -354,7 +385,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 852bfa02f49c0514b94e92d2f4c60b2d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -401,10 +432,20 @@ MonoBehaviour:
   - {fileID: 8524039189068760226}
   - {fileID: 8524039189096802808}
   - {fileID: 8193851719194844124}
+  - {fileID: 8193851719194844124}
+  - {fileID: 8193851719194844124}
+  - {fileID: 8193851719194844124}
+  - {fileID: 8193851719194844124}
+  - {fileID: 8193851719194844124}
   powerAttack:
   - {fileID: 8524039189068760226}
   - {fileID: 8524039189096802808}
   - {fileID: 7823641512262361762}
+  - {fileID: 7823641512262361762}
+  - {fileID: 7823641512262361762}
+  - {fileID: 8524039189068760226}
+  - {fileID: 8193851719194844124}
+  - {fileID: 8193851719194844124}
   MeleeWeaponType: 0
   PopUpDamage: {fileID: 224758864541635820, guid: 3765d098280a78541a36bd56af3e1c44,
     type: 3}
@@ -451,27 +492,36 @@ MonoBehaviour:
   - {fileID: 114021235920092806, guid: cecfd10b73b95c44dbb74bcd54868027, type: 3}
   - {fileID: 6968022802792312402, guid: 852031bc03ad313498049fd0eb444354, type: 3}
   - {fileID: 8315733683099106912, guid: 5d1c2451f782af344914bdf936f1c835, type: 3}
+  - {fileID: 8579064368712909951, guid: 467ded2d7c365d54a85555a8d74cc54c, type: 3}
   powerProjectile:
   - {fileID: 5801730819362278875, guid: 6bf4cd82bb6c657499f2b82553bd2413, type: 3}
   - {fileID: 8085262812505040281, guid: cdf44aed80bbba945a8e32fd2cf888eb, type: 3}
   - {fileID: 8315733683099106912, guid: 5d1c2451f782af344914bdf936f1c835, type: 3}
+  - {fileID: 8579064368712909951, guid: 467ded2d7c365d54a85555a8d74cc54c, type: 3}
   RangedWeaponType: 0
+  meleeProjectile: {fileID: 8579064368712909951, guid: 467ded2d7c365d54a85555a8d74cc54c,
+    type: 3}
+  disCast: 200
   gunBarrel:
   - {fileID: 8524039187663459909}
   - {fileID: 2403444942249462067}
   - {fileID: 2403444942249462067}
+  - {fileID: 6289719203073900952}
   gunBarrelDuck:
   - {fileID: 3291615047258261289}
   - {fileID: 8740590849487099045}
   - {fileID: 8740590849487099045}
+  - {fileID: 6289719203073900952}
   PowerGunBarrel:
   - {fileID: 8524039187663459909}
   - {fileID: 2403444942249462067}
   - {fileID: 2403444942249462067}
+  - {fileID: 6289719203073900952}
   PowerGunBarrelDuck:
   - {fileID: 3291615047258261289}
   - {fileID: 8740590849487099045}
   - {fileID: 8740590849487099045}
+  meleeGunBarrel: {fileID: 6289719203073900952}
 --- !u!114 &6589543082364206000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,6 +550,7 @@ GameObject:
   - component: {fileID: 8524039188666438506}
   - component: {fileID: 8524039188666438501}
   - component: {fileID: 8524039188666438500}
+  - component: {fileID: 4356507513704539616}
   m_Layer: 13
   m_Name: Player
   m_TagString: Player
@@ -677,12 +728,15 @@ MonoBehaviour:
   SpeedOnSwordAttack: 20
   ChangeCollider: 0
   hasSeries: 0
+  hasPowerAttackShell: 0
   MeleeCanThirdAttackCriticalDamage: 0
+  MeleeManaCost: 0
   MeleePowerAttackMinDamage: 0
   MeleePowerAttackMaxDamage: 0
   MeleePowerAttackCooldownTime: 0.8
   MeleePowerCriticalDamageMultiply: 1
   MeleePowerChanceCriticalDamage: 0
+  MeleePowerManaCost: 0
   MeleeAttackCanPoison: 0
   MeleePowerAttackCanPoison: 0
   MeleePoisonDamaged: 0
@@ -702,6 +756,13 @@ MonoBehaviour:
   MeleeAttackCanPush: 0
   MeleePowerAttackCanPush: 0
   MeleePushDistance: 0
+  MeleeAttackCanPushUp: 0
+  MeleePowerAttackCanPushUp: 0
+  MeleePushUpDistance: 0
+  MeleeAttackCanStun: 0
+  MeleePowerAttackCanStun: 0
+  MeleeStunDuration: 0
+  MeleeStunChance: 100
   HandAttackCooldownTime: 0.8
   SecondSwordAttackCooldownTime: 0.4
   ThirdSwordAttackCooldownTime: 0.4
@@ -714,12 +775,14 @@ MonoBehaviour:
   RangedAttackMaxDamage: 2
   ShellsCount: 0
   RangedAttackCooldownTime: 1
+  RangedManaCost: 0
   RangedPowerAttackMinDamage: 0
   RangedPowerAttackMaxDamage: 0
   RangedPowerAttackCooldownTime: 10
   RangedPowerCriticalDamageMultiply: 1
   RangedPowerChanceCriticalDamage: 0
   PowerShellsCount: 0
+  RangedPowerManaCost: 0
   RangedAttackCanPoison: 0
   RangedPowerAttackCanPoison: 0
   RangedPoisonDamaged: 0
@@ -739,6 +802,13 @@ MonoBehaviour:
   RangedAttackCanPush: 0
   RangedPowerAttackCanPush: 0
   RangedPushDistance: 0
+  RangedAttackCanPushUp: 0
+  RangedPowerAttackCanPushUp: 0
+  RangedPushUpDistance: 0
+  RangedAttackCanStun: 0
+  RangedPowerAttackCanStun: 0
+  RangedStunDuration: 0
+  RangedStunChance: 100
   RangedAttackCanThroughShoot: 0
   RangedTossingUp: 0
   RangedAttackAiming: 0
@@ -748,6 +818,9 @@ MonoBehaviour:
   RangedPowerAttackPopUpAfterHit: 0
   RangedPowerAttackAiming: 0
   RangedPowerAttackCanThroughShoot: 0
+  RangedHeal: 0
+  RangedHealCount: 0
+  RangedPowerBlink: 0
   Facing: 1
   wallSlideDir: 0
   isInLadder: 0
@@ -786,6 +859,9 @@ MonoBehaviour:
   activeWeapon: 1
   InitialWeapon: {fileID: 7325081864335052826, guid: 7fcda9774c39b3d43a737f8f09c492ea,
     type: 3}
+  RangedWeapon: {fileID: 4064983902154758797, guid: 7fcda9774c39b3d43a737f8f09c492ea,
+    type: 3}
+  MeleeWeapon: {fileID: 0}
 --- !u!114 &8524039188666438500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -823,7 +899,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8524039188666438500}
+        m_MethodName: SetUIHealthBarFadeDamage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnPushedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPushedUpEvent:
     m_PersistentCalls:
       m_Calls: []
   OnBurnedEvent:
@@ -840,6 +930,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnStunedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFreezedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -896,6 +989,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnStunedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls:
@@ -938,6 +1034,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8524039188666438500}
+        m_MethodName: SetUIHealthBarFadeHeal
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDeathEvent:
     m_PersistentCalls:
       m_Calls:
@@ -952,14 +1059,56 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  maxHealth: 3
-  health: 3
+  maxHealth: 10
+  health: 10
   dead: 0
   invincible: 0
   block: 0
   becomeInvincibleOnHit: 1
   invincibleTimeOnHit: 1
   DieEventsAfterTime: 0
+--- !u!114 &4356507513704539616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8524039188666438502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc9b23e1146f0146ad4a24e26a1dd4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnTakeExpenseEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4356507513704539616}
+        m_MethodName: SetUIHealthBarFadeDamage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTakeRefreshEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4356507513704539616}
+        m_MethodName: SetUIHealthBarFadeHeal
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  maxMana: 10
+  mana: 10
 --- !u!1 &8524039189068760253
 GameObject:
   m_ObjectHideFlags: 0
@@ -1224,6 +1373,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2498651591626944918, guid: 860031615a5481e43844b0e96abd071f,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 860031615a5481e43844b0e96abd071f, type: 3}

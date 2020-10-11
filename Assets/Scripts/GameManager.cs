@@ -99,4 +99,14 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
+
+    public void SetUIHealthBarFadeRefresh()
+    {
+        if (HealthBarFade.instance != null)
+        {
+            HealthBarFade.instance.Refresh();
+        }
+    }
+
 }
+

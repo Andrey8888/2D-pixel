@@ -23,7 +23,7 @@ public class DoorPlatform : MonoBehaviour
         CycleMove                       // Движение циклично
     }
     public MoveType Motion;             // Выбранный тип перемещения объекта
-    [HideInInspector]
+    //[HideInInspector]
     public bool Active;                 // Проверка на активацию всех объектов управления
     [HideInInspector]
     public int NextPointID = 1;         // ID следующей точки
@@ -42,6 +42,12 @@ public class DoorPlatform : MonoBehaviour
 
     private int Mnum = 0;
 
+    public enum TypeOfActivation
+    {
+        WholeOwner,                 // Все объекты управления должны быть активированы
+        OneOwner                    // Должен быть активирован только один объект управления
+    }
+    public TypeOfActivation TypeActivation;
 
     void Awake()
     {
@@ -153,17 +159,33 @@ public class DoorPlatform : MonoBehaviour
     public void CheckAllControls()
     {
         //Debug.Log(Owner[0].Active + " - " + Owner[1].Active);
-        for (int i = 0; i < ButtonControl.Length; i++)
+        switch (TypeActivation)
         {
-            if (Owner[i].Active == false)
-            {
-                Active = false;
+            case TypeOfActivation.OneOwner:
+                for (int i = 0; i < ButtonControl.Length; i++)
+                {
+                    if (Owner[i].Active == false)
+                    {
+                        Active = false;
+                    }
+                    else
+                    {
+                        Active = true;
+                        break;
+                    }
+                }
                 break;
-            }
-            else
-            {
-                Active = true;
-            }
+            case TypeOfActivation.WholeOwner:
+                bool Decision = true;
+                for (int i = 0; i < ButtonControl.Length; i++)
+                {
+                    Decision = Decision && Owner[i].Active;
+                }
+                if (Decision == true)
+                {
+                    Active = true;
+                }
+                break;
         }
     }
 }

@@ -8,7 +8,7 @@ public class Projectile : MonoBehaviour
 
     [Header("Speed")]
     public Vector2 Speed;
-
+	public int disappearanceTime = 3;
 
     [Header("Layers")]
     public LayerMask solid_layer;
@@ -16,7 +16,9 @@ public class Projectile : MonoBehaviour
     public enum Type
     {
         Arrow,
-        Explosion                                       
+        Explosion,
+		ThroughShell,
+		TemporaryShell
     }
     public Type ShellType = Type.Arrow;
 
@@ -42,6 +44,11 @@ public class Projectile : MonoBehaviour
         // keeping everything Pixel perfect
         Position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
         transform.position = Position;
+		
+		if(ShellType == Type.TemporaryShell)
+		{
+            StartCoroutine("DisappearanceCoroutine");
+        }
     }
 
     void Update()
@@ -75,7 +82,7 @@ public class Projectile : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         // if the projectile hit's a solid object, destroy it
-        if (col.gameObject.layer == (int)Mathf.Log(solid_layer.value, 2) && ShellType == Type.Arrow)
+        if (col.gameObject.layer == (int)Mathf.Log(solid_layer.value, 2) && ShellType != Type.Explosion)
         {
             DestroyMe();
             return;
@@ -91,7 +98,11 @@ public class Projectile : MonoBehaviour
             var PlayerComponent = FindObjectOfType<Player>();
             var didDamage = false;
 
-            if (PlayerComponent.PowerRangedAttack == false)
+            if (PlayerComponent.hasPowerAttackShell == true)
+            {
+                MeleeDamage(PlayerComponent, component);
+            }
+            else if (PlayerComponent.PowerRangedAttack == false)
             {
                 if (Random.Range(0, 100) < PlayerComponent.RangedCriticalDamageChance)
                 {
@@ -120,11 +131,39 @@ public class Projectile : MonoBehaviour
             // Apply the damage
             //var didDamage = component.TakeDamage(DamageOnHit, false, 0, 0, 0, false, 0, 0, 0, false, 0, false, 0);
             // Destroy the projectile after applying damage
-
+			
             if (didDamage && ShellType == Type.Arrow)
             {
                 DestroyMe();
             }
+        }
+    }
+	
+	IEnumerator  DisappearanceCoroutine()
+	{
+		yield return new WaitForSeconds(disappearanceTime);
+		DestroyMe();
+	}
+
+    private void MeleeDamage(Player PlayerComponent, Health component)
+    {
+        int dmg = (Random.Range(PlayerComponent.MeleePowerAttackMinDamage, PlayerComponent.MeleePowerAttackMaxDamage + 1));
+        component.TakeDamage(dmg, PlayerComponent.MeleePowerAttackCanPoison, PlayerComponent.MeleePoisonDamaged,
+        PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance,
+        PlayerComponent.MeleePowerAttackCanFire, PlayerComponent.MeleeFireDamaged,
+        PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
+        PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleePowerAttackCanFreez,
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleePowerAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
+        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
+
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleePowerManaCost);			
+		
+        if (!damageShow)
+        {
+            Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
+            DamagePopUp damagePopUp = damagePopupTransform.GetComponent<DamagePopUp>();
+            damagePopUp.Setup(dmg, false);
+            damageShow = true;
         }
     }
 
@@ -135,7 +174,11 @@ public class Projectile : MonoBehaviour
         PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedAttackCanFire,
         PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
         PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez,
-        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance, PlayerComponent.RangedAttackCanPushUp, PlayerComponent.RangedPushUpDistance,
+        PlayerComponent.RangedAttackCanStun, PlayerComponent.RangedStunDuration, PlayerComponent.RangedStunChance);
+
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.RangedManaCost);
+
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
@@ -153,7 +196,11 @@ public class Projectile : MonoBehaviour
         PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedAttackCanFire,
         PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
         PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez,
-        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance, PlayerComponent.RangedAttackCanPushUp, PlayerComponent.RangedPushUpDistance,
+        PlayerComponent.RangedAttackCanStun, PlayerComponent.RangedStunDuration, PlayerComponent.RangedStunChance);
+
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.RangedManaCost);
+
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
@@ -170,7 +217,11 @@ public class Projectile : MonoBehaviour
         PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedPowerAttackCanFire,
         PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
         PlayerComponent.RangedPowerAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedPowerAttackCanFreez,
-        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance, PlayerComponent.RangedPowerAttackCanPushUp, PlayerComponent.RangedPushUpDistance,
+        PlayerComponent.RangedPowerAttackCanStun, PlayerComponent.RangedStunDuration, PlayerComponent.RangedStunChance);
+
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.RangedPowerManaCost);
+
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
@@ -188,7 +239,11 @@ public class Projectile : MonoBehaviour
         PlayerComponent.RangedPoisonFrequency, PlayerComponent.RangedPoisonTick, PlayerComponent.RangedPoisonChance, PlayerComponent.RangedPowerAttackCanFire,
         PlayerComponent.RangedFireDamaged, PlayerComponent.RangedFireFrequency, PlayerComponent.RangedFireTick, PlayerComponent.RangedFireChance,
         PlayerComponent.RangedPowerAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedPowerAttackCanFreez,
-        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance);
+        PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance, PlayerComponent.RangedPowerAttackCanPushUp, PlayerComponent.RangedPushUpDistance,
+        PlayerComponent.RangedPowerAttackCanStun, PlayerComponent.RangedStunDuration, PlayerComponent.RangedStunChance);
+
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.RangedPowerManaCost);
+
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);

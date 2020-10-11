@@ -111,7 +111,8 @@ public class EnemyProjectile : MonoBehaviour
         EnemyComponent.RangedPoisonFrequency, EnemyComponent.RangedPoisonTick, EnemyComponent.RangedPoisonChance, EnemyComponent.RangedAttackCanFire,
         EnemyComponent.RangedFireDamaged, EnemyComponent.RangedFireFrequency, EnemyComponent.RangedFireTick, EnemyComponent.RangedFireChance,
         EnemyComponent.RangedAttackCanPush, EnemyComponent.RangedPushDistance, EnemyComponent.RangedAttackCanFreez,
-        EnemyComponent.RangedFreezDuration, EnemyComponent.RangedFreezChance);
+        EnemyComponent.RangedFreezDuration, EnemyComponent.RangedFreezChance, EnemyComponent.RangedAttackCanPushUp, EnemyComponent.RangedPushUpDistance, 
+        EnemyComponent.RangedAttackCanStun, EnemyComponent.RangedStunDuration, EnemyComponent.RangedStunChance);
 
         if (!damageShow)
         {
@@ -130,7 +131,8 @@ public class EnemyProjectile : MonoBehaviour
         EnemyComponent.RangedPoisonFrequency, EnemyComponent.RangedPoisonTick, EnemyComponent.RangedPoisonChance, EnemyComponent.RangedAttackCanFire,
         EnemyComponent.RangedFireDamaged, EnemyComponent.RangedFireFrequency, EnemyComponent.RangedFireTick, EnemyComponent.RangedFireChance,
         EnemyComponent.RangedAttackCanPush, EnemyComponent.RangedPushDistance, EnemyComponent.RangedAttackCanFreez,
-        EnemyComponent.RangedFreezDuration, EnemyComponent.RangedFreezChance);
+        EnemyComponent.RangedFreezDuration, EnemyComponent.RangedFreezChance, EnemyComponent.RangedAttackCanPushUp, EnemyComponent.RangedPushUpDistance,
+        EnemyComponent.RangedAttackCanStun, EnemyComponent.RangedStunDuration, EnemyComponent.RangedStunChance);
 
         if (!damageShow)
         {

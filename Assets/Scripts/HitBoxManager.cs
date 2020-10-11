@@ -101,10 +101,7 @@ public class HitBoxManager : MonoBehaviour
                 {
                     if (PlayerComponent.hitCount == 3)
                     {
-                        if (Random.Range(0, 100) < PlayerComponent.MeleeCriticalDamageChance)
-                        {
-                            CriticalDamage(PlayerComponent, component, didDamage);
-                        }
+                        CriticalDamage(PlayerComponent, component, didDamage);
                     }
                     else
                     {
@@ -150,8 +147,12 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
         PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
-        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleeAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
+        PlayerComponent.MeleeAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
 
+
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleeManaCost);	
+		
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
@@ -169,7 +170,12 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
         PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
-        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleeAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
+        PlayerComponent.MeleeAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
+
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleeManaCost);
+        Debug.Log(PlayerComponent.MeleeManaCost);
+
 
         if (!damageShow)
         {
@@ -188,8 +194,11 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleePowerAttackCanFire, PlayerComponent.MeleeFireDamaged,
         PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
         PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleePowerAttackCanFreez,
-        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleePowerAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
+        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
 
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleePowerManaCost);			
+		
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
@@ -207,8 +216,11 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleePoisonFrequency, PlayerComponent.MeleePoisonTick, PlayerComponent.MeleePoisonChance, PlayerComponent.MeleeAttackCanFire,
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
         PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
-        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance);
+        PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleePowerAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
+        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
 
+        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleePowerManaCost);			
+		
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);

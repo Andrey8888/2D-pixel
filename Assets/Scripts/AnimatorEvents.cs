@@ -46,10 +46,21 @@ public class AnimatorEvents : MonoBehaviour {
         if (enemy != null)
         {
             //enemy.OnStun = false;
-            enemy.Blink();
+            //enemy.Blink();
         }
     }
 
+	//public void PlayerBlink()
+ //   {
+ //       var player = GetComponentInParent<Player>();
+
+ //       if (player != null)
+ //       {
+ //           //enemy.OnStun = false;
+ //           player.Blink();
+ //       }
+ //   }
+	
     public void HitablePushBlockBackToNormalState()
     {
         var pushblock = GetComponentInParent<HitablePushBlock>();
@@ -70,6 +81,20 @@ public class AnimatorEvents : MonoBehaviour {
         }
     }
 
+	public void PlayerHeal()
+    {
+        var player = GetComponentInParent<Player>();
+
+        if (player != null)
+        {
+		var healthcomp = player.GetComponent<Health> ();
+			if (healthcomp != null && healthcomp.TakeHeal(player.RangedHealCount)) 
+			{
+			
+			}
+        }
+    }
+	
     public void PlayerSwordAttackMove()
     {
         var player = GetComponentInParent<Player>();

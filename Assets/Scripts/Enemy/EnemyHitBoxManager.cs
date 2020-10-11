@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyHitBoxManager : MonoBehaviour {
 
 	// Set these in the editor
-	public PolygonCollider2D attack1; // hands
+	public PolygonCollider2D[] attack; // hands
 
     // Used for organization
     public PolygonCollider2D[] colliders;
@@ -34,13 +34,30 @@ public class EnemyHitBoxManager : MonoBehaviour {
 			}
 		}
 		// Set up an array so our script can more easily set up the hit boxes
-		colliders = new PolygonCollider2D[]{attack1};
+		colliders = new PolygonCollider2D[]{ attack[0] };
 
 		// Create a polygon collider
 		localCollider = gameObject.AddComponent<PolygonCollider2D>();
 		localCollider.isTrigger = true; // Set as a trigger so it doesn't collide with our environment
 		localCollider.pathCount = 0; // Clear auto-generated polygons
 	}
+
+    public void ChangeCollider(int i)
+    {
+        if (owner == null)
+        {
+            owner = GetComponentInParent<Health>();
+            if (owner == null)
+            {
+                Debug.Log("There is no owner health component asigned to this HitBoxManager");
+            }
+        }
+        colliders = new PolygonCollider2D[] { attack[i] };
+        // Create a polygon collider
+        localCollider = gameObject.AddComponent<PolygonCollider2D>();
+        localCollider.isTrigger = true; // Set as a trigger so it doesn't collide with our environment
+        localCollider.pathCount = 0; // Clear auto-generated polygons
+    }
 
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -75,7 +92,8 @@ public class EnemyHitBoxManager : MonoBehaviour {
         EnemyComponent.MeleePoisonFrequency, EnemyComponent.MeleePoisonTick, EnemyComponent.MeleePoisonChance, EnemyComponent.MeleeAttackCanFire,
         EnemyComponent.MeleeFireDamaged, EnemyComponent.MeleeFireFrequency, EnemyComponent.MeleeFireTick, EnemyComponent.MeleeFireChance,
         EnemyComponent.MeleeAttackCanPush, EnemyComponent.MeleePushDistance, EnemyComponent.MeleeAttackCanFreez,
-        EnemyComponent.MeleeFreezDuration, EnemyComponent.MeleeFreezChance);
+        EnemyComponent.MeleeFreezDuration, EnemyComponent.MeleeFreezChance, EnemyComponent.MeleeAttackCanPushUp, EnemyComponent.MeleePushUpDistance,
+        EnemyComponent.MeleeAttackCanStun, EnemyComponent.MeleeStunDuration, EnemyComponent.MeleeStunChance);
 
         //if (!damageShow)
         //{
@@ -94,7 +112,8 @@ public class EnemyHitBoxManager : MonoBehaviour {
         EnemyComponent.MeleePoisonFrequency, EnemyComponent.MeleePoisonTick, EnemyComponent.MeleePoisonChance, EnemyComponent.MeleeAttackCanFire,
         EnemyComponent.MeleeFireDamaged, EnemyComponent.MeleeFireFrequency, EnemyComponent.MeleeFireTick, EnemyComponent.MeleeFireChance,
         EnemyComponent.MeleeAttackCanPush, EnemyComponent.MeleePushDistance, EnemyComponent.MeleeAttackCanFreez,
-        EnemyComponent.MeleeFreezDuration, EnemyComponent.MeleeFreezChance);
+        EnemyComponent.MeleeFreezDuration, EnemyComponent.MeleeFreezChance, EnemyComponent.MeleeAttackCanPushUp, EnemyComponent.MeleePushUpDistance,
+        EnemyComponent.MeleeAttackCanStun, EnemyComponent.MeleeStunDuration, EnemyComponent.MeleeStunChance);
 
         //if (!damageShow)
         //{

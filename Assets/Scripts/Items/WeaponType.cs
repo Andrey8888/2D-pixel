@@ -18,7 +18,7 @@ public enum RangedWeapon
 {
     Bow,
     Staff,
-    StaffFire,
+    StaffFire
 }
 
 public enum Artifacts

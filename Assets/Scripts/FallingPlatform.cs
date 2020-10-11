@@ -11,7 +11,10 @@ public class FallingPlatform : MonoBehaviour {
 
 	public float destroyAfterTime = 0.5f;
 
-	public BoxCollider2D myCollider;
+    [Header("Collision Layers")]
+    public LayerMask player_layer; // The layer on which player 
+
+    public BoxCollider2D myCollider;
 	public Animator myAnimator;
 
 	void Awake () {
@@ -34,8 +37,8 @@ public class FallingPlatform : MonoBehaviour {
 
 	void Update () {
 		if (!isTriggered) {
-			if (CheckColAtPlace(Vector2.up, 1)) {
-				var cols = CheckColsInDirAll (Vector2.up, 1);
+			if (CheckColAtPlace(Vector2.up, player_layer)) {
+				var cols = CheckColsInDirAll (Vector2.up, player_layer);
 
 				foreach (Collider2D col in cols) {
 					if (col.GetComponent<Actor> () != null && col.GetComponent<Actor>().onGround) {

@@ -13,13 +13,15 @@ public class ProjectileSpawner : MonoBehaviour
     public Projectile[] projectile;
     public Projectile[] powerProjectile;
     public RangedWeapon RangedWeaponType;
+    public Projectile meleeProjectile;
+    public int disCast = 200;
 
     [Header("Place to spawn the projectile at")]
     public Transform[] gunBarrel;
     public Transform[] gunBarrelDuck;
     public Transform[] PowerGunBarrel;
     public Transform[] PowerGunBarrelDuck;
-
+    public Transform meleeGunBarrel;
 
     private Projectile curProjectile;
     private Transform curGunBarrel;
@@ -41,17 +43,19 @@ public class ProjectileSpawner : MonoBehaviour
         }
     }
 
-
     public void Update()
     {
         //Cursor.lockState = CursorLockMode.None;
         //Cursor.visible = false;
 
         var playercomponent = GetComponentInParent<Player>();
-        if (playercomponent.RangedPowerAttackAiming)
+
+
+        if (playercomponent.RangedPowerAttackAiming || playercomponent.RangedPowerBlink)
         {
             float dist = Vector2.Distance(playercomponent.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            if (dist < 200)
+
+            if (dist < disCast)
             {
                 playercomponent.aimSprite.GetComponent<SpriteRenderer>().sprite = playercomponent.AimSpriteGreen;
             }
@@ -65,9 +69,12 @@ public class ProjectileSpawner : MonoBehaviour
     public void ChangeProjectile(int i)
     {
         curProjectile = projectile[i];
+
         curGunBarrel = gunBarrel[i];
         curBarrelDuck = gunBarrelDuck[i];
+
         curPowerProjectile = powerProjectile[i];
+
         curPowerGunBarrel = PowerGunBarrel[i];
         curPowerGunBarrelDuck = PowerGunBarrelDuck[i];
     }
@@ -104,28 +111,42 @@ public class ProjectileSpawner : MonoBehaviour
 
         if (playercomponent.RangedPowerAttackAiming)
         {
-
-            var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var hit2D = Physics2D.Raycast(cursor, Vector2.zero); // Vector2.zero если нужен рейкаст именно под курсором
-
-            if (hit2D.collider.tag == "BackGround")
+            //if (Input.GetButtonUp("Attack2"))
             {
+                var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                var hit2D = Physics2D.Raycast(cursor, Vector2.zero); // Vector2.zero если нужен рейкаст именно под курсором
+
+                    float dist = Vector2.Distance(playercomponent.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                    if (dist < disCast)
+                    {
+                        InstantiateFreePosition(cursor);
+                    }
+                    else
+                    {
+                        playercomponent.rangedPowerAttackCooldownTimer = 0;
+                    playercomponent.PowerShellsCount++;
+                    playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
+                    }
+            }
+        }
+        else if (playercomponent.RangedPowerBlink)
+        {
+            //if (Input.GetButtonUp("Attack2"))
+            {
+                var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                //var hit2D = Physics2D.Raycast(cursor, Vector2.zero); // Vector2.zero если нужен рейкаст именно под курсором
+
                 float dist = Vector2.Distance(playercomponent.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                if (dist < 200)
+                if (dist < disCast )
                 {
-                    InstantiateFreePosition(cursor);
+                    playercomponent.Blink(cursor);
                 }
                 else
                 {
                     playercomponent.rangedPowerAttackCooldownTimer = 0;
+                    playercomponent.PowerShellsCount++;
                     playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
                 }
-            }
-            else
-            {
-                playercomponent.aimSprite.GetComponent<SpriteRenderer>().sprite = playercomponent.AimSpriteRed;
-                playercomponent.rangedPowerAttackCooldownTimer = 0;
-                playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
             }
         }
         else
@@ -164,11 +185,29 @@ public class ProjectileSpawner : MonoBehaviour
     {
         var playercomponent = GetComponentInParent<Player>();
 
-        Projectile p = null;
-
         if (playercomponent.RangedPowerAttackAiming)
         {
-            if (playercomponent.RangedPowerAttackAiming)
+            //if (Input.GetButtonUp("Attack2"))
+            {
+                var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                var hit2D = Physics2D.Raycast(cursor, Vector2.zero); // Vector2.zero если нужен рейкаст именно под курсором
+
+                float dist = Vector2.Distance(playercomponent.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                if (dist < disCast)
+                {
+                    InstantiateFreePosition(cursor);
+                }
+                else
+                {
+                    playercomponent.rangedPowerAttackCooldownTimer = 0;
+                    playercomponent.PowerShellsCount++;
+                    playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
+                }
+            }
+        }
+        else if (playercomponent.RangedPowerBlink)
+        {
+            //if (Input.GetButtonUp("Attack2"))
             {
                 var cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 var hit2D = Physics2D.Raycast(cursor, Vector2.zero); // Vector2.zero если нужен рейкаст именно под курсором
@@ -176,13 +215,14 @@ public class ProjectileSpawner : MonoBehaviour
                 if (hit2D.collider.tag == "BackGround")
                 {
                     float dist = Vector2.Distance(playercomponent.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                    if (dist < 100)
+                    if (dist < disCast)
                     {
-                        InstantiateFreePosition(cursor);
+                        playercomponent.Blink(cursor);
                     }
                     else
                     {
                         playercomponent.rangedPowerAttackCooldownTimer = 0;
+                        playercomponent.PowerShellsCount++;
                         playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
                     }
                 }
@@ -190,13 +230,14 @@ public class ProjectileSpawner : MonoBehaviour
                 {
                     playercomponent.aimSprite.GetComponent<SpriteRenderer>().sprite = playercomponent.AimSpriteRed;
                     playercomponent.rangedPowerAttackCooldownTimer = 0;
+                    playercomponent.PowerShellsCount++;
                     playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
                 }
             }
-            else
-            {
-                InstantiateFreePosition(curPowerGunBarrelDuck.position);
-            }
+        }
+        else
+        {
+        InstantiateFreePosition(curPowerGunBarrelDuck.position);
         }
     }
 
@@ -225,4 +266,31 @@ public class ProjectileSpawner : MonoBehaviour
             PixelCameraController.instance.DirectionalShake(new Vector2(parentXScale, 0f), .05f);
         }
     }
+
+    public void InstantiateMeleeProjectile()
+    {
+        //Instantiate the projectile prefab
+        var p = Instantiate(meleeProjectile, meleeGunBarrel.position, Quaternion.identity) as Projectile;
+
+        // Shoot based on the X scale of our parent object (base facing), which should be 1 for right and -1 for left 
+        var parentXScale = Mathf.Sign(transform.parent.localScale.x);
+
+        // Set the localscale so the projectiles faces the right direction based on the parent object (base)
+        p.transform.localScale = new Vector3(parentXScale * p.transform.localScale.x, p.transform.localScale.y, p.transform.localScale.z);
+
+        if (owner != null)
+        {
+            p.owner = owner; // Set it's owner 
+        }
+
+        // Change the X speed based on the facing of the parent object
+        p.Speed.x *= parentXScale;
+
+        // Do a small screenshake to add a little bit of extra "feel"
+        if (PixelCameraController.instance != null)
+        {
+            PixelCameraController.instance.DirectionalShake(new Vector2(parentXScale, 0f), .05f);
+        }
+    }
+
 }

@@ -15,8 +15,9 @@ public class Spawn : MonoBehaviour
 
         if (spawnItem == null)
         {
-            Vector2 playerPos = new Vector2(player.position.x, player.position.y + 20f);
-            spawnItem = Instantiate(item, playerPos, Quaternion.identity);
+            //Vector2 playerPos = new Vector2(player.position.x, player.position.y + 20f);
+			
+            //spawnItem = Instantiate(item, playerPos, Quaternion.identity);	
         }
     }
 }

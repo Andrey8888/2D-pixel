@@ -45,7 +45,7 @@ public class EnemyImpact : MonoBehaviour
             {
                 var MoveH = playercomponent.MoveHPlatform(-400 * -(int)playercomponent.Facing * Time.deltaTime);
             }
-                StartCoroutine(OnPlayerSlow(playercomponent));
+                //StartCoroutine(OnPlayerSlow(playercomponent));
             }
         }
     }
@@ -75,7 +75,7 @@ public class EnemyImpact : MonoBehaviour
             {
                 //collision.transform.position = new Vector2(collision.transform.position.x - 5, 0);
 				
-                StartCoroutine(OnPlayerSlow(playercomponent));
+                //StartCoroutine(OnPlayerSlow(playercomponent));
 
                 if (!playercomponent.sticking && !playercomponent.CheckColAtPlace(Vector2.right * -(int)enemy.Facing, playercomponent.solid_layer))
                 {
@@ -114,7 +114,7 @@ public class EnemyImpact : MonoBehaviour
     // Function to deal damage to the player
     void OnPlayerTrigger(Player player)
     {
-        player.GetComponent<Health>().TakeDamage(DamageOnTouch, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
+        player.GetComponent<Health>().TakeDamage(DamageOnTouch, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0, false, 0, false, 0, 0);
     }
 
     IEnumerator OnPlayerSlow(Player player)

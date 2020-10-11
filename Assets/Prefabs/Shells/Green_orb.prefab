@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: ae786469aaba51e448bc2d8af5c64b38, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -97,9 +97,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: {x: 11, y: 0}
+  disappearanceTime: 3
   solid_layer:
     serializedVersion: 2
     m_Bits: 256
+  ShellType: 0
   owner: {fileID: 0}
   PopUpDamage: {fileID: 224758864541635820, guid: 3765d098280a78541a36bd56af3e1c44,
     type: 3}

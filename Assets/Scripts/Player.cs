@@ -76,7 +76,9 @@ public class Player : Actor
     public bool ChangeCollider = false;
     public bool hasSeries = false;
     private bool hasBlock = false;
+    public bool hasPowerAttackShell = false;
     public bool MeleeCanThirdAttackCriticalDamage;
+	public int MeleeManaCost =0;
 
     [Header("MeleePowerAttack")]
     public int MeleePowerAttackMinDamage = 0;
@@ -86,6 +88,7 @@ public class Player : Actor
     public int MeleePowerCriticalDamageMultiply = 1;
     [Range(0, 99)]
     public int MeleePowerChanceCriticalDamage = 0;
+	public int MeleePowerManaCost = 0;
 
     [Header("Poison")]
     public bool MeleeAttackCanPoison = false;
@@ -110,6 +113,18 @@ public class Player : Actor
     public bool MeleeAttackCanPush = false;
     public bool MeleePowerAttackCanPush = false;
     public int MeleePushDistance = 0;
+	
+	[Header("PushUp")]
+    public bool MeleeAttackCanPushUp = false;
+    public bool MeleePowerAttackCanPushUp = false;
+    public int MeleePushUpDistance = 0;
+	[Header("Stun")]
+    public bool MeleeAttackCanStun = false;
+    public bool MeleePowerAttackCanStun = false;
+    public int MeleeStunDuration = 0;
+	[Range(0, 99)]
+    public int MeleeStunChance = 100;
+	
     [Header("Other")]
     public float HandAttackCooldownTime = 0.8f;
     public float SecondSwordAttackCooldownTime = 0.4f;
@@ -128,6 +143,7 @@ public class Player : Actor
     public int RangedAttackMaxDamage = 2;//new int[2] {2, 0, 0};
     public int ShellsCount = 0;
     public float RangedAttackCooldownTime = 1f;
+	public int RangedManaCost = 0;
 
     [Header("RangedPowerAttack")]
     public int RangedPowerAttackMinDamage = 0;
@@ -138,6 +154,7 @@ public class Player : Actor
     [Range(0, 99)]
     public int RangedPowerChanceCriticalDamage = 0;
     public int PowerShellsCount = 0;
+	public int RangedPowerManaCost = 0;
 
     [Header("Poison")]
     public bool RangedAttackCanPoison = false;
@@ -166,6 +183,18 @@ public class Player : Actor
     public bool RangedPowerAttackCanPush = false;
     public int RangedPushDistance = 0;
 
+	[Header("PushUp")]
+    public bool RangedAttackCanPushUp = false;
+    public bool RangedPowerAttackCanPushUp = false;
+    public int RangedPushUpDistance = 0;
+	
+	[Header("Stun")]
+    public bool RangedAttackCanStun = false;
+    public bool RangedPowerAttackCanStun = false;
+    public int RangedStunDuration = 0;
+	[Range(0, 99)]
+    public int RangedStunChance = 100;
+	
     [Header("Other")]
     public bool RangedAttackCanThroughShoot = false;
     public bool RangedTossingUp = false;
@@ -178,6 +207,9 @@ public class Player : Actor
     public int RangedPowerAttackPopUpAfterHit = 0;
     public bool RangedPowerAttackAiming = false;
     public bool RangedPowerAttackCanThroughShoot = false;
+    public bool RangedHeal = false;
+    public int RangedHealCount = 0;
+	public bool RangedPowerBlink = false;
     #endregion
 
     [Header("Facing Direction")]
@@ -236,14 +268,15 @@ public class Player : Actor
     private Vector2 extraPosOnClimb = new Vector2(10, 16); // Extra position to add to the current position to the end position of the climb animation matches the start position in idle state
     public int hitCount = 0;
     public bool hasPrepare = false;
-    private GameObject countText;
+    private GameObject countShellText;
+	private GameObject countPowerShellText;
     private bool hasBow = false;
     private bool hasSword = false;
     [HideInInspector]
     public bool canAim = false;
-	public Sprite AimSpriteGreen; // сделать дял каждого оружия отдельный подгружать из оружия
-	public Sprite AimSpriteRed;
-	public GameObject aimSprite;
+    public Sprite AimSpriteGreen; // сделать дял каждого оружия отдельный подгружать из оружия
+    public Sprite AimSpriteRed;
+    public GameObject aimSprite;
     [HideInInspector]
     public bool OnAttackMove = false;
     [HideInInspector]
@@ -324,7 +357,7 @@ public class Player : Actor
     {
         get
         {
-            return hitCount == 0 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+            return GetComponent<Mana>().mana > MeleeManaCost && hitCount == 0 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
         }
     }
 
@@ -332,7 +365,7 @@ public class Player : Actor
     {
         get
         {
-            return (hasSeries && hitCount == 1 && activeWeapon == ActiveWeapon.Sword) && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+            return GetComponent<Mana>().mana > MeleeManaCost &&  hasSeries && hitCount == 1 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
         }
     }
 
@@ -340,14 +373,14 @@ public class Player : Actor
     {
         get
         {
-            return hasSeries && hitCount == 2 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+            return GetComponent<Mana>().mana > MeleeManaCost &&  hasSeries && hitCount == 2 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
         }
     }
     public bool CanPowerSwordAttack
     {
         get
         {
-            return !hasBlock && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack2") && meleePowerAttackCooldownTimer <= 0f;
+            return GetComponent<Mana>().mana > MeleePowerManaCost &&  !hasBlock && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack2") && meleePowerAttackCooldownTimer <= 0f;
         }
     }
     public bool CanBlock
@@ -368,14 +401,14 @@ public class Player : Actor
     {
         get
         {
-            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack");
+            return GetComponent<Mana>().mana > RangedManaCost &&  activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack");
         }
     }
     public bool CanPowerShoot
     {
         get
         {
-            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack2");
+            return GetComponent<Mana>().mana > RangedPowerManaCost && activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack2");
         }
     }
 
@@ -383,7 +416,7 @@ public class Player : Actor
     {
         get
         {
-            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && rangedPowerAttackCooldownTimer <= 0f;
+            return PowerShellsCount > 0 && activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && rangedPowerAttackCooldownTimer <= 0f;
         }
     }
 
@@ -391,7 +424,8 @@ public class Player : Actor
     {
         get
         {
-            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && ShellsCount > 0 && activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack") && rangedAttackCooldownTimer <= 0f;
+            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && ShellsCount > 0 && GetComponent<Mana>().mana > RangedManaCost 
+			&& activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack") && rangedAttackCooldownTimer <= 0f;
         }
     }
 
@@ -403,6 +437,22 @@ public class Player : Actor
         }
     }
 
+	    public bool CanDuckPowerShootPrepare
+    {
+        get
+        {
+            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && GetComponent<Mana>().mana > RangedPowerManaCost && PowerShellsCount > 0 
+			&& activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && rangedPowerAttackCooldownTimer <= 0f;
+        }
+    }
+
+    public bool CanDuckPowerShoot
+    {
+        get
+        {
+            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack2"); ;
+        }
+    }
     #endregion
 
     [Header("Squash & Stretch")]
@@ -442,7 +492,10 @@ public class Player : Actor
         PowerSwordAttack,
         DuckShoot,
         DuckPrepare,
-        Selection
+        DuckPowerShoot,
+        DuckPowerShootPrepare,
+        Selection,
+		Stun
     }
 
     // State Machine
@@ -454,10 +507,13 @@ public class Player : Actor
         Bow,           // Лук 
         Sword          // Меч
     }
+
     [Header("Initial weapon")]
     public ActiveWeapon activeWeapon; // Активное оружие
 
     public GameObject InitialWeapon = null;
+    public PickupRangedWeapons RangedWeapon = null;
+    public PickupMeleeWeapons MeleeWeapon = null;
 
     new void Awake()
     {
@@ -466,7 +522,8 @@ public class Player : Actor
         aimSprite.SetActive(false);
 
         //AimLine.gameObject.SetActive(false);
-        countText = GameObject.FindGameObjectWithTag("ArrowCount");
+        countShellText = GameObject.FindGameObjectWithTag("ShellCount");
+        countPowerShellText = GameObject.FindGameObjectWithTag("PowerShellCount");
         // This code piece is only neccesary for the ducking functionality
         //Ducking & Normal Colliders Assignment
         if (myNormalCollider == null && myDuckingCollider != null)
@@ -483,7 +540,9 @@ public class Player : Actor
             InitialWeapon.GetComponent<PickupRangedWeapons>().OnPlayer(this);
         if (InitialWeapon.GetComponent<PickupMeleeWeapons>() != null)
             InitialWeapon.GetComponent<PickupMeleeWeapons>().OnPlayer(this);
-        countText.GetComponent<Text>().text = ShellsCount.ToString();
+        countShellText.GetComponent<Text>().text = ShellsCount.ToString();
+        countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
+        //countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
     }
 
     // Use this for initialization
@@ -492,6 +551,7 @@ public class Player : Actor
         fsm.ChangeState(States.LadderClimb);
         ChangeWeapon(activeWeapon);
         curRun = MaxRun;
+        StartCoroutine("ManaRegeneration");
     }
 
     private void ChangeWeapon(ActiveWeapon activeWeapon) // удалить вместе с вызовом
@@ -522,9 +582,11 @@ public class Player : Actor
             switch (activeWeapon)
             {
                 case ActiveWeapon.Sword:
+                    hasPowerAttackShell = false;
                     activeWeapon = ActiveWeapon.Bow;
                     break;
                 case ActiveWeapon.Bow:
+                    hasPowerAttackShell = true;
                     activeWeapon = ActiveWeapon.Sword;
                     break;
             }
@@ -1070,6 +1132,13 @@ public class Player : Actor
             fsm.ChangeState(States.DuckPrepare, StateTransition.Overwrite);
             return;
         }
+		
+		if (CanDuckPowerShootPrepare)
+        {
+            rangedAttackCooldownTimer = RangedAttackCooldownTime;
+            fsm.ChangeState(States.DuckPowerShootPrepare, StateTransition.Overwrite);
+            return;
+        }
     }
 
     private void LadderClimb_Enter()
@@ -1416,7 +1485,7 @@ public class Player : Actor
 
         if (OnAttackMove)
         {
-		
+
             if (tossingUp)
                 Speed.y = Calc.Approach(PopUpAfterHit, target, Gravity * Time.deltaTime);
 
@@ -1729,10 +1798,153 @@ public class Player : Actor
     }
     void DuckShoot_Exit()
     {
+        RangedWeapon.GetComponent<PickupRangedWeapons>().ShellsCount--;
         ShellsCount--;
-        countText.GetComponent<Text>().text = ShellsCount.ToString();
+        countShellText.GetComponent<Text>().text = ShellsCount.ToString();
     }
 
+	void DuckPowerShootPrepare_Update()
+    {
+
+        //if(canAim) // прицеливание
+        //{
+        //    AimLine.gameObject.SetActive(true);
+        //    //mouseMotion.x += Input.GetAxis("Mouse X") * mouseSens;
+        //    //mouseMotion.y += Input.GetAxis("Mouse Y") * mouseSens;
+        //    //AimPoints[0] += mouseMotion;
+
+        //    var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
+        //    var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
+        //    var aimAngle2 = aimAngle * Mathf.Rad2Deg;
+        //    //Debug.Log(aimAngle2);
+        //    if (aimAngle < 0f)
+        //    {
+        //        aimAngle = Mathf.PI * 2 + aimAngle;
+        //    }
+        //    bool Flip = ((Mathf.Abs(aimAngle2) > 91) && (transform.localScale.x > 0) || (Mathf.Abs(aimAngle2) < 89) && (transform.localScale.x < 0));
+        //    if (Flip)
+        //    {
+        //        if (Facing != (Facings)(-1))
+        //            Facing = (Facings)(-1);
+        //        else
+        //            Facing = (Facings)(1);
+        //    }
+        //    AimLine.transform.rotation = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg);
+        //    var aimAngle3 = aimAngle - 89.6f;
+        //    var aimAngle4 = 180;
+        //    //Bow.transform.rotation = Quaternion.Euler(aimAngle4, aimAngle4, aimAngle3 * Mathf.Rad2Deg - bowSpriteAngle);
+        //    if (delayTimer >= AttackDelay)
+        //    {
+        //        if (Velocity < maxVel)
+        //        {
+        //            Velocity += delVel * Time.deltaTime;
+        //            //Debug.Log("Скорость: " + Velocity);
+        //        }
+        //        else
+        //        {
+        //            Velocity = maxVel;
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    /*if (Input.GetMouseButtonUp(0))
+        //    {
+        //        Instantiate(Arrow, AimPosition, AimLine.transform.rotation);
+        //        delayTimer = 0;
+        //    }*/
+
+        //    if (ChangeDirection)
+        //    {
+        //        //AimLine.transform.localScale = new Vector3(-AimLine.transform.localScale.x, AimLine.transform.localScale.y, AimLine.transform.localScale.z);
+        //        //AimPoints[1] = -AimPoints[1];
+        //        ChangeDirection = !ChangeDirection;
+        //    }
+        //    AimLine.transform.Rotate(Vector3.forward, -AimLine.transform.localEulerAngles.z);
+        //    AimLine.gameObject.SetActive(false);
+        //}
+        //mouseMotion = Vector2.zero;
+        //delayTimer += Time.deltaTime;
+
+        if (RangedPowerAttackAiming || RangedPowerBlink)
+        {
+            aimSprite.SetActive(true);
+
+            var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
+            var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
+            var aimAngle2 = aimAngle * Mathf.Rad2Deg;
+
+            bool Flip = ((Mathf.Abs(aimAngle2) > 95) && (transform.localScale.x > 1) || (Mathf.Abs(aimAngle2) < 85) && (transform.localScale.x < -1));
+            if (Flip)
+            {
+                if (Facing != (Facings)(-1))
+                    Facing = (Facings)(-1);
+                else
+                    Facing = (Facings)(1);
+            }
+
+            if ((Mathf.Abs(aimAngle2) < 90) && (Mathf.Abs(aimAngle2) > 75))
+                Debug.Log("angle 90 - 75");
+            if ((Mathf.Abs(aimAngle2) < 75) && (Mathf.Abs(aimAngle2) > 60))
+                Debug.Log("angle 75 - 60");
+            if ((Mathf.Abs(aimAngle2) < 60) && (Mathf.Abs(aimAngle2) > 45))
+                Debug.Log("angle 60 - 45");
+            if ((Mathf.Abs(aimAngle2) < 45) && (Mathf.Abs(aimAngle2) > 30))
+                Debug.Log("angle 45 - 30");
+            if ((Mathf.Abs(aimAngle2) < 30) && (Mathf.Abs(aimAngle2) > 15))
+                Debug.Log("angle 30 - 15");
+            if ((Mathf.Abs(aimAngle2) < 15) && (Mathf.Abs(aimAngle2) > 0))
+                Debug.Log("angle 15 - 0");
+        }
+
+        // Bow Attack over here
+        if (CanDuckPowerShoot)
+        {
+            //AimLine.gameObject.SetActive(false);
+            fsm.ChangeState(States.DuckPowerShoot, StateTransition.Overwrite);
+            return;
+        }
+
+        if (!(onGround && moveX == 0 && moveY < 0 && !jumpIsInsideBuffer))
+        {
+            //AimLine.gameObject.SetActive(false);
+            fsm.ChangeState(States.Normal, StateTransition.Overwrite);
+            return;
+        }
+
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+    }
+	
+	void DuckPowerShoot_Update()
+    {
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+    }
+
+    void DuckPowerShoot_Exit()
+    {
+        RangedWeapon.GetComponent<PickupRangedWeapons>().PowerShellsCount--;
+        PowerShellsCount--;
+        countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
+    }
+	
     void BowPrepare_Update()
     {
 
@@ -1796,20 +2008,30 @@ public class Player : Actor
         //mouseMotion = Vector2.zero;
         //delayTimer += Time.deltaTime;
 
-        aimSprite.SetActive(true);
+        //aimSprite.SetActive(true);
 
-        var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
-        var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
-        var aimAngle2 = aimAngle * Mathf.Rad2Deg;
+		
+			//if ((Mathf.Abs(aimAngle2) < 90) && (Mathf.Abs(aimAngle2) > 45))
+   //             Debug.Log("angle 90 - 45");
+   //         if ((Mathf.Abs(aimAngle2) < 45) && (Mathf.Abs(aimAngle2) > 0))
+   //             Debug.Log("angle 45 - 0");
+   //         if ((Mathf.Abs(aimAngle2) < 0) && (Mathf.Abs(aimAngle2) > -45))
+   //             Debug.Log("angle 0 - -45");
+			//if ((Mathf.Abs(aimAngle2) < -45) && (Mathf.Abs(aimAngle2) > -90))
+   //             Debug.Log("angle -45 - -90");
+		
+        //var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
+        //var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
+        //var aimAngle2 = aimAngle * Mathf.Rad2Deg;
 
-        bool Flip = ((Mathf.Abs(aimAngle2) > 91) && (transform.localScale.x > 0) || (Mathf.Abs(aimAngle2) < 89) && (transform.localScale.x < 0));
-        if (Flip)
-        {
-            if (Facing != (Facings)(-1))
-                Facing = (Facings)(-1);
-            else
-                Facing = (Facings)(1);
-        }
+        //bool Flip = ((Mathf.Abs(aimAngle2) > 92) && (transform.localScale.x > 1) || (Mathf.Abs(aimAngle2) < 88) && (transform.localScale.x < -1));
+        //if (Flip)
+        //{
+        //    if (Facing != (Facings)(-1))
+        //        Facing = (Facings)(-1);
+        //    else
+        //        Facing = (Facings)(1);
+        //}
 
         // Bow Attack over here
         if (CanShoot)
@@ -1830,7 +2052,7 @@ public class Player : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
-	
+
     void BowAttack_Update()
     {
         // Horizontal Speed Update Section
@@ -1846,9 +2068,10 @@ public class Player : Actor
     }
     void BowAttack_Exit()
     {
+        RangedWeapon.GetComponent<PickupRangedWeapons>().ShellsCount--;
         ShellsCount--;
-        countText.GetComponent<Text>().text = ShellsCount.ToString();
-        aimSprite.SetActive(false);
+        countShellText.GetComponent<Text>().text = ShellsCount.ToString();
+        //aimSprite.SetActive(false);
     }
 
     void BowPowerAttackPrepare_Update()
@@ -1870,44 +2093,61 @@ public class Player : Actor
         //mouseMotion.x += Input.GetAxis("Mouse X") * mouseSens;
         //mouseMotion.y += Input.GetAxis("Mouse Y") * mouseSens;
         //AimPoints[0] += mouseMotion;
-
-		aimSprite.SetActive(true);
-		
-        var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
-        var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
-        var aimAngle2 = aimAngle * Mathf.Rad2Deg;
-
-        bool Flip = ((Mathf.Abs(aimAngle2) > 91) && (transform.localScale.x > 0) || (Mathf.Abs(aimAngle2) < 89) && (transform.localScale.x < 0));
-        if (Flip)
+        if (RangedPowerAttackAiming || RangedPowerBlink)
         {
-            if (Facing != (Facings)(-1))
-                Facing = (Facings)(-1);
-            else
-                Facing = (Facings)(1);
-        }
+            aimSprite.SetActive(true);
 
-        // Bow Attack over here
-        if (CanPowerShoot)
-        {
-            //AimLine.gameObject.SetActive(false);
-            fsm.ChangeState(States.BowPowerAttack, StateTransition.Overwrite);
-            return;
-        }
+            var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
+            var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
+            var aimAngle2 = aimAngle * Mathf.Rad2Deg;
+
+            bool Flip = ((Mathf.Abs(aimAngle2) > 95) && (transform.localScale.x > 1) || (Mathf.Abs(aimAngle2) < 85) && (transform.localScale.x < -1));
+            if (Flip)
+            {
+                if (Facing != (Facings)(-1))
+                    Facing = (Facings)(-1);
+                else
+                    Facing = (Facings)(1);
+            }
+
+            if ((Mathf.Abs(aimAngle2) < 90) && (Mathf.Abs(aimAngle2) > 75))
+                Debug.Log("angle 90 - 75");
+            if ((Mathf.Abs(aimAngle2) < 75) && (Mathf.Abs(aimAngle2) > 60))
+                Debug.Log("angle 75 - 60");
+            if ((Mathf.Abs(aimAngle2) < 60) && (Mathf.Abs(aimAngle2) > 45))
+                Debug.Log("angle 60 - 45");
+            if ((Mathf.Abs(aimAngle2) < 45) && (Mathf.Abs(aimAngle2) > 30))
+                Debug.Log("angle 45 - 30");
+            if ((Mathf.Abs(aimAngle2) < 30) && (Mathf.Abs(aimAngle2) > 15))
+                Debug.Log("angle 30 - 15");
+            if ((Mathf.Abs(aimAngle2) < 15) && (Mathf.Abs(aimAngle2) > 0))
+                Debug.Log("angle 15 - 0");
+		}
+            // Bow Attack over here
+            if (CanPowerShoot)
+            {
+                //AimLine.gameObject.SetActive(false);
+                fsm.ChangeState(States.BowPowerAttack, StateTransition.Overwrite);
+                return;
+            }
+
     }
 
-	void BowPowerAttackPrepare_Exit()
+    void BowPowerAttackPrepare_Enter()
     {
-		aimSprite.SetActive(false);
-    }
-	
-	void BowPowerAttackPrepare_Enter()
-    {
-        if (RangedPowerAttackAiming)
+        PowerRangedAttack = true;
+        if (RangedPowerAttackAiming || RangedPowerBlink)
         {
-        aimSprite.GetComponent<SpriteRenderer>().sprite = AimSpriteGreen;
+            aimSprite.GetComponent<SpriteRenderer>().sprite = AimSpriteGreen;
         }
     }
-	
+
+    void BowPowerAttackPrepare_Exit()
+    {
+        PowerRangedAttack = false;
+        aimSprite.SetActive(false);
+    }
+
     void BowPowerAttack_Update()
     {
         // Horizontal Speed Update Section
@@ -1924,8 +2164,9 @@ public class Player : Actor
 
     void BowPowerAttack_Exit()
     {
+        RangedWeapon.GetComponent<PickupRangedWeapons>().PowerShellsCount--;
         PowerShellsCount--;
-        countText.GetComponent<Text>().text = PowerShellsCount.ToString();
+        countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
     }
 
     void Action_Update()
@@ -1942,7 +2183,7 @@ public class Player : Actor
         }
     }
 
-    void Selection_Update()
+	void Stun_Update()
     {
         // Horizontal Speed Update Section
         float num = onGround ? 1f : AirMult;
@@ -1955,7 +2196,7 @@ public class Player : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
-
+	
     void LedgeGrab_Enter()
     {
         Speed = Vector2.zero;
@@ -2233,7 +2474,7 @@ public class Player : Actor
     //    hasBlock = false;
     //}
 
-    public bool PickUpMeleeWeapon(MeleeWeapon type, int minDamage, int maxDamage,
+    public bool PickUpMeleeWeapon(PickupMeleeWeapons meleeWeapon, MeleeWeapon type, int minDamage, int maxDamage,
     float attackCooldown, int critMultiply, int critChance,
     int minPowerDamage, int maxPowerDamage,
     float attackPowerCooldown, int critPowerMultiply, int critPowerChance,
@@ -2242,7 +2483,10 @@ public class Player : Actor
     bool hasFire, bool hasPowerAttackFire, int fireAmount, int fireFrequency, int fireTick, int fireChance,
     bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance,
     bool hasPush, bool hasPowerAttackPush, int pushDistance,
-    bool hasTossingUp, int popUpAfterHit)
+    bool hasTossingUp, int popUpAfterHit,
+	bool hasPushUp, bool hasPowerAttackPushUp, int pushUpDistance,
+	bool hasStun, bool hasPowerAttackStun, int stunDuration, int stunChance,
+	int manaCost, int ManaPowerCost, bool powerShell)
     {
         if (!hasSword)
         {
@@ -2260,6 +2504,7 @@ public class Player : Actor
             MeleeCanThirdAttackCriticalDamage = hasThirdAttackCriticalDamage;
             hasSeries = series;
             hasBlock = block;
+            hasPowerAttackShell = powerShell;
 
             MeleePowerAttackMinDamage = minPowerDamage;
             MeleePowerAttackMaxDamage = maxPowerDamage;
@@ -2289,9 +2534,22 @@ public class Player : Actor
             MeleeAttackCanPush = hasPush;
             MeleePowerAttackCanPush = hasPowerAttackPush;
             MeleePushDistance = pushDistance;
-
+			
+            MeleeAttackCanPushUp = hasPushUp;
+            MeleePowerAttackCanPushUp = hasPowerAttackPushUp;
+            MeleePushUpDistance = pushUpDistance;
+			
+			MeleeAttackCanStun = hasStun;
+            MeleePowerAttackCanStun = hasPowerAttackStun;
+            MeleeStunDuration = stunDuration;
+            MeleeStunChance = stunChance;
+			MeleeManaCost = manaCost;
+			MeleePowerManaCost = ManaPowerCost;
+			
             tossingUp = hasTossingUp;
             PopUpAfterHit = popUpAfterHit;
+
+            MeleeWeapon = meleeWeapon;
 
             activeWeapon = ActiveWeapon.Sword;
             hasSword = true;
@@ -2315,7 +2573,7 @@ public class Player : Actor
         }
         return true;
     }
-    public bool PickUpRangedWeapon(RangedWeapon type, int minDamage, int maxDamage, int shellsCount,
+    public bool PickUpRangedWeapon(PickupRangedWeapons rangedWeapon, RangedWeapon type, int minDamage, int maxDamage, int shellsCount,
     float attackCooldown, int critMultiply, int critChance,
     int rangedPowerAttackMinDamage, int rangedPowerAttackMaxDamage, int powerShellsCount,
     float attackPowerCooldown, int critPowerMultiply, int critPowerChance,
@@ -2324,7 +2582,11 @@ public class Player : Actor
     bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance,
     bool hasPush, bool hasPowerAttackPush, int pushDistance,
     bool hasTossingUp, int popUpAfterHit, bool hasThroughShoot, bool hasPowerAttackThroughShoot,
-    bool hasAiming, int StepUpAfterHit, int PowerAttackPopUpAfterHit, bool hasPowerAttackAiming)  //hasTossingUp  popUpAfterHit  rangedPowerAttackMinDamage  rangedPowerAttackMaxDamage
+    bool hasAiming, int StepUpAfterHit, int PowerAttackPopUpAfterHit, bool hasPowerAttackAiming, 
+	bool rangedBlink, bool rangedHeal, int rangedHealCount,
+	bool hasPushUp, bool hasPowerAttackPushUp, int pushUpDistance,
+	bool hasStun, bool hasPowerAttackStun, int stunDuration, int stunChance,
+	int manaCost, int manaPowerCost)  
     {
         if (!hasBow)
         {
@@ -2371,15 +2633,32 @@ public class Player : Actor
             RangedPowerAttackCanPush = hasPowerAttackPush;
             RangedPushDistance = pushDistance;
 
+			RangedAttackCanPushUp = hasPushUp;
+            RangedPowerAttackCanPushUp = hasPowerAttackPushUp;
+            RangedPushUpDistance = pushUpDistance;
+			
+			RangedAttackCanStun = hasStun;
+            RangedPowerAttackCanStun = hasPowerAttackStun;
+            RangedStunDuration = stunDuration;
+            RangedStunChance = stunChance;
+			
             RangedAttackCanThroughShoot = hasThroughShoot;
             RangedPowerAttackCanThroughShoot = hasPowerAttackThroughShoot;
             RangedAttackAiming = hasAiming;
             RangedPowerAttackAiming = hasPowerAttackAiming;
-
+			RangedPowerBlink = rangedBlink;
+			RangedHeal = rangedHeal;
+			RangedHealCount = rangedHealCount;
+			RangedManaCost = manaCost;
+			RangedPowerManaCost = manaPowerCost;
+			
+			
+            RangedWeapon = rangedWeapon;
 
             activeWeapon = ActiveWeapon.Bow;
             hasBow = true;
-            countText.GetComponent<Text>().text = ShellsCount.ToString();
+            countShellText.GetComponent<Text>().text = ShellsCount.ToString();
+			countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
 
             var projectile = GetComponentInChildren<ProjectileSpawner>();
             projectile.ChangeProjectile((int)RangedWeaponClass);
@@ -2422,6 +2701,8 @@ public class Player : Actor
 
     public void DropRangedWeapon()
     {
+        RangedWeapon = null;
+
         for (int i = 0; i < parameters.Count; i++)
         {
             DropItem(parameters[i]);
@@ -2439,6 +2720,7 @@ public class Player : Actor
         else activeWeapon = ActiveWeapon.Hands;
         hasBow = false;
     }
+	
     public void PickUpArtifacts(ItemParameters item)
     {
         parameters.Add(item);
@@ -2452,7 +2734,7 @@ public class Player : Actor
                     if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
                     {
                         {
-                            AddParametrs(item.StacksArtifacts[j]);
+                            TakeItem(item.StacksArtifacts[j]);
                             Debug.Log("plus param");
                         }
                     }
@@ -2460,46 +2742,8 @@ public class Player : Actor
         }
 
     }
+
     public bool TakeItem(ItemParameters item) // TODO переделать логику
-    {
-        //for (int j = 0; j < item.ArtifactsType.Length; j++)
-        //{
-        //for (int i = 0; i < parameters.Count; i++)
-        //{
-        //if (item.ArtifactsType.Length != 0)
-        //    if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
-        //    {
-        //        {
-        AddParametrs(item);
-        //Debug.Log(item.ToString());
-        //Debug.Log("plus param");
-        //    }
-        //}
-        //}
-        //}
-
-
-
-        //if (item.StacksRangedWeapon == stack.StacksRangedWeapon)
-        //{
-        //    for (int i = 0; i < item.StacksRangedWeapon.Length; i++)
-        //    {
-        //        AddParametrs(item.StacksRangedWeapon[i]);
-        //    } 
-        //}
-
-        //if (item.StacksMeleeWeapon == stack.StacksMeleeWeapon)
-        //{
-        //    for (int i = 0; i < item.StacksMeleeWeapon.Length; i++)
-        //    {
-        //        AddParametrs(item.StacksMeleeWeapon[i]);
-        //    }
-        //}
-
-        return true;
-    }
-
-    public bool AddParametrs(ItemParameters item) // TODO переделать логику
     {
         Gravity = Gravity + item.Gravity;
         MaxFall = MaxFall + item.MaxFall;
@@ -2599,43 +2843,6 @@ public class Player : Actor
 
     public void DropItem(ItemParameters item) // TODO переделать логику
     {
-        DecreaseParameters(item);
-        Debug.Log(item.ToString());
-
-        //for (int j = 0; j < item.ArtifactsType.Length; j++)
-        //{
-        //    for (int i = 0; i < parameters.Count; i++)
-        //    {
-        //        if (item.ArtifactsType.Length != 0)
-        //            if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
-        //            {
-        //                {
-        //                    parameters.Remove(parameters[j]);
-        //                    Debug.Log("Remove " + parameters[j]);
-        //                }
-        //            }
-        //    }
-        //}
-
-
-        //for (int j = 0; j < item.ArtifactsType.Length; j++)
-        //{
-        //    for (int i = 0; i < parameters.Count; i++)
-        //    {
-        //        if (item.ArtifactsType.Length != 0)
-        //            if (parameters[i].Type.ToString() == item.ArtifactsType[j].ToString())
-        //            {
-        //                {
-        //                    DecreaseParameters(item.StacksArtifacts[j]);
-        //                    Debug.Log("minus param");
-        //                }
-        //            }
-        //    }
-        //}
-    }
-
-    public void DecreaseParameters(ItemParameters item) // TODO переделать логику
-    {
         Gravity = Gravity - item.Gravity;
         MaxFall = MaxFall - item.MaxFall;
         FastFall = FastFall - item.FastFall;
@@ -2719,6 +2926,10 @@ public class Player : Actor
         RangedFreezChance = 0;
         RangedAttackCanPush = false;
         RangedAttackCanThroughShoot = false;
+		RangedPowerAttackAiming = false;
+		RangedPowerBlink = false;
+		RangedHeal = false;
+		RangedHealCount = 0;
 
     }
 
@@ -3133,6 +3344,14 @@ public class Player : Actor
                 }
                 // If on the attack state
             }
+			else if (fsm.State == States.DuckPowerShootPrepare)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "DuckPowerShootPrepare"))
+                {
+                    animator.Play((string)RangedWeaponType + "DuckPowerShootPrepare");
+                }
+                // If on the attack state
+            }
             else if (fsm.State == States.BowAttack)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Shoot"))
@@ -3146,6 +3365,14 @@ public class Player : Actor
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "DuckShoot"))
                 {
                     animator.Play((string)RangedWeaponType + "DuckShoot");
+                }
+                // If on the attack state
+            }
+			else if (fsm.State == States.DuckPowerShoot)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "DuckPowerShoot"))
+                {
+                    animator.Play((string)RangedWeaponType + "DuckPowerShoot");
                 }
                 // If on the attack state
             }
@@ -3293,24 +3520,40 @@ public class Player : Actor
         GameManager.instance.Emit(SparkParticle, Random.Range(5, 8), new Vector2(transform.position.x, transform.position.y + 10) + new Vector2(wallSlideDir * 2.5f, 4), Vector2.one * 1f);
     }
 
-	public void Push(int pushDistance)
+	
+    public void Blink(Vector3 pos)
 	{
-		if (!sticking && !CheckColAtPlace(Vector2.right * (int)Facing * pushDistance, solid_layer))
-		{
-			Debug.Log(Vector2.right * (int)Facing * pushDistance);
-			transform.position = new Vector2(transform.position.x + (pushDistance * (int)Facing), transform.position.y);
-		}
+		transform.position = Vector2.Lerp(transform.position, new Vector3(pos.x, pos.y + 5, 0), 2); 
 	}
+	
+    IEnumerator ManaRegeneration()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            GetComponent<Mana>().TakeRefresh(1);
+        }
+    }
+
+
+    public void Push(int pushDistance)
+    {
+        if (!sticking && !CheckColAtPlace(Vector2.right * (int)Facing * pushDistance, solid_layer))
+        {
+            Debug.Log(Vector2.right * (int)Facing * pushDistance);
+            transform.position = new Vector2(transform.position.x + (pushDistance * (int)Facing), transform.position.y);
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        var component = col.GetComponent<Health>();
+        var component = col.GetComponent<Health>(); // TODO переделать для другого
         var worm = col.GetComponent<WormEnemy>();
         // If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
         if (component != null && component != owner && !healthsDamaged.Contains(component) && worm != null && fsm.State == States.Roll)
         {
             // Try to Apply the damage
-            var didDamage = component.TakeDamage(3, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
+            var didDamage = component.TakeDamage(3, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0, false, 0, false, 0, 0);
 
             if (didDamage)
             {

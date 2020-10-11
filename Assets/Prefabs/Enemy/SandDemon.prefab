@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136702201393995468}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.52, y: 24.29, z: 0}
+  m_LocalPosition: {x: -0.8, y: 24.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2537320069327037443}
@@ -78,7 +78,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.37051392, y: -7.857971}
+  m_Offset: {x: -0.4347229, y: -5.7517548}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -89,7 +89,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 10.325256, y: 31.784424}
+  m_Size: {x: 14.909241, y: 35.996857}
   m_EdgeRadius: 0
 --- !u!50 &2561694061659895421
 Rigidbody2D:
@@ -160,7 +160,8 @@ MonoBehaviour:
   OnStun: 0
   OnAggression: 0
   OnBlink: 0
-  Facing: -1
+  OnSpecial: 0
+  Facing: 1
   SpriteHolder: {fileID: 2537320069327037443}
   SpriteScale: {x: 1, y: 1}
   animator: {fileID: 2480364254785735063}
@@ -168,6 +169,10 @@ MonoBehaviour:
     type: 3}
   MeleeCriticalDamage: 0
   MeleeAttackCooldownTime: 1.5
+  FirstSpecialAttackCooldownTime: 10
+  FirstSpecialTimer: 10
+  SecondSpecialTimer: 10
+  ThirdSpecialTimer: 10
   MeleeAttackMaxDamage: 0
   MeleeAttackMinDamage: 0
   MeleeCriticalDamageMultiply: 0
@@ -539,7 +544,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203835e6c4242dd40bba52236d357086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack1: {fileID: 9171175967842904054}
+  attack:
+  - {fileID: 9171175967842904054}
   colliders: []
   owner: {fileID: 2499429275146192179}
 --- !u!114 &6472818345095457249

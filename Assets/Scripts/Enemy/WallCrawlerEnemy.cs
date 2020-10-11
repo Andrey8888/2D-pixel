@@ -78,7 +78,7 @@ public class WallCrawlerEnemy : Actor {
 		if (CollisionSelf(solid_layer)) {
 			var health = GetComponent<Health>();
 			if (health != null) {
-				health.TakeDamage (9999, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
+				health.TakeDamage (9999, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0, false, 0, false, 0, 0);
             }
 		}
 	}
@@ -359,7 +359,7 @@ public class WallCrawlerEnemy : Actor {
 
 	// Function to deal damage to the player
 	void OnPlayerTrigger (Player player) {
-		player.GetComponent<Health> ().TakeDamage (DamageOnTouch, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
+		player.GetComponent<Health> ().TakeDamage (DamageOnTouch, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0, false, 0, false, 0, 0);
     }
 
 	// Function to update the sprite scale, facing direction and animations 

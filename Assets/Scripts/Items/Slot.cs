@@ -23,7 +23,7 @@ public class Slot : MonoBehaviour
     {
         if (transform.GetComponentInChildren<Spawn>() != null)
         {
-            transform.GetComponentInChildren<Spawn>().SpawnDroppedItem();
+            //transform.GetComponentInChildren<Spawn>().SpawnDroppedItem();
             GameObject.Destroy(transform.GetComponentInChildren<Spawn>().gameObject);
         }
     }

@@ -16,7 +16,8 @@ public class Enemy : Actor
         Snake,
         SandDemon,
         Bat,
-        Golem
+        Golem,
+        Beholder
     }
 
     public Type TypeEnemy = Type.MeleeSceleton;
@@ -43,6 +44,10 @@ public class Enemy : Actor
     public bool OnStun = false;
     public bool OnAggression = false;
     public bool OnBlink = false;
+    public bool OnSpecial = false;
+    public bool firstHit = true;
+    public int DpsTestTime = 30;
+
 
     // Helper private Variables
     private int moveX;                          // Variable to store the horizontal Input each frame
@@ -68,6 +73,22 @@ public class Enemy : Actor
     public int MeleeAttackMinDamage;
     public int MeleeCriticalDamageMultiply;
     public int MeleeCriticalDamageChance;
+    public int MeleeDistanceForAttack = 18;
+
+
+    [Header("SpecialAttack")]
+    public bool hasFirstSpecial = false;
+    public bool hasSecondSpecial = false;
+    public bool hasThirdSpecial = false;
+    public float FirstSpecialAttackCooldownTime = 10f;
+    public float SecondSpecialAttackCooldownTime = 10f;
+    public float ThirdSpecialAttackCooldownTime = 10f;
+    public float FirstSpecialTimer = 10f;
+    public float SecondSpecialTimer = 10f;
+    public float ThirdSpecialTimer = 10f;
+    public int DistanceForFirstSpecial = 30;
+    public int DistanceForSecondSpecial = 0;
+    public int DistanceForThirdSpecial = 0;
 
     [Header("Poison")]
     public bool MeleeAttackCanPoison = false;
@@ -88,6 +109,15 @@ public class Enemy : Actor
     [Header("Push")]
     public bool MeleeAttackCanPush = false;
     public int MeleePushDistance = 0;
+    [Header("PushUp")]
+    public bool MeleeAttackCanPushUp = false;
+    public int MeleePushUpDistance = 0;
+    [Header("Stun")]
+    public bool MeleeAttackCanStun = false;
+    public int MeleeStunDuration = 0;
+    [Range(0, 99)]
+    public int MeleeStunChance = 100;
+
 
     [Header("RangedAttacks")]
     public float BowAttackCooldownTime = 4f;     // Задержка по выстрелу     
@@ -118,11 +148,22 @@ public class Enemy : Actor
     [Header("Push")]
     public bool RangedAttackCanPush = false;
     public int RangedPushDistance = 0;
+    [Header("PushUp")]
+    public bool RangedAttackCanPushUp = false;
+    public int RangedPushUpDistance = 0;
+    [Header("Stun")]
+    public bool RangedAttackCanStun = false;
+    public int RangedStunDuration = 0;
+    [Range(0, 99)]
+    public int RangedStunChance = 100;
 
 
     private bool InVisibilityZone = false;       // Проверка на нахождение в зоне видимости
     private bool InDetectionZone = false;           // Проверка на нахождение в зоне обнаружения   
     private float meleeAttackCooldownTimer = 0f; // Таймер до ближней атаки
+    private float firstSpecialAttackCooldownTimer = 0f; // Таймер до спец приема
+    private float secondSpecialAttackCooldownTimer = 0f; // Таймер до спец приема
+    private float thirdSpecialAttackCooldownTimer = 0f; // Таймер до спец приема
     private float bowAttackCooldownTimer = 0f;   // Таймер до выстрела
     private float castAttackCooldownTimer = 0f;   // Таймер до выстрела
     private Player Player;
@@ -148,7 +189,9 @@ public class Enemy : Actor
         Death,
         Cast,
         Blink,
-        Special
+        FirstSpecial,
+        SecondSpecial,
+        ThirdSpecial
     }
 
     public enum Attack
@@ -164,7 +207,7 @@ public class Enemy : Actor
         Following,                          // Преследование
         Patroling,                          // Патрулирование
         FreeWalking,                        // патрулирование без преследования
-        Idle,                                // Покой
+        Idle,                               // Покой для лет тоже
         Aggression
     }
     public Behaivour BehaivourType = Behaivour.Idle;
@@ -197,25 +240,55 @@ public class Enemy : Actor
     {
         get
         {
-            if (TypeEnemy == Type.Golem)
-            {
-                return AttackType == Attack.Melee && EnemyVisibility.InVisibilityZone &&
-                  ((CheckColAtPlace(Vector2.right * 33, player_layer)) || CheckColAtPlace(Vector2.left * 33, player_layer)) &&
-                  meleeAttackCooldownTimer <= 0f;
-            }
-            return AttackType == Attack.Melee && EnemyVisibility.InVisibilityZone &&
-            ((CheckColAtPlace(Vector2.right * 18, player_layer)) || CheckColAtPlace(Vector2.left * 18, player_layer)) &&
-             meleeAttackCooldownTimer <= 0f;
+            return (AttackType == Attack.Melee && EnemyVisibility.InVisibilityZone &&
+            ((CheckColAtPlace(Vector2.right * MeleeDistanceForAttack, player_layer)) || CheckColAtPlace(Vector2.left * MeleeDistanceForAttack, player_layer)) &&
+             meleeAttackCooldownTimer <= 0f);
+
+            //(AttackType == Attack.Flying && EnemyVisibility.InVisibilityZone && meleeAttackCooldownTimer <= 0f);
+
+            //(TypeEnemy == Type.SandDemon && EnemyVisibility.InVisibilityZone &&
+            //((CheckColAtPlace(-Vector2.right * 45, player_layer)) || CheckColAtPlace(-Vector2.left * 45, player_layer)) && // вынести число расстояния взависимости от типа врага
+            // meleeAttackCooldownTimer <= 0f);
         }
     }
 
+    public bool CanFirstSpecial
+    {
+        get
+        {
+            return hasFirstSpecial && EnemyVisibility.InVisibilityZone && // если получает x урона
+                ((CheckColAtPlace(Vector2.right * DistanceForFirstSpecial, player_layer)) || CheckColAtPlace(Vector2.left * DistanceForFirstSpecial, player_layer)) &&
+                firstSpecialAttackCooldownTimer <= 0f; ;
+        }
+    }
+
+    public bool CanSecondSpecial
+    {
+        get
+        {
+            return hasSecondSpecial && EnemyVisibility.InVisibilityZone && // если получает x урона
+                ((CheckColAtPlace(Vector2.right * DistanceForSecondSpecial, player_layer)) || CheckColAtPlace(Vector2.left * DistanceForSecondSpecial, player_layer)) &&
+                secondSpecialAttackCooldownTimer <= 0f; ;
+        }
+    }
+
+    public bool CanThirdSpecial
+    {
+        get
+        {
+            return hasThirdSpecial && EnemyVisibility.InVisibilityZone && // если получает x урона
+                ((CheckColAtPlace(Vector2.right * DistanceForThirdSpecial, player_layer)) || CheckColAtPlace(Vector2.left * DistanceForThirdSpecial, player_layer)) &&
+                thirdSpecialAttackCooldownTimer <= 0f; ;
+        }
+    }
 
     public bool CanIdle
     {
         get
         {
             return ((AttackType == Attack.Melee && (CheckColAtPlace(Vector2.right * 18, player_layer) || CheckColAtPlace(Vector2.left * 18, player_layer)) || CheckColInDir(new Vector2(moveX, 0), player_layer))
-                && meleeAttackCooldownTimer >= 0f) || ((AttackType == Attack.Archery || AttackType == Attack.Magic) && EnemyVisibility.InVisibilityZone);
+                && meleeAttackCooldownTimer >= 0f) ||
+                ((AttackType == Attack.Archery || AttackType == Attack.Magic) && EnemyVisibility.InVisibilityZone);
         }
     }
 
@@ -296,6 +369,21 @@ public class Enemy : Actor
             meleeAttackCooldownTimer -= Time.deltaTime;
         }
 
+        if (firstSpecialAttackCooldownTimer > 0f)
+        {
+            firstSpecialAttackCooldownTimer -= Time.deltaTime;
+        }
+
+        if (secondSpecialAttackCooldownTimer > 0f)
+        {
+            secondSpecialAttackCooldownTimer -= Time.deltaTime;
+        }
+
+        if (thirdSpecialAttackCooldownTimer > 0f)
+        {
+            thirdSpecialAttackCooldownTimer -= Time.deltaTime;
+        }
+
         if (aggressionCooldownTimer > 0f)
         {
             aggressionCooldownTimer -= Time.deltaTime;
@@ -356,7 +444,7 @@ public class Enemy : Actor
             var health = GetComponent<Health>();
             if (health != null)
             {
-                health.TakeDamage(9999, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0);
+                health.TakeDamage(9999, false, 0, 0, 0, 0, false, 0, 0, 0, 0, false, 0, false, 0, 0, false, 0, false, 0, 0);
             }
         }
     }
@@ -380,8 +468,30 @@ public class Enemy : Actor
 
         if (CanAttack)
         {
+            Debug.Log("attack");
             meleeAttackCooldownTimer = MeleeAttackCooldownTime;
             fsm.ChangeState(States.Attack, StateTransition.Overwrite);
+            return;
+        }
+
+        if (CanFirstSpecial)
+        {
+            firstSpecialAttackCooldownTimer = FirstSpecialAttackCooldownTime;
+            fsm.ChangeState(States.FirstSpecial, StateTransition.Overwrite);
+            return;
+        }
+
+        if (CanSecondSpecial)
+        {
+            secondSpecialAttackCooldownTimer = SecondSpecialAttackCooldownTime;
+            fsm.ChangeState(States.SecondSpecial, StateTransition.Overwrite);
+            return;
+        }
+
+        if (CanThirdSpecial)
+        {
+            thirdSpecialAttackCooldownTimer = ThirdSpecialAttackCooldownTime;
+            fsm.ChangeState(States.ThirdSpecial, StateTransition.Overwrite);
             return;
         }
 
@@ -552,7 +662,12 @@ public class Enemy : Actor
 
             if (AttackType == Attack.Melee)
             {
-                Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
+                Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+                if (!(moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer)))
+                {
+                    Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
+                }
 
                 var diff = Player.transform.position.x - transform.position.x; //позиция
 
@@ -584,6 +699,38 @@ public class Enemy : Actor
                 Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
             }
         }
+        // особенности монстров
+        if (TypeEnemy == Type.Golem && InDetectionZone)
+        {
+            int rnd = Random.Range(0, 1);
+            Debug.Log("random special attack:" + rnd);
+            OnSpecial = false;
+            if (rnd == 0)
+                StartCoroutine("FirstSpecialCoroutine");
+            if (rnd == 0)
+                StartCoroutine("SecondSpecialCoroutine");
+            if (rnd == 0)
+                StartCoroutine("ThirdSpecialCoroutine");
+        }
+
+    }
+
+    IEnumerator FirstSpecialCoroutine()
+    {
+        yield return new WaitForSeconds(FirstSpecialTimer);
+        OnSpecial = true;
+    }
+
+    IEnumerator SecondSpecialCoroutine()
+    {
+        yield return new WaitForSeconds(SecondSpecialTimer);
+        OnSpecial = true;
+    }
+
+    IEnumerator ThirdSpecialCoroutine()
+    {
+        yield return new WaitForSeconds(ThirdSpecialTimer);
+        OnSpecial = true;
     }
 
     void CharacterRotation()
@@ -614,6 +761,105 @@ public class Enemy : Actor
     }
 
     void Cast_Update()
+    {
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+
+        if (CanStuned)
+        {
+            //stunedCooldownTimer = StunedCooldownTime;
+            fsm.ChangeState(States.Hit, StateTransition.Overwrite);
+            return;
+        }
+    }
+
+    void FirstSpecial_Enter()
+    {
+        var col = GetComponentInChildren<EnemyHitBoxManager>();
+        col.ChangeCollider(1);
+    }
+
+    void FirstSpecial_Exit()
+    {
+        var col = GetComponentInChildren<EnemyHitBoxManager>();
+        col.ChangeCollider(0);
+    }
+
+    void FirstSpecial_Update()
+    {
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+
+        if (CanStuned)
+        {
+            //stunedCooldownTimer = StunedCooldownTime;
+            fsm.ChangeState(States.Hit, StateTransition.Overwrite);
+            return;
+        }
+    }
+
+    void SecondSpecial_Enter()
+    {
+        var col = GetComponentInChildren<EnemyHitBoxManager>();
+        col.ChangeCollider(2);
+    }
+
+    void SecondSpecial_Exit()
+    {
+        var col = GetComponentInChildren<EnemyHitBoxManager>();
+        col.ChangeCollider(0);
+    }
+
+    void SecondSpecial_Update()
+    {
+        // Horizontal Speed Update Section
+        float num = onGround ? 1f : AirMult;
+
+        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+        if (!onGround)
+        {
+            float target = MaxFall;
+            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+        }
+
+        if (CanStuned)
+        {
+            //stunedCooldownTimer = StunedCooldownTime;
+            fsm.ChangeState(States.Hit, StateTransition.Overwrite);
+            return;
+        }
+    }
+
+    void ThirdSpecial_Enter()
+    {
+        var col = GetComponentInChildren<EnemyHitBoxManager>();
+        col.ChangeCollider(3);
+    }
+
+    void ThirdSpecial_Exit()
+    {
+        var col = GetComponentInChildren<EnemyHitBoxManager>();
+        col.ChangeCollider(0);
+    }
+
+    void ThirdSpecial_Update()
     {
         // Horizontal Speed Update Section
         float num = onGround ? 1f : AirMult;
@@ -907,7 +1153,8 @@ public class Enemy : Actor
                 }
             }
             // If the is nohorizontal movement input
-            else {
+            else
+            {
                 // Idle Animation
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SnakeIdle"))
                 {
@@ -924,34 +1171,47 @@ public class Enemy : Actor
 
             if (fsm.State == States.Death)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SandDemonDeath"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
                 {
-                    animator.Play("SandDemonDeath");
+                    animator.Play("Death");
                 }
             }
+
+            else if (fsm.State == States.Blink)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Blink"))
+                {
+                    animator.Play("Blink");
+                }
+            }
+
             else if (fsm.State == States.Attack)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SandDemonAttack"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
                 {
-                    animator.Play("SandDemonAttack");
+                    animator.Play("Attack");
                 }
-            }
-            //else if (fsm.State == States.Blink)
-            //{
-            //    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SandDemonBlink"))
-            //    {
-            //        animator.Play("SandDemonBlink");
-            //    }
-            //}
-            // If the is nohorizontal movement input
-            else
+            } // If on the ground
+            else if (onGround)
             {
-                // Idle Animation
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SandDemonIdle"))
+                // If the is nohorizontal movement input
+                if (Speed.x == 0)
                 {
-                    animator.Play("SandDemonIdle");
+                    // Idle Animation
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    {
+                        animator.Play("Idle");
+                    }
+                    // If there is horizontal movement input
                 }
-                // If there is horizontal movement input
+                else
+                {
+                    // Walk Animation
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Walk"))
+                    {
+                        animator.Play("Walk");
+                    }
+                }
             }
             // If there is horizontal movement input
         }
@@ -972,6 +1232,27 @@ public class Enemy : Actor
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Stun"))
                 {
                     animator.Play("Stun");
+                }
+            }
+            else if (fsm.State == States.FirstSpecial)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("FirstSpecial"))
+                {
+                    animator.Play("FirstSpecial");
+                }
+            }
+            else if (fsm.State == States.SecondSpecial)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("SecondSpecial"))
+                {
+                    animator.Play("SecondSpecial");
+                }
+            }
+            else if (fsm.State == States.ThirdSpecial)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("ThirdSpecial"))
+                {
+                    animator.Play("ThirdSpecial");
                 }
             }
             else if (fsm.State == States.Attack)
@@ -1005,19 +1286,7 @@ public class Enemy : Actor
         }
     }
 
-    void Stun_Update()
-    {
-        // Horizontal Speed Update Section
-        float num = onGround ? 1f : 0.65f;
 
-        Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
-
-        if (!onGround)
-        {
-            float target = MaxFall;
-            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
-        }
-    }
 
     void Blink_Update()
     {
@@ -1035,20 +1304,26 @@ public class Enemy : Actor
 
     void Blink_Enter()
     {
-        transform.position = Vector2.Lerp(transform.position, new Vector3(EnemyDetection.PlayerPos.x - 5, EnemyDetection.PlayerPos.y + 25, 0), 2); // домножить на направление игрока 
-        Debug.Log(blinkCooldownTimer);
+        //transform.position = Vector2.Lerp(transform.position, new Vector3(EnemyDetection.PlayerPos.x - 5, EnemyDetection.PlayerPos.y + 25, 0), 2); // домножить на направление игрока 
+
         //animator.Play("Blink");
     }
 
     public void Blink()
     {
-        transform.position = Vector2.Lerp(transform.position, new Vector3(EnemyDetection.PlayerPos.x - 5, EnemyDetection.PlayerPos.y + 25, 0), 2); // домножить на направление игрока 
+        var player = GetComponentInParent<Player>();
+
+        if (player != null)
+        {
+            if (!player.sticking && !player.CheckColAtPlace(Vector2.right * (int)player.Facing * 10, solid_layer)
+            && !player.CheckColAtPlace(Vector2.left * 10, solid_layer)
+            && !player.CheckColAtPlace(Vector2.up * 10, solid_layer))
+            {
+                transform.position = Vector2.Lerp(transform.position, new Vector3(EnemyDetection.PlayerPos.x - 5, EnemyDetection.PlayerPos.y + 25, 0), 2); // домножить на направление игрока 
+            }
+        }
     }
-	void Blink_Exit()
-    {
-        //animator.Play("Reveal");
-    }
-	
+
     public void Freez()
     {
         walkSpeed = 0;
@@ -1064,19 +1339,33 @@ public class Enemy : Actor
         fsm.ChangeState(States.Stun, StateTransition.Overwrite);
     }
 
-	public void Push(int pushDistance)
-	{
-		if (!CheckColAtPlace(Vector2.right * (int)Facing * pushDistance, solid_layer))
-		{
-			Debug.Log(Vector2.right * (int)Facing * pushDistance);
-			transform.position = new Vector2(transform.position.x + (pushDistance * (int)Facing), transform.position.y);
-		}
-	}
-	
+    public void UnStun()
+    {
+        fsm.ChangeState(States.Normal, StateTransition.Overwrite);
+    }
+
+    public void Push(int pushDistance)
+    {
+        if (!CheckColAtPlace(Vector2.right * (int)Facing * pushDistance, solid_layer))
+        {
+            Debug.Log(Vector2.right * (int)Facing * pushDistance);
+            transform.position = new Vector2(transform.position.x + (pushDistance * (int)Facing), transform.position.y);
+        }
+    }
+
+    public void PushUp(int pushDistance)
+    {
+        if (!CheckColAtPlace(Vector2.up * pushDistance, solid_layer))
+        {
+            Debug.Log(Vector2.up * pushDistance);
+            transform.position = new Vector2(transform.position.x + pushDistance, transform.position.y + pushDistance);
+        }
+    }
+
     public void Hit()
     {
         OnAggression = true;
-		OnBlink = true;
+        OnBlink = true;
         var health = GetComponent<Health>();
         // показываем текущие здоровье на полосе хп
         ShowHP.value = health.health;
@@ -1085,6 +1374,26 @@ public class Enemy : Actor
         //{
         //fsm.ChangeState(States.Stun, StateTransition.Overwrite);
         //}
+    }
+
+    public void DpsTest()
+    {
+        if (firstHit)
+        {
+            StartCoroutine("DpsTestCoroutine");
+            firstHit = false;
+            Debug.Log("START");
+        }
+    }
+
+    IEnumerator DpsTestCoroutine()
+    {
+        var health = GetComponent<Health>();
+        yield return new WaitForSeconds(DpsTestTime);
+        Debug.Log("STOP");
+        Debug.Log(health.maxHealth - health.health + " dmg per " + DpsTestTime + " sec");
+        health.health = health.maxHealth;
+        firstHit = true;
     }
 
     public void Die()
