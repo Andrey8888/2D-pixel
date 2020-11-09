@@ -2,109 +2,169 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 
-
-public class PickupMeleeWeapons : Actor
+public class PickupMeleeWeapons : MonoBehaviour
 {
-
-    public float Gravity = 900f; // Gravity force
-    public float MaxFall = -240f; // Maximun fall speed
-
-    private bool Pickable = true;
-    private float RespawnTimer = 0f;
-    public float recoveryTime = 2.5f;
-
-    public float PickupTime; // Total Time it takes the player to respawn
-    private float pickupTimer = 1f; // Variable to store the timer of the respawn
-    private Inventory inventory;
-    public GameObject itemButton;
-	//public GameObject tooltip;
-	//public Text tooltipDescription;
-
+#region Params
     [Header("MeleeWeapons")]
-    public int MeleeAttackMinDamage = 0;
-    public int MeleeAttackMaxDamage = 0;
-    public float MeleeAttackCooldownTime = 0.2f;
-    public bool CanThirdAttackCriticalDamage = false; // or all attack
-    //public bool CanPowerAttackCriticalDamage = false;
-    [Range(1, 10)]
-    public int MeleeCriticalDamageMultiply = 1;
-    [Range(0, 99)]
-    public int MeleeChanceCriticalDamage = 0;
+    [HorizontalGroup("base", LabelWidth = 80)]
+    [VerticalGroup("base/column 1")]
+	public MeleeWeapon Type = MeleeWeapon.Sword;
+	[VerticalGroup("base/column 1")]
+	public SpriteRenderer Sprite;
+	[VerticalGroup("base/column 1")]
+    public int Rarity = 1;
+    [VerticalGroup("base/column 1")]
     [Range(1, 10)]
     public int level = 1;  // Multiply damage
-    [Range(0, 3)]
-    public int Rarity = 1;
+	
+    private Inventory inventory;
+
+	[Header("NormalAttack")]
+    [TabGroup("NormalAttack")]
+    public int MeleeAttackMinDamage = 0;
+	[TabGroup("NormalAttack")]
+    public int MeleeAttackMaxDamage = 0;
+	[TabGroup("NormalAttack")]
+    public float MeleeAttackCooldownTime = 0.2f;
+	[TabGroup("NormalAttack")]
+    public bool CanThirdAttackCriticalDamage = false; // or all attack
+    //public bool CanPowerAttackCriticalDamage = false;
+	[TabGroup("NormalAttack")]
+    [Range(1, 10)]
+    public int MeleeCriticalDamageMultiply = 1;
+	[TabGroup("NormalAttack")]
+    [Range(0, 99)]
+    public int MeleeChanceCriticalDamage = 0;
+	[TabGroup("NormalAttack")]
+    private float MeleeAttackSpeed = 1f;
+	[TabGroup("NormalAttack")]
+    private float SecondSwordAttackSpeed = 1f;
+	[TabGroup("NormalAttack")]
+    private float ThirdSwordAttackSpeed = 1f;
+    [TabGroup("NormalAttack")]
+    public int ManaCost = 0;
 
     [Header("PowerAttack")]
+    [TabGroup("PowerAttack")]
     public int MeleePowerAttackMinDamage = 0;
+	[TabGroup("PowerAttack")]
     public int MeleePowerAttackMaxDamage = 0;
+	[TabGroup("PowerAttack")]
     [Range(1, 10)]
     public int MeleePowerCriticalDamageMultiply = 1;
+	[TabGroup("PowerAttack")]
     [Range(0, 99)]
     public int MeleePowerChanceCriticalDamage = 0;
+	[TabGroup("PowerAttack")]
     public float MeleePowerAttackCooldownTime = 0.2f;
+	[TabGroup("PowerAttack")]
+    private float MeleePowerAttackSpeed = 1f;
+    [HideInInspector]
+    public int MeleePowerShellsCountCurent = 0;
+    [TabGroup("PowerAttack")]
+    public int PowerShells = 0;
+    [TabGroup("PowerAttack")]
+    public int PowerManaCost = 0;
 
-
+    [TabGroup("Tab Group 2", "Poison")]
     [Header("Poison")]
     public bool CanPoison = false;
+	[TabGroup("Tab Group 2", "Poison")]
     public bool CanPowerAttackPoison = false;
+	[TabGroup("Tab Group 2", "Poison")]
     public int PoisonDamaged = 0;
+	[TabGroup("Tab Group 2", "Poison")]
     public int PoisonFrequency = 0;
+	[TabGroup("Tab Group 2", "Poison")]
     public int PoisonTick = 0;
+	[TabGroup("Tab Group 2", "Poison")]
     [Range(0, 99)]
     public int PoisonChance = 0;
+	
+    [TabGroup("Tab Group 2", "Fire")]
     [Header("Fire")]
     public bool CanFire = false;
+	[TabGroup("Tab Group 2", "Fire")]
     public bool CanPowerAttackFire = false;
+	[TabGroup("Tab Group 2", "Fire")]
     public int FireDamaged = 0;
+	[TabGroup("Tab Group 2", "Fire")]
     public int FireFrequency = 0;
+	[TabGroup("Tab Group 2", "Fire")]
     public int FireTick = 0;
+	[TabGroup("Tab Group 2", "Fire")]
     [Range(0, 99)]
     public int FireChance = 0;
+	
+    [TabGroup("Tab Group 2", "Freez")]
     [Header("Freez")]
     public bool CanFreez = false;
+	[TabGroup("Tab Group 2", "Freez")]
     public bool CanPowerAttackFreez = false;
+	[TabGroup("Tab Group 2", "Freez")]
     public int FreezDuration = 0;
+	[TabGroup("Tab Group 2", "Freez")]
     [Range(0, 99)]
     public int FreezChance = 0;
+	
     [Header("Push")]
+    [TabGroup("Tab Group 2", "Push")]
     public bool CanPush = false;
+	[TabGroup("Tab Group 2", "Push")]
     public bool CanPowerAttackPush = false;
+	[TabGroup("Tab Group 2", "Push")]
     public int PushDistance = 0;
-	[Header("PushUp")]
+	[TabGroup("Tab Group 2", "Push")]
     public bool CanPushUp = false;
+	[TabGroup("Tab Group 2", "Push")]
     public bool CanPowerAttackPushUp = false;
+	[TabGroup("Tab Group 2", "Push")]
     public int PushUpDistance = 0;
-	[Header("Stun")]
+	
+    [Header("Stun")]
+    [TabGroup("Tab Group 2", "Stun")]
     public bool CanStun = false;
+	[TabGroup("Tab Group 2", "Stun")]
     public bool CanPowerAttackStun = false;
+	[TabGroup("Tab Group 2", "Stun")]
     public int StunDuration = 0;
+	[TabGroup("Tab Group 2", "Stun")]
 	[Range(0, 99)]
     public int StunChance = 100;
+	
     [Header("Other")]
+    [TabGroup("Tab Group 2", "Other")]
     public bool hasBlock = false;
+	[TabGroup("Tab Group 2", "Other")]
     public bool hasSeries = false;
+	[TabGroup("Tab Group 2", "Other")]
     public bool hasPowerAttackShell = false;
+	[TabGroup("Tab Group 2", "Other")]
     public int StepUpAfterHit = 0;
+	[TabGroup("Tab Group 2", "Other")]
 	public int PowerStepUpAfterHit = 0;
+	[TabGroup("Tab Group 2", "Other")]
     public bool MeleeTossingUp = false;
+	[TabGroup("Tab Group 2", "Other")]
     public int MeleePopUpAfterHit = 0;
+	[TabGroup("Tab Group 2", "Other")]
     public int MeleePowerPopUpAfterHit = 0;
-	public int ManaCost = 0;
-	public int PowerManaCost = 0;
-
-    public MeleeWeapon Type = MeleeWeapon.Sword;
-
-    [SerializeField]
-    public SpriteRenderer Sprite;
-
-    public Sprite spriteHighlight;
+    #endregion
+	
+	public Sprite spriteHighlight;
     public Sprite spriteNormal;
+	
+    public GameObject itemButton;
+	
+	public GameObject tooltip;
+    public Text tooltipDescription;
+	
     private bool OnTrigger;
     private Player player;
     private bool OnMouse;
-    public float dist = 50;
+    private float dist = 50;
 
     void Start()
     {
@@ -122,10 +182,14 @@ public class PickupMeleeWeapons : Actor
         Sprite.sprite = spriteNormal;
         OnMouse = false;
     }
-    new void Awake()
+    void Awake()
     {
-        base.Awake();
         Sprite.enabled = true;
+        MeleePowerShellsCountCurent = PowerShells;
+		
+		//tooltipDescription = ("MeleeWeapon " + Type + "; Level " + level + "; Min Damage: " + MeleeAttackMinDamage + "' Max Damage: " + MeleeAttackMinDamage )
+		//tooltip.Text = tooltipDescription;
+		
         if (Sprite == null)
         {
             Sprite = GetComponent<SpriteRenderer>();
@@ -139,47 +203,22 @@ public class PickupMeleeWeapons : Actor
     }
 
     // Update is called once per frame
-    new void Update()
+    void Update()
     {
-        // Update variables
-        wasOnGround = onGround;
-        onGround = OnGround();
-        // Gravity
-        if (!onGround)
-        {
-            float target = MaxFall;
-            Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
-        }
-
         dist = Vector3.Distance(player.transform.position, transform.position);
 		
 		//Vector3 tooltipPos = Camera.main.WorldToScreenPoint(gameObject.transform.position + new Vector3(0, 50, 0));
 		//tooltip.transform.position = tooltipPos;
-		
-        if (pickupTimer > 0f)
-        {
-            pickupTimer -= Time.deltaTime;
-        }
-
-        if (this.RespawnTimer > 0f)
-        {
-            this.RespawnTimer -= Time.deltaTime;
-            if (this.RespawnTimer <= 0f)
-            {
-                this.Respawn();
-            }
-        }
 
         Vector3 Cursor = Input.mousePosition;
         Cursor = Camera.main.ScreenToWorldPoint(Cursor);
         Cursor.z = 0;
 
-        if (pickupTimer <= 0f && dist < 50 && OnMouse)
+        if (dist < 50 && OnMouse)
         {
             Sprite.sprite = spriteHighlight;
             if (inventory.isFull[0] == true && Input.GetKey(KeyCode.E) )
             {
-                pickupTimer = PickupTime;
                 inventory.isFull[0] = false;
                 //if(gameObject.activeSelf)
                 {
@@ -203,9 +242,10 @@ public class PickupMeleeWeapons : Actor
                 CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
                 CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit,
 				CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost, hasPowerAttackShell))
+				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost,
+				hasPowerAttackShell, MeleePowerShellsCountCurent, MeleeAttackSpeed, MeleePowerAttackSpeed,
+				SecondSwordAttackSpeed, ThirdSwordAttackSpeed))
                 {
-                    this.RespawnTimer = recoveryTime;
 
                     // Screenshake
                     if (PixelCameraController.instance != null)
@@ -214,7 +254,6 @@ public class PickupMeleeWeapons : Actor
                     }
 
                     inventory.isFull[0] = true;
-                    Pickable = false;
                     // Disable
                     Sprite.sprite = spriteNormal;
                     Instantiate(itemButton, inventory.slots[0].transform, false);
@@ -225,14 +264,6 @@ public class PickupMeleeWeapons : Actor
         }
     }
 
-    void LateUpdate()
-    {
-        // Vertical movement
-        var movev = base.MoveV(Speed.y * Time.deltaTime);
-        if (movev)
-            Speed.y = 0;
-    }
-
     void OnTriggerEnter2D(Collider2D other)
     {
         //if ((other.tag == "Player") && tooltip != null)
@@ -241,7 +272,7 @@ public class PickupMeleeWeapons : Actor
 
     void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && Pickable)
+        if (other.CompareTag("Player"))
         {
             Sprite.sprite = spriteHighlight;
             var playercomponent = other.GetComponent<Player>();
@@ -254,7 +285,7 @@ public class PickupMeleeWeapons : Actor
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && Pickable)
+        if (other.CompareTag("Player") )
         {
             Sprite.sprite = spriteNormal;
         }
@@ -264,10 +295,8 @@ public class PickupMeleeWeapons : Actor
 
     public void OnPlayerTrigger(Player player)
     {
-        if (inventory.isFull[0] == true && Input.GetKey(KeyCode.E) && pickupTimer <= 0f)
+        if (inventory.isFull[0] == true && Input.GetKey(KeyCode.E))
         {
-            pickupTimer = PickupTime;
-
             inventory.isFull[0] = false;
             //if(gameObject.activeSelf)
             {
@@ -291,12 +320,10 @@ public class PickupMeleeWeapons : Actor
                 CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
                 CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit,
 				CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost, hasPowerAttackShell))
+				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost, 
+				hasPowerAttackShell, MeleePowerShellsCountCurent, MeleeAttackSpeed, MeleePowerAttackSpeed,
+				SecondSwordAttackSpeed, ThirdSwordAttackSpeed))
             {
-		
-                Pickable = false;
-                // Disable
-                this.RespawnTimer = recoveryTime;
 
                 // Screenshake
                 if (PixelCameraController.instance != null)
@@ -316,6 +343,8 @@ public class PickupMeleeWeapons : Actor
     {
         inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
         inventory.isFull[0] = true;
+        MeleePowerShellsCountCurent = PowerShells;
+				
         if (player.PickUpMeleeWeapon(this, Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
             MeleeAttackCooldownTime, MeleeCriticalDamageMultiply, MeleeChanceCriticalDamage,
             MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage,
@@ -326,19 +355,12 @@ public class PickupMeleeWeapons : Actor
             CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
             CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit,
 			CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-			CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost, hasPowerAttackShell))
+			CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost, 
+			hasPowerAttackShell, MeleePowerShellsCountCurent, MeleeAttackSpeed, MeleePowerAttackSpeed,
+			SecondSwordAttackSpeed, ThirdSwordAttackSpeed))
         {
-
+            MeleePowerShellsCountCurent = PowerShells;
         }
         Instantiate(itemButton, inventory.slots[0].transform, false);
-    }
-
-    private void Respawn()
-    {
-        if (!Pickable)
-        {
-            Pickable = true;
-            Sprite.enabled = true;
-        }
     }
 }

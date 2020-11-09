@@ -1,215 +1,406 @@
 ﻿#pragma warning disable 0649
-
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MonsterLove.StateMachine;
 using UnityEngine.UI;
+using PowerTools;
+using Pathfinding;
 
 public class Player : Actor
 {
     #region Params
     [Header("Movement Variables")]
+    [FoldoutGroup("Movement Variables")]
     // Gravity, Maximun fall speed & fastfall Speed
     public float Gravity = 900f; // Скорость, с которой игрок падает, пока находится в воздухе
+    [FoldoutGroup("Movement Variables")]
     public float MaxFall = -160f; // Максимальная общая скорость, с которой вы можете упасть
+    [FoldoutGroup("Movement Variables")]
     public float FastFall = -240f; // Максимальная скорость падения при быстром падении
+    [FoldoutGroup("Movement Variables")]
     // Скорость бега и ускорение
     public float MaxRun = 140f; //  Максимальная скорость бега по горизонтали
-
+    [FoldoutGroup("Movement Variables")]
     public float RunAccel = 1000f; // Скорость горизонтального ускорения
+    [FoldoutGroup("Movement Variables")]
     public float RunReduce = 400f; // Горизонтальное ускорение, когда ваша горизонтальная скорость выше или равна максимальной
     // Множитель в воздухе
+    [FoldoutGroup("Movement Variables")]
     public float AirMult = 0.65f; // Множитель для горизонтального перемещения воздуха (трения), чем выше, тем больше контроля в воздухе
     // Переменные для прыжка
+    [FoldoutGroup("Movement Variables")]
     public float JumpSpeed = 135f; // Скорость вертикального прыжка / Сила
+    [FoldoutGroup("Movement Variables")]
     public float JumpHBoost = 40f; // Повышение скорости по горизонтали при прыжке
+    [FoldoutGroup("Movement Variables")]
     public float VariableJumpTime = 0.2f; // Время после выполнения прыжка, при котором вы можете удерживать клавишу прыжка, чтобы прыгнуть выше
+    [FoldoutGroup("Movement Variables")]
     public float SpringJumpSpeed = 275f; // Скорость вертикального прыжка / Сила прыжков на пружине
+    [FoldoutGroup("Movement Variables")]
     public float SpringJumpVariableTime = 0.05f; // Время после выполнения прыжка с пружины, при котором вы можете удерживать клавишу прыжка, чтобы прыгнуть выше
     // Переменные для прыжков от стен
+    [FoldoutGroup("Movement Variables")]
     public float WallJumpForceTime = 0.16f; // Время, когда горизонтальное движение возобновляется / форсируется после прыжка со стены (если он слишком низок, игрок может взобраться на стену)
+    [FoldoutGroup("Movement Variables")]
     public float WallJumpHSpeed = 130f; // Увеличение скорости по горизонтали при выполнении прыжка со стены
+    [FoldoutGroup("Movement Variables")]
     public int WallJumpCheckDist = 2; // Расстояние, на котором мы проверяем стены перед выполнением прыжка со стены (рекомендуется 2-4)
     // Переменные для скольжения по стене
+    [FoldoutGroup("Movement Variables")]
     public float WallSlideStartMax = -20f; //  Начальная вертикальная скорость, когда вы скользите по стене
+    [FoldoutGroup("Movement Variables")]
     public float WallSlideTime = 1.2f; // Максимальное время, когда вы можете скользить по стене, прежде чем снова набрать полную скорость падения
     // Параметры для рывка и переката
+    [FoldoutGroup("Movement Variables")]
     public float DashSpeed = 240f; // Скорость / Сила рывка (dash)
+    [FoldoutGroup("Movement Variables")]
     public float RollSpeed = 240f; // Скорость переката 
+    [FoldoutGroup("Movement Variables")]
     public float EndDashSpeed = 160f; // Повышенная скорость, когда рывок заканчивается (рекомендуется 2/3 скорости рывка)
+    [FoldoutGroup("Movement Variables")]
     public float EndRollSpeed = 160f; // Повышение скорости при окончании переката (рекомендуется 2/3 скорости переката)
+    [FoldoutGroup("Movement Variables")]
     public float EndDashUpMult = 0.75f; // Множитель применяется к скорости после окончания рывка, если направление, в котором вы летели, было вверх
+    [FoldoutGroup("Movement Variables")]
     public float EndRollUpMult = 0.75f; // Множитель применяется к скорости после окончания переката, если направление, в котором вы катились, было вверх
+    [FoldoutGroup("Movement Variables")]
     public float DashTime = 0.15f; // Общее время, которое длится рывок
+    [FoldoutGroup("Movement Variables")]
     public float RollTime = 0.15f; // Общее время, которое длится перекат
+    [FoldoutGroup("Movement Variables")]
     public float DashCooldown = 0.4f; // Время восстановления рывка
+    [FoldoutGroup("Movement Variables")]
     public float RollCooldown = 0.4f; // Время восстановления переката
+    [FoldoutGroup("Movement Variables")]
     // Другие переменные, используемые для адаптивного движения
     public float clingTime = 0.125f;  // Время после прикосновения к стене, где вы не можете покинуть стену (чтобы избежать непреднамеренного ухода от стены при попытке выполнить прыжок с стены)
+    [FoldoutGroup("Movement Variables")]
     public float JumpGraceTime = 0.1f; // Время отсрочки прыжка после того, как вы покинули землю без прыжка, на котором вы все еще можете сделать прыжок
+    [FoldoutGroup("Movement Variables")]
     public float JumpBufferTime = 0.1f; // Если игрок ударяет об землю в течение этого времени после нажатия кнопки прыжка, прыжок будет выполнен, как только он коснется земли
-                                        // Лестничные переменные
+    [FoldoutGroup("Movement Variables")]                                 // Лестничные переменные
     public float LadderClimbSpeed = 60f;
     #endregion
+	
     #region WeaponParams
-
     [Header("Hands")]
     public int HandAttackMinDamage = 1;//new int[2] {1, 0, 0};
     public int HandAttackMaxDamage = 2;//new int[2] {2, 0, 0};
     public int HandStepUpAfterHit = 20; //new int[2] {20,0,0};
+    public float HandAttackCooldownTime = 0.8f;
 
-    [Header("MeleeAttacks")]
+	#region MeleeWeapons
+    [Header("MeleeWeapons")]
+    [HorizontalGroup("base1")]
     public string MeleeWeaponType;
     private MeleeWeapon MeleeWeaponClass;
 
+    [Header("NormalAttack")]
+    [TabGroup("NormalAttack")]
     public int MeleeAttackMaxDamage;
+    [TabGroup("NormalAttack")]
     public int MeleeAttackMinDamage;
+    [TabGroup("NormalAttack")]
     public int MeleeCriticalDamageMultiply;
+    [TabGroup("NormalAttack")]
     public int MeleeCriticalDamageChance;
-    private float MeleeAttackSpeed = 1f;
-    public int StepUpAfterHit;
-    public int PopUpAfterHit = 0;
+    [TabGroup("NormalAttack")]
     public float MeleeAttackCooldownTime = 0.8f;
+    [TabGroup("NormalAttack")]
+    public float SecondSwordAttackCooldownTime = 0.4f;
+    [TabGroup("NormalAttack")]
+    public float ThirdSwordAttackCooldownTime = 0.4f;
+    [TabGroup("NormalAttack")]
+    private float MeleeAttackSpeed = 1f;
+	[TabGroup("NormalAttack")]
+    private float SecondSwordAttackSpeed = 1f;
+	[TabGroup("NormalAttack")]
+    private float ThirdSwordAttackSpeed = 1f;
+    [TabGroup("NormalAttack")]
+    public int MeleeManaCost = 0;
+
+    [Header("PowerAttack")]
+    [TabGroup("PowerAttack")]
+    public int MeleePowerAttackMinDamage = 0;
+    [TabGroup("PowerAttack")]
+    public int MeleePowerAttackMaxDamage = 0;
+    [TabGroup("PowerAttack")]
+    public float MeleePowerAttackCooldownTime = 0.8f;
+    [TabGroup("PowerAttack")]
+    [Range(1, 10)]
+    public int MeleePowerCriticalDamageMultiply = 1;
+    [TabGroup("PowerAttack")]
+    [Range(0, 99)]
+    public int MeleePowerChanceCriticalDamage = 0;
+	[TabGroup("PowerAttack")]
+    private float MeleePowerAttackSpeed = 1f;
+    [TabGroup("PowerAttack")]
+    public int MeleePowerManaCost = 0;
+	[TabGroup("PowerAttack")]
+    public int MeleePowerShellsCount = 0;
+
+    [TabGroup("Tab Group 2", "Poison")]
+    [Header("Poison")]
+    public bool MeleeAttackCanPoison = false;
+    [TabGroup("Tab Group 2", "Poison")]
+    public bool MeleePowerAttackCanPoison = false;
+    [TabGroup("Tab Group 2", "Poison")]
+    public int MeleePoisonDamaged = 0;
+    [TabGroup("Tab Group 2", "Poison")]
+    public int MeleePoisonFrequency = 0;
+    [TabGroup("Tab Group 2", "Poison")]
+    public int MeleePoisonTick = 0;
+    [TabGroup("Tab Group 2", "Poison")]
+    public int MeleePoisonChance = 100;
+
+    [TabGroup("Tab Group 2", "Fire")]
+    [Header("Fire")]
+    public bool MeleeAttackCanFire = false;
+    [TabGroup("Tab Group 2", "Fire")]
+    public bool MeleePowerAttackCanFire = false;
+    [TabGroup("Tab Group 2", "Fire")]
+    public int MeleeFireDamaged = 0;
+    [TabGroup("Tab Group 2", "Fire")]
+    public int MeleeFireFrequency = 0;
+    [TabGroup("Tab Group 2", "Fire")]
+    public int MeleeFireTick = 0;
+    [TabGroup("Tab Group 2", "Fire")]
+    public int MeleeFireChance = 100;
+
+    [TabGroup("Tab Group 2", "Freez")]
+    [Header("Freez")]
+    public bool MeleeAttackCanFreez = false;
+    [TabGroup("Tab Group 2", "Freez")]
+    public bool MeleePowerAttackCanFreez = false;
+    [TabGroup("Tab Group 2", "Freez")]
+    public int MeleeFreezDuration = 0;
+    [TabGroup("Tab Group 2", "Freez")]
+    public int MeleeFreezChance = 100;
+
+    [Header("Push")]
+    [TabGroup("Tab Group 2", "Push")]
+    public bool MeleeAttackCanPush = false;
+    [TabGroup("Tab Group 2", "Push")]
+    public bool MeleePowerAttackCanPush = false;
+    [TabGroup("Tab Group 2", "Push")]
+    public int MeleePushDistance = 0;
+    [TabGroup("Tab Group 2", "Push")]
+    public bool MeleeAttackCanPushUp = false;
+    [TabGroup("Tab Group 2", "Push")]
+    public bool MeleePowerAttackCanPushUp = false;
+    [TabGroup("Tab Group 2", "Push")]
+    public int MeleePushUpDistance = 0;
+
+    [Header("Stun")]
+    [TabGroup("Tab Group 2", "Stun")]
+    public bool MeleeAttackCanStun = false;
+    [TabGroup("Tab Group 2", "Stun")]
+    public bool MeleePowerAttackCanStun = false;
+    [TabGroup("Tab Group 2", "Stun")]
+    public int MeleeStunDuration = 0;
+    [TabGroup("Tab Group 2", "Stun")]
+    [Range(0, 99)]
+    public int MeleeStunChance = 100;
+
+    [Header("Other")]
+    [TabGroup("Tab Group 2", "Other")]
+    public int StepUpAfterHit;
+    [TabGroup("Tab Group 2", "Other")]
+    public int PopUpAfterHit = 0;
+    [TabGroup("Tab Group 2", "Other")]
     public float SpeedOnSwordAttack = 20;
     [HideInInspector]
     public bool ChangeCollider = false;
+    [TabGroup("Tab Group 2", "Other")]
     public bool hasSeries = false;
-    private bool hasBlock = false;
-    public bool hasPowerAttackShell = false;
-    public bool MeleeCanThirdAttackCriticalDamage;
-	public int MeleeManaCost =0;
-
-    [Header("MeleePowerAttack")]
-    public int MeleePowerAttackMinDamage = 0;
-    public int MeleePowerAttackMaxDamage = 0;
-    public float MeleePowerAttackCooldownTime = 0.8f;
-    [Range(1, 10)]
-    public int MeleePowerCriticalDamageMultiply = 1;
-    [Range(0, 99)]
-    public int MeleePowerChanceCriticalDamage = 0;
-	public int MeleePowerManaCost = 0;
-
-    [Header("Poison")]
-    public bool MeleeAttackCanPoison = false;
-    public bool MeleePowerAttackCanPoison = false;
-    public int MeleePoisonDamaged = 0;
-    public int MeleePoisonFrequency = 0;
-    public int MeleePoisonTick = 0;
-    public int MeleePoisonChance = 100;
-    [Header("Fire")]
-    public bool MeleeAttackCanFire = false;
-    public bool MeleePowerAttackCanFire = false;
-    public int MeleeFireDamaged = 0;
-    public int MeleeFireFrequency = 0;
-    public int MeleeFireTick = 0;
-    public int MeleeFireChance = 100;
-    [Header("Freez")]
-    public bool MeleeAttackCanFreez = false;
-    public bool MeleePowerAttackCanFreez = false;
-    public int MeleeFreezDuration = 0;
-    public int MeleeFreezChance = 100;
-    [Header("Push")]
-    public bool MeleeAttackCanPush = false;
-    public bool MeleePowerAttackCanPush = false;
-    public int MeleePushDistance = 0;
-	
-	[Header("PushUp")]
-    public bool MeleeAttackCanPushUp = false;
-    public bool MeleePowerAttackCanPushUp = false;
-    public int MeleePushUpDistance = 0;
-	[Header("Stun")]
-    public bool MeleeAttackCanStun = false;
-    public bool MeleePowerAttackCanStun = false;
-    public int MeleeStunDuration = 0;
-	[Range(0, 99)]
-    public int MeleeStunChance = 100;
-	
-    [Header("Other")]
-    public float HandAttackCooldownTime = 0.8f;
-    public float SecondSwordAttackCooldownTime = 0.4f;
-    public float ThirdSwordAttackCooldownTime = 0.4f;
+    [TabGroup("Tab Group 2", "Other")]
+    public bool hasBlock = false;
+    [TabGroup("Tab Group 2", "Other")]
     public float MeleeBlockCooldownTime = 0.5f;
+    [TabGroup("Tab Group 2", "Other")]
+    public bool hasPowerAttackShell = false;
+    [TabGroup("Tab Group 2", "Other")]
+    public bool MeleeCanThirdAttackCriticalDamage;
 
+	#endregion
 
-    [Header("RangedAttacks")]
+	#region RangedWeapons
+    [Header("RangedWeapons")]
+    [HorizontalGroup("base2")]
     public string RangedWeaponType;
     private RangedWeapon RangedWeaponClass;
 
+    [Header("NormalAttack")]
+    [TabGroup("RangedWeapons", "NormalAttack")]
     public int RangedCriticalDamage = 0;
+    [TabGroup("RangedWeapons", "NormalAttack")]
     public int RangedCriticalDamageMultiply = 1;
+    [TabGroup("RangedWeapons", "NormalAttack")]
     public int RangedCriticalDamageChance = 0;
+    [TabGroup("RangedWeapons", "NormalAttack")]
     public int RangedAttackMinDamage = 1;//new int[2] {1, 0, 0};
+    [TabGroup("RangedWeapons", "NormalAttack")]
     public int RangedAttackMaxDamage = 2;//new int[2] {2, 0, 0};
+    [TabGroup("RangedWeapons", "NormalAttack")]
+    private float RangedAttackSpeed = 1f;
+    [TabGroup("RangedWeapons", "NormalAttack")]
     public int ShellsCount = 0;
+    [TabGroup("RangedWeapons", "NormalAttack")]
     public float RangedAttackCooldownTime = 1f;
-	public int RangedManaCost = 0;
+    [TabGroup("RangedWeapons", "NormalAttack")]
+    public int RangedManaCost = 0;
 
-    [Header("RangedPowerAttack")]
+    [Header("PowerAttack")]
+    [TabGroup("RangedWeapons", "PowerAttack")]
     public int RangedPowerAttackMinDamage = 0;
+    [TabGroup("RangedWeapons", "PowerAttack")]
     public int RangedPowerAttackMaxDamage = 0;
+    [TabGroup("RangedWeapons", "PowerAttack")]
     public float RangedPowerAttackCooldownTime = 10f;
+    [TabGroup("RangedWeapons", "PowerAttack")]
     [Range(1, 10)]
     public int RangedPowerCriticalDamageMultiply = 1;
+    [TabGroup("RangedWeapons", "PowerAttack")]
     [Range(0, 99)]
     public int RangedPowerChanceCriticalDamage = 0;
-    public int PowerShellsCount = 0;
-	public int RangedPowerManaCost = 0;
+	[TabGroup("RangedWeapons", "PowerAttack")]
+    private float RangedPowerAttackSpeed = 1f;
+    [TabGroup("RangedWeapons", "PowerAttack")]
+    public int RangedPowerShellsCount = 0;
+    [TabGroup("RangedWeapons", "PowerAttack")]
+    public int RangedPowerManaCost = 0;
 
+    [TabGroup("Tab Group 3", "Poison")]
     [Header("Poison")]
     public bool RangedAttackCanPoison = false;
+    [TabGroup("Tab Group 3", "Poison")]
     public bool RangedPowerAttackCanPoison = false;
+    [TabGroup("Tab Group 3", "Poison")]
     public int RangedPoisonDamaged = 0;
+    [TabGroup("Tab Group 3", "Poison")]
     public int RangedPoisonFrequency = 0;
+    [TabGroup("Tab Group 3", "Poison")]
     public int RangedPoisonTick = 0;
+    [TabGroup("Tab Group 3", "Poison")]
     public int RangedPoisonChance = 100;
 
+    [TabGroup("Tab Group 3", "Fire")]
     [Header("Fire")]
     public bool RangedAttackCanFire = false;
+    [TabGroup("Tab Group 3", "Fire")]
     public bool RangedPowerAttackCanFire = false;
+    [TabGroup("Tab Group 3", "Fire")]
     public int RangedFireDamaged = 0;
+    [TabGroup("Tab Group 3", "Fire")]
     public int RangedFireFrequency = 0;
+    [TabGroup("Tab Group 3", "Fire")]
     public int RangedFireTick = 0;
+    [TabGroup("Tab Group 3", "Fire")]
     public int RangedFireChance = 100;
 
+    [TabGroup("Tab Group 3", "Freez")]
     [Header("Freez")]
     public bool RangedAttackCanFreez = false;
+    [TabGroup("Tab Group 3", "Freez")]
     public bool RangedPowerAttackCanFreez = false;
+    [TabGroup("Tab Group 3", "Freez")]
     public int RangedFreezDuration = 0;
+    [TabGroup("Tab Group 3", "Freez")]
     public int RangedFreezChance = 100;
 
     [Header("Push")]
+    [TabGroup("Tab Group 3", "Push")]
     public bool RangedAttackCanPush = false;
+    [TabGroup("Tab Group 3", "Push")]
     public bool RangedPowerAttackCanPush = false;
+    [TabGroup("Tab Group 3", "Push")]
     public int RangedPushDistance = 0;
-
-	[Header("PushUp")]
+    [TabGroup("Tab Group 3", "Push")]
     public bool RangedAttackCanPushUp = false;
+    [TabGroup("Tab Group 3", "Push")]
     public bool RangedPowerAttackCanPushUp = false;
+    [TabGroup("Tab Group 3", "Push")]
     public int RangedPushUpDistance = 0;
-	
-	[Header("Stun")]
+
+    [Header("Stun")]
+    [TabGroup("Tab Group 3", "Stun")]
     public bool RangedAttackCanStun = false;
+    [TabGroup("Tab Group 3", "Stun")]
     public bool RangedPowerAttackCanStun = false;
+    [TabGroup("Tab Group 3", "Stun")]
     public int RangedStunDuration = 0;
-	[Range(0, 99)]
+    [TabGroup("Tab Group 3", "Stun")]
+    [Range(0, 99)]
     public int RangedStunChance = 100;
-	
+
     [Header("Other")]
+    [TabGroup("Tab Group 3", "Other")]
     public bool RangedAttackCanThroughShoot = false;
+    [TabGroup("Tab Group 3", "Other")]
     public bool RangedTossingUp = false;
+    [TabGroup("Tab Group 3", "Other")]
     public bool RangedAttackAiming = false;
+    [TabGroup("Tab Group 3", "Other")]
     public int PowerAttackPopUpAfterHit = 0;
+    [TabGroup("Tab Group 3", "Other")]
     public int RangedStepUpAfterHit = 0;
+    [TabGroup("Tab Group 3", "Other")]
     public bool RangedAiming = false;
 
-    [Header("PowerAttackOther")]
+    [Header("Power")]
+    [TabGroup("Tab Group 3", "Power")]
     public int RangedPowerAttackPopUpAfterHit = 0;
+    [TabGroup("Tab Group 3", "Power")]
     public bool RangedPowerAttackAiming = false;
+    [TabGroup("Tab Group 3", "Power")]
     public bool RangedPowerAttackCanThroughShoot = false;
+    [TabGroup("Tab Group 3", "Power")]
     public bool RangedHeal = false;
+    [TabGroup("Tab Group 3", "Power")]
     public int RangedHealCount = 0;
-	public bool RangedPowerBlink = false;
+    [TabGroup("Tab Group 3", "Power")]
+    public bool RangedPowerBlink = false;
+	#endregion
+	
+	
+    public int hitCount = 0;
+    public bool hasPrepare = false;
+    private GameObject countShellText;
+    private GameObject countPowerShellText;
+	private GameObject countMeleePowerShellText;
+	private GameObject countMoneyText;
+	
+	public int countMoney;
+    private bool hasBow = false;
+    private bool hasSword = false;
+    [HideInInspector]
+    public bool canAim = false;
+    public Sprite AimSpriteGreen; // сделать дял каждого оружия отдельный подгружать из оружия
+    public Sprite AimSpriteRed;
+    public GameObject aimSprite;
+    [HideInInspector]
+    public bool OnAttackMove = false;
+	public bool OnAttackMoveBack = false;
+    [HideInInspector]
+    public bool tossingUp = false;
+    public bool PowerMeleeAttack = false;
+    public bool PowerRangedAttack = false;
+
+    public enum ActiveWeapon
+    {
+        Hands,         // Руки
+        Bow,           // Лук 
+        Sword          // Меч
+    }
+
+    [Header("Initial weapon")]
+    public ActiveWeapon activeWeapon; // Активное оружие
+
+    public GameObject InitialWeapon = null; // TODO проверка на null Odin
+    public PickupRangedWeapons RangedWeapon = null;
+    public PickupMeleeWeapons MeleeWeapon = null;
     #endregion
 
     [Header("Facing Direction")]
@@ -220,71 +411,57 @@ public class Player : Actor
     public bool isInLadder = false;
 
     [Header("Respawn")]
-    public float RespawnTime; // Total Time it takes the player to respawn
-    private float respawnTimer = 0f; // Variable to store the timer of the respawn
-    private Vector2 respawnPosition; // Variable to store the position you respawn at
+    public float RespawnTime; // Общее время, необходимое игроку, чтобы возродиться
+    private float respawnTimer = 0f; // Переменная для хранения таймера респауна
+    private Vector2 respawnPosition; // Переменная для хранения таймера респауна
 
     [Header("Ducking & Colliders")]
-    public BoxCollider2D myNormalCollider; // Collider used while you're on any state except for the ducking state
-    public BoxCollider2D myDuckingCollider; // Collider used while in the ducking state
-    public float DuckingFrictionMultiplier = 0.5f; // The friction multiplier for when you're ducking 0.4-0.6 recommended (0 is no friction, 1 is the normal friction)
+    public BoxCollider2D myNormalCollider; // Коллайдер используется, когда вы находитесь в любом состоянии, кроме состояния приседа
+    public BoxCollider2D myDuckingCollider; // Коллайдер используется в состоянии приседа
+    public float DuckingFrictionMultiplier = 0.5f; // Множитель трения для уклона в воздухе рекомендуется 0,4-0,6 (0 - отсутствие трения, 1 - нормальное трение)
 
-    // Helper private Variables
-    private int moveX; // Variable to store the horizontal Input each frame
-    private int moveY; // Variable to store the vectical Input each frame
+    [Header("Other")]
+    public GameObject wing;
+    public GameObject flyingWeapon;
+
+    // Вспомогательные частные переменные
+    private int moveX; // Переменная для хранения горизонтального ввода каждого кадра
+    private int moveY; // Переменная для хранения векторного ввода каждого кадра
     public float curRun = 140;
-    private int oldMoveY; // Variable to store the he vertical Input for the last frame
-    private float varJumpSpeed; // Vertical Speed to apply on each frame of the variable jump
-    private float varJumpTimer = 0f; // Variable to store the time left on the variable jump
-    private int forceMoveX; // Used to store the forced horizontal movement input
-    private float forceMoveXTimer = 0f; // Used to store the time left on the force horizontal movement
-    private float maxFall; // Variable to store the current maximun fall speed
-    private float wallSlideTimer = 0f; // Used to store the time left on the wallslide
-    private Vector2 DashDir; // Here we store the direction in which we are dashing
-    private Vector2 RollDir; // Here we store the direction in which we are rolling
-    private float dashCooldownTimer = 0f; // Timer to store how much cooldown has the dash
-    private float rollCooldownTimer = 0f; // Timer to store how much cooldown has the roll
-    private bool canStick = false; // Helper variable for the wall sticking functionality
-    public bool sticking = false; // Variable to store if the player is currently sticking to a wall
-    private float stickTimer = 0f; // Timer to store the time left sticking to a wall 
-    private float jumpGraceTimer = 0f; // Timer to store the time left to perform a jump after leaving a platform/solid
-    private float jumpBufferTimer = 0f; // Timer to store the time left in the JumpBuffer timer
+    private int oldMoveY; // Переменная для хранения вертикального ввода для последнего кадра
+    private float varJumpSpeed; // Вертикальная скорость, применяемая к каждому кадру переменной jump
+    private float varJumpTimer = 0f; // Переменная для хранения времени, оставшегося до перехода переменной
+    private int forceMoveX; // Используется для сохранения ввода принудительного горизонтального перемещения
+    private float forceMoveXTimer = 0f; // Используется для хранения времени, оставшегося на силовое горизонтальное движение
+    private float maxFall; // Переменная для сохранения текущей максимальной скорости падения
+    private float wallSlideTimer = 0f; // Используется для хранения времени, оставшегося на стене
+    private Vector2 DashDir; // Здесь мы сохраняем направление, в котором мы мчимся
+    private Vector2 RollDir; // Здесь мы храним направление, в котором катимся
+    private float dashCooldownTimer = 0f; // Таймер для хранения времени восстановления рывка
+    private float rollCooldownTimer = 0f; // Таймер для хранения времени восстановления броска
+    private bool canStick = false; // Вспомогательная переменная для функции приклеивания стены
+    public bool sticking = false; // Переменная для сохранения, если игрок в данный момент прилипает к стене
+    private float stickTimer = 0f; // Таймер для хранения оставшегося времени прилипания к стене
+    private float jumpGraceTimer = 0f; // Таймер для запоминания времени, оставшегося до выполнения прыжка после выхода с платформы / твердого тела
+    private float jumpBufferTimer = 0f; // Таймер для хранения оставшегося времени в таймере JumpBuffer(Буфер перехода)
     private bool jumpIsInsideBuffer = false;
-    private float meleeAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
-    private float meleePowerAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
+    private float meleeAttackCooldownTimer = 0f; // Таймер для сохранения времени восстановления, оставшегося для использования атаки ближнего боя
+    private float meleePowerAttackCooldownTimer = 0f; // Таймер для сохранения времени восстановления, оставшегося для использования атаки ближнего боя
     private float meleeBlockCooldownTimer = 0f;
     [HideInInspector]
-    public float secondSwordAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
+    public float secondSwordAttackCooldownTimer = 0f; // Таймер для сохранения времени восстановления, оставшегося для использования атаки ближнего боя
     [HideInInspector]
-    public float thirdSwordAttackCooldownTimer = 0f; // Timer to store the cooldown left to use the melee attack
-    private float rangedAttackCooldownTimer = 0f; // Timer to store cooldown left on the bow attak
+    public float thirdSwordAttackCooldownTimer = 0f; // // Таймер для сохранения времени восстановления, оставшегося для использования атаки ближнего боя
+    private float rangedAttackCooldownTimer = 0f; // Таймер для сохранения времени восстановления, оставшегося после атаки лука
     [HideInInspector]
-    public float rangedPowerAttackCooldownTimer = 0f; // Timer to store cooldown left on the bow attak
-    private float moveToRespawnPositionAfter = .5f; // Time to wait before moving to the respawn position
-    private float moveToRespawnPosTimer = 0f; // Timer to store how much time is left before moving to the respawn position
+    public float rangedPowerAttackCooldownTimer = 0f; // Таймер для сохранения времени восстановления, оставшегося после атаки лука
+    private float moveToRespawnPositionAfter = .5f; // Пора подождать, прежде чем перейти на позицию респауна
+    private float moveToRespawnPosTimer = 0f; // Таймер, чтобы запомнить, сколько времени осталось до перехода в позицию респауна
     private bool rollAgain = false;
-    private float ledgeClimbTime = 1f; // Total time it takes to climb a wall
-    private float ledgeClimbTimer = 0f; // Timer to store the current time passed in the ledgeClimb state
-    private Vector2 extraPosOnClimb = new Vector2(10, 16); // Extra position to add to the current position to the end position of the climb animation matches the start position in idle state
-    public int hitCount = 0;
-    public bool hasPrepare = false;
-    private GameObject countShellText;
-	private GameObject countPowerShellText;
-    private bool hasBow = false;
-    private bool hasSword = false;
-    [HideInInspector]
-    public bool canAim = false;
-    public Sprite AimSpriteGreen; // сделать дял каждого оружия отдельный подгружать из оружия
-    public Sprite AimSpriteRed;
-    public GameObject aimSprite;
-    [HideInInspector]
-    public bool OnAttackMove = false;
-    [HideInInspector]
-    public bool tossingUp = false;
-    public bool PowerMeleeAttack = false;
-    public bool PowerRangedAttack = false;
-
-
+    private float ledgeClimbTime = 1f; // Общее время, необходимое, чтобы взобраться на стену
+    private float ledgeClimbTimer = 0f; // Таймер для сохранения текущего времени, прошедшего в состоянии ledgeClimb
+    private Vector2 extraPosOnClimb = new Vector2(10, 16); // Дополнительная позиция для добавления к текущей позиции в конечную позицию анимации подъема соответствует начальной позиции в состоянии ожидания
+    private Inventory inventory;
     //[Header("Objects")]
     //// public GameObject Arrow;         // Стрела, которую наш герой выпускает
     //public GameObject AimLine;          // Линия прицеливания
@@ -319,7 +496,7 @@ public class Player : Actor
 
     #region Properties
 
-    // Check if we should duck (on the ground and moveY is pointing down and moveX is 0)
+    // Проверяем, должны ли мы пригнуться (на земле и moveY указывает вниз, а moveX равно 0)
     public bool CanDuck
     {
         get
@@ -328,7 +505,7 @@ public class Player : Actor
         }
     }
 
-    // Check if we should/can dash (the dash button has been pressed & If the cooldown has been completed)
+	// Проверяем, нужно ли / можем ли мы сделать рывок (кнопка рывка была нажата и завершилась ли перезарядка)
     public bool CanDash
     {
         get
@@ -365,7 +542,7 @@ public class Player : Actor
     {
         get
         {
-            return GetComponent<Mana>().mana > MeleeManaCost &&  hasSeries && hitCount == 1 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+            return GetComponent<Mana>().mana > MeleeManaCost && hasSeries && hitCount == 1 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
         }
     }
 
@@ -373,14 +550,15 @@ public class Player : Actor
     {
         get
         {
-            return GetComponent<Mana>().mana > MeleeManaCost &&  hasSeries && hitCount == 2 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
+            return GetComponent<Mana>().mana > MeleeManaCost && hasSeries && hitCount == 2 && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack") && meleeAttackCooldownTimer <= 0f;
         }
     }
     public bool CanPowerSwordAttack
     {
         get
         {
-            return GetComponent<Mana>().mana > MeleePowerManaCost &&  !hasBlock && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack2") && meleePowerAttackCooldownTimer <= 0f;
+            return MeleePowerShellsCount > 0 && GetComponent<Mana>().mana > MeleePowerManaCost && 
+			!hasBlock && activeWeapon == ActiveWeapon.Sword && Input.GetButtonDown("Attack2") && meleePowerAttackCooldownTimer <= 0f;
         }
     }
     public bool CanBlock
@@ -401,7 +579,7 @@ public class Player : Actor
     {
         get
         {
-            return GetComponent<Mana>().mana > RangedManaCost &&  activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack");
+            return GetComponent<Mana>().mana > RangedManaCost && activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack");
         }
     }
     public bool CanPowerShoot
@@ -416,16 +594,7 @@ public class Player : Actor
     {
         get
         {
-            return PowerShellsCount > 0 && activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && rangedPowerAttackCooldownTimer <= 0f;
-        }
-    }
-
-    public bool CanDuckPrepare
-    {
-        get
-        {
-            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && ShellsCount > 0 && GetComponent<Mana>().mana > RangedManaCost 
-			&& activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack") && rangedAttackCooldownTimer <= 0f;
+            return RangedPowerShellsCount > 0 && activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && rangedPowerAttackCooldownTimer <= 0f;
         }
     }
 
@@ -433,16 +602,17 @@ public class Player : Actor
     {
         get
         {
-            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack"); ;
+			return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && ShellsCount > 0 && GetComponent<Mana>().mana > RangedManaCost
+            && activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack") && rangedAttackCooldownTimer <= 0f;
         }
     }
 
-	    public bool CanDuckPowerShootPrepare
+    public bool CanDuckPowerShootPrepare
     {
         get
         {
-            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && GetComponent<Mana>().mana > RangedPowerManaCost && PowerShellsCount > 0 
-			&& activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && rangedPowerAttackCooldownTimer <= 0f;
+            return moveX == 0 && moveY < 0 && !jumpIsInsideBuffer && GetComponent<Mana>().mana > RangedPowerManaCost && RangedPowerShellsCount > 0
+            && activeWeapon == ActiveWeapon.Bow && Input.GetButtonDown("Attack2") && rangedPowerAttackCooldownTimer <= 0f;
         }
     }
 
@@ -456,8 +626,8 @@ public class Player : Actor
     #endregion
 
     [Header("Squash & Stretch")]
-    public Transform SpriteHolder; // Reference to the transform of the child object which holds the sprite renderer of the player
-    public Vector2 SpriteScale = Vector2.one; // The current X and Y scale of the sprite holder (used for Squash & Stretch)
+    public Transform SpriteHolder; // Ссылка на преобразование дочернего объекта, который содержит средство визуализации спрайтов игрока
+    public Vector2 SpriteScale = Vector2.one; // Текущие масштабы X и Y держателя спрайта (используются для Squash & Stretch)
 
     [Header("Animator")]
     public Animator animator; // Reference to the animator
@@ -495,25 +665,11 @@ public class Player : Actor
         DuckPowerShoot,
         DuckPowerShootPrepare,
         Selection,
-		Stun
+        Stun
     }
 
     // State Machine
     public StateMachine<States> fsm;
-
-    public enum ActiveWeapon
-    {
-        Hands,         // Руки
-        Bow,           // Лук 
-        Sword          // Меч
-    }
-
-    [Header("Initial weapon")]
-    public ActiveWeapon activeWeapon; // Активное оружие
-
-    public GameObject InitialWeapon = null;
-    public PickupRangedWeapons RangedWeapon = null;
-    public PickupMeleeWeapons MeleeWeapon = null;
 
     new void Awake()
     {
@@ -522,39 +678,49 @@ public class Player : Actor
         aimSprite.SetActive(false);
 
         //AimLine.gameObject.SetActive(false);
-        countShellText = GameObject.FindGameObjectWithTag("ShellCount");
-        countPowerShellText = GameObject.FindGameObjectWithTag("PowerShellCount");
-        // This code piece is only neccesary for the ducking functionality
-        //Ducking & Normal Colliders Assignment
+
+		
+		
+		// Этот фрагмент кода необходим только для функции приседания
+         // Назначение коллайдеров Ducking и Normal
         if (myNormalCollider == null && myDuckingCollider != null)
         {
             Debug.Log("The player has no Collider attached to it for the normal state");
         }
         else if (myDuckingCollider != null && myNormalCollider != null)
         {
-            // Only assign the collider if the ducking collider has been assigned hence only do it if you're planning to use the ducking functionality
+            // Назначайте коллайдер только в том случае, если был назначен коллайдер приседания, поэтому делайте это только в том случае, если вы планируете использовать функцию приглушения
             myCollider = myNormalCollider;
-        }
+        }	
+    }
+
+    void Start()
+    {
+        countShellText = GameObject.FindGameObjectWithTag("ShellCount");
+        countPowerShellText = GameObject.FindGameObjectWithTag("PowerShellCount");
+        //countMeleePowerShellText = GameObject.FindGameObjectWithTag("PowerMeleeShellCount"); //TODO доделать
+
+        //отображение патрон
+        countShellText.GetComponent<Text>().text = ShellsCount.ToString();
+        countPowerShellText.GetComponent<Text>().text = RangedPowerShellsCount.ToString();
+        //countMeleePowerShellText.GetComponent<Text>().text = MeleePowerShellsCount.ToString();
 
         if (InitialWeapon.GetComponent<PickupRangedWeapons>() != null)
             InitialWeapon.GetComponent<PickupRangedWeapons>().OnPlayer(this);
         if (InitialWeapon.GetComponent<PickupMeleeWeapons>() != null)
             InitialWeapon.GetComponent<PickupMeleeWeapons>().OnPlayer(this);
-        countShellText.GetComponent<Text>().text = ShellsCount.ToString();
-        countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
-        //countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
-    }
 
-    // Use this for initialization
-    void Start()
-    {
         fsm.ChangeState(States.LadderClimb);
         ChangeWeapon(activeWeapon);
         curRun = MaxRun;
-        StartCoroutine("ManaRegeneration");
+        StartCoroutine("ManaRegeneration"); // при старте запускать TODO
+		inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
+		countMoney = 0;
+
+        flyingWeapon.GetComponent<AIDestinationSetter>().target = transform;
     }
 
-    private void ChangeWeapon(ActiveWeapon activeWeapon) // удалить вместе с вызовом
+    private void ChangeWeapon(ActiveWeapon activeWeapon) // удалить вместе с вызовом TODO
     {
         if (activeWeapon == ActiveWeapon.Hands)
         {
@@ -583,10 +749,14 @@ public class Player : Actor
             {
                 case ActiveWeapon.Sword:
                     hasPowerAttackShell = false;
+					//inventory.GetComponent<Inventory>().slots[0].GetComponent<Slot>().selectImage.SetActive(true);
+					//inventory.GetComponent<Inventory>().slots[1].GetComponent<Slot>().selectImage.SetActive(false);
                     activeWeapon = ActiveWeapon.Bow;
                     break;
                 case ActiveWeapon.Bow:
                     hasPowerAttackShell = true;
+					//inventory.GetComponent<Inventory>().slots[1].GetComponent<Slot>().selectImage.SetActive(true);
+					//inventory.GetComponent<Inventory>().slots[0].GetComponent<Slot>().selectImage.SetActive(false);
                     activeWeapon = ActiveWeapon.Sword;
                     break;
             }
@@ -606,7 +776,7 @@ public class Player : Actor
             ChangeWeapon(activeWeapon);
         }
     }
-    // Update is called once per frame
+
     new void Update()
     {
 
@@ -813,6 +983,11 @@ public class Player : Actor
         {
             Die();
         }
+
+        // TODO test new
+        SpriteAnimNodes nodes = GetComponentInChildren<SpriteAnimNodes>();
+        wing.transform.position = new Vector3(nodes.GetPosition(0).x - 11 * -(int)Facing, nodes.GetPosition(0).y + 9, nodes.GetPosition(0).z);
+
     }
 
     void Normal_Update()
@@ -883,6 +1058,14 @@ public class Player : Actor
         {
             meleeBlockCooldownTimer = MeleeBlockCooldownTime;
             fsm.ChangeState(States.SwordBlock, StateTransition.Overwrite);
+            return;
+        }
+
+		if (CanShoot)
+        {
+			rangedAttackCooldownTimer = RangedAttackCooldownTime;
+            //AimLine.gameObject.SetActive(false);
+            fsm.ChangeState(States.BowAttack, StateTransition.Overwrite);
             return;
         }
 
@@ -1126,14 +1309,15 @@ public class Player : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
 
-        if (CanDuckPrepare)
+		if (CanDuckShoot)
         {
-            rangedAttackCooldownTimer = RangedAttackCooldownTime;
-            fsm.ChangeState(States.DuckPrepare, StateTransition.Overwrite);
+		    rangedAttackCooldownTimer = RangedAttackCooldownTime;
+            //AimLine.gameObject.SetActive(false);
+            fsm.ChangeState(States.DuckShoot, StateTransition.Overwrite);
             return;
         }
 		
-		if (CanDuckPowerShootPrepare)
+        if (CanDuckPowerShootPrepare)
         {
             rangedAttackCooldownTimer = RangedAttackCooldownTime;
             fsm.ChangeState(States.DuckPowerShootPrepare, StateTransition.Overwrite);
@@ -1423,7 +1607,7 @@ public class Player : Actor
         //activeWeapon = ActiveWeapon.Hands;
         var health = GetComponent<Health>();
         health.dead = false;
-        health.TakeHeal(health.maxHealth);
+        //health.TakeHeal(health.maxHealth);
     }
 
     void Respawn_Update()
@@ -1485,7 +1669,6 @@ public class Player : Actor
 
         if (OnAttackMove)
         {
-
             if (tossingUp)
                 Speed.y = Calc.Approach(PopUpAfterHit, target, Gravity * Time.deltaTime);
 
@@ -1498,6 +1681,22 @@ public class Player : Actor
                 Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
             }
         }
+		
+		if (OnAttackMoveBack)
+        {
+            if (tossingUp)
+                Speed.y = Calc.Approach(-PopUpAfterHit, target, Gravity * Time.deltaTime);
+
+            if (!sticking && !CheckColAtPlace(Vector2.left * (int)Facing, solid_layer))
+            {
+                var MoveH = MoveHPlatform(-StepUpAfterHit * Time.deltaTime);
+            }
+            if (!onGround)
+            {
+                Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
+            }
+        }
+		
         if (hasSeries)
             secondSwordAttackCooldownTimer = SecondSwordAttackCooldownTime;
 
@@ -1518,6 +1717,10 @@ public class Player : Actor
         PowerMeleeAttack = false;
         var col = GetComponentInChildren<HitBoxManager>();
         col.ChangeCollider((int)MeleeWeaponClass);
+		
+        MeleeWeapon.GetComponent<PickupMeleeWeapons>().MeleePowerShellsCountCurent--;
+        MeleePowerShellsCount--;
+        //countMeleePowerShellText.GetComponent<Text>().text = MeleePowerShellsCount.ToString();
     }
     void SwordAttack_Update()
     {
@@ -1693,6 +1896,7 @@ public class Player : Actor
     //    health.invincible = false;
     //}
 
+
     void DuckPrepare_Update()
     {
 
@@ -1796,6 +2000,7 @@ public class Player : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
+	
     void DuckShoot_Exit()
     {
         RangedWeapon.GetComponent<PickupRangedWeapons>().ShellsCount--;
@@ -1803,7 +2008,7 @@ public class Player : Actor
         countShellText.GetComponent<Text>().text = ShellsCount.ToString();
     }
 
-	void DuckPowerShootPrepare_Update()
+    void DuckPowerShootPrepare_Update()
     {
 
         //if(canAim) // прицеливание
@@ -1923,8 +2128,8 @@ public class Player : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
-	
-	void DuckPowerShoot_Update()
+
+    void DuckPowerShoot_Update()
     {
         // Horizontal Speed Update Section
         float num = onGround ? 1f : AirMult;
@@ -1940,11 +2145,12 @@ public class Player : Actor
 
     void DuckPowerShoot_Exit()
     {
-        RangedWeapon.GetComponent<PickupRangedWeapons>().PowerShellsCount--;
-        PowerShellsCount--;
-        countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
+        RangedWeapon.GetComponent<PickupRangedWeapons>().RangedPowerShellsCountCurent--;
+        RangedPowerShellsCount--;
+        countPowerShellText.GetComponent<Text>().text = RangedPowerShellsCount.ToString();
     }
-	
+
+
     void BowPrepare_Update()
     {
 
@@ -2010,16 +2216,16 @@ public class Player : Actor
 
         //aimSprite.SetActive(true);
 
-		
-			//if ((Mathf.Abs(aimAngle2) < 90) && (Mathf.Abs(aimAngle2) > 45))
-   //             Debug.Log("angle 90 - 45");
-   //         if ((Mathf.Abs(aimAngle2) < 45) && (Mathf.Abs(aimAngle2) > 0))
-   //             Debug.Log("angle 45 - 0");
-   //         if ((Mathf.Abs(aimAngle2) < 0) && (Mathf.Abs(aimAngle2) > -45))
-   //             Debug.Log("angle 0 - -45");
-			//if ((Mathf.Abs(aimAngle2) < -45) && (Mathf.Abs(aimAngle2) > -90))
-   //             Debug.Log("angle -45 - -90");
-		
+
+        //if ((Mathf.Abs(aimAngle2) < 90) && (Mathf.Abs(aimAngle2) > 45))
+        //             Debug.Log("angle 90 - 45");
+        //         if ((Mathf.Abs(aimAngle2) < 45) && (Mathf.Abs(aimAngle2) > 0))
+        //             Debug.Log("angle 45 - 0");
+        //         if ((Mathf.Abs(aimAngle2) < 0) && (Mathf.Abs(aimAngle2) > -45))
+        //             Debug.Log("angle 0 - -45");
+        //if ((Mathf.Abs(aimAngle2) < -45) && (Mathf.Abs(aimAngle2) > -90))
+        //             Debug.Log("angle -45 - -90");
+
         //var facingDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - SpriteHolder.position;
         //var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
         //var aimAngle2 = aimAngle * Mathf.Rad2Deg;
@@ -2066,12 +2272,19 @@ public class Player : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
+
+    void BowAttack_Enter()
+    {
+        flyingWeapon.SetActive(false);
+    }
+
     void BowAttack_Exit()
     {
         RangedWeapon.GetComponent<PickupRangedWeapons>().ShellsCount--;
         ShellsCount--;
         countShellText.GetComponent<Text>().text = ShellsCount.ToString();
         //aimSprite.SetActive(false);
+        flyingWeapon.SetActive(true);
     }
 
     void BowPowerAttackPrepare_Update()
@@ -2093,6 +2306,7 @@ public class Player : Actor
         //mouseMotion.x += Input.GetAxis("Mouse X") * mouseSens;
         //mouseMotion.y += Input.GetAxis("Mouse Y") * mouseSens;
         //AimPoints[0] += mouseMotion;
+		
         if (RangedPowerAttackAiming || RangedPowerBlink)
         {
             aimSprite.SetActive(true);
@@ -2111,25 +2325,43 @@ public class Player : Actor
             }
 
             if ((Mathf.Abs(aimAngle2) < 90) && (Mathf.Abs(aimAngle2) > 75))
+			{
                 Debug.Log("angle 90 - 75");
+				animator.Play((string)RangedWeaponType + "angle75");
+			}
             if ((Mathf.Abs(aimAngle2) < 75) && (Mathf.Abs(aimAngle2) > 60))
+			{
                 Debug.Log("angle 75 - 60");
+				animator.Play((string)RangedWeaponType + "angle60");
+			}
             if ((Mathf.Abs(aimAngle2) < 60) && (Mathf.Abs(aimAngle2) > 45))
+			{
                 Debug.Log("angle 60 - 45");
+				animator.Play((string)RangedWeaponType + "angle45");
+			}
             if ((Mathf.Abs(aimAngle2) < 45) && (Mathf.Abs(aimAngle2) > 30))
+			{
                 Debug.Log("angle 45 - 30");
+				animator.Play((string)RangedWeaponType + "angle30");
+			}
             if ((Mathf.Abs(aimAngle2) < 30) && (Mathf.Abs(aimAngle2) > 15))
+			{
                 Debug.Log("angle 30 - 15");
+				animator.Play((string)RangedWeaponType + "angle15");
+			}
             if ((Mathf.Abs(aimAngle2) < 15) && (Mathf.Abs(aimAngle2) > 0))
+			{
                 Debug.Log("angle 15 - 0");
-		}
-            // Bow Attack over here
-            if (CanPowerShoot)
-            {
-                //AimLine.gameObject.SetActive(false);
-                fsm.ChangeState(States.BowPowerAttack, StateTransition.Overwrite);
-                return;
-            }
+				animator.Play((string)RangedWeaponType + "angle0");
+			}
+        }
+        // Bow Attack over here
+        if (CanPowerShoot)
+        {
+            //AimLine.gameObject.SetActive(false);
+            fsm.ChangeState(States.BowPowerAttack, StateTransition.Overwrite);
+            return;
+        }
 
     }
 
@@ -2164,9 +2396,9 @@ public class Player : Actor
 
     void BowPowerAttack_Exit()
     {
-        RangedWeapon.GetComponent<PickupRangedWeapons>().PowerShellsCount--;
-        PowerShellsCount--;
-        countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
+        RangedWeapon.GetComponent<PickupRangedWeapons>().RangedPowerShellsCountCurent--;
+        RangedPowerShellsCount--;
+        countPowerShellText.GetComponent<Text>().text = RangedPowerShellsCount.ToString();
     }
 
     void Action_Update()
@@ -2183,7 +2415,7 @@ public class Player : Actor
         }
     }
 
-	void Stun_Update()
+    void Stun_Update()
     {
         // Horizontal Speed Update Section
         float num = onGround ? 1f : AirMult;
@@ -2196,7 +2428,7 @@ public class Player : Actor
             Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
         }
     }
-	
+
     void LedgeGrab_Enter()
     {
         Speed = Vector2.zero;
@@ -2484,9 +2716,10 @@ public class Player : Actor
     bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance,
     bool hasPush, bool hasPowerAttackPush, int pushDistance,
     bool hasTossingUp, int popUpAfterHit,
-	bool hasPushUp, bool hasPowerAttackPushUp, int pushUpDistance,
-	bool hasStun, bool hasPowerAttackStun, int stunDuration, int stunChance,
-	int manaCost, int ManaPowerCost, bool powerShell)
+    bool hasPushUp, bool hasPowerAttackPushUp, int pushUpDistance,
+    bool hasStun, bool hasPowerAttackStun, int stunDuration, int stunChance,
+    int manaCost, int ManaPowerCost, bool powerShell, int powerShellsCount,
+    float attackSpeed, float attackPowerSpeed, float attackSecondSpeed, float attackThirdSpeed)
     {
         if (!hasSword)
         {
@@ -2534,17 +2767,24 @@ public class Player : Actor
             MeleeAttackCanPush = hasPush;
             MeleePowerAttackCanPush = hasPowerAttackPush;
             MeleePushDistance = pushDistance;
-			
+
             MeleeAttackCanPushUp = hasPushUp;
             MeleePowerAttackCanPushUp = hasPowerAttackPushUp;
             MeleePushUpDistance = pushUpDistance;
-			
-			MeleeAttackCanStun = hasStun;
+
+            MeleeAttackCanStun = hasStun;
             MeleePowerAttackCanStun = hasPowerAttackStun;
             MeleeStunDuration = stunDuration;
             MeleeStunChance = stunChance;
-			MeleeManaCost = manaCost;
-			MeleePowerManaCost = ManaPowerCost;
+            MeleeManaCost = manaCost;
+            MeleePowerManaCost = ManaPowerCost;
+			MeleePowerShellsCount = powerShellsCount;
+			
+			MeleeAttackSpeed = attackSpeed;
+			SecondSwordAttackSpeed = attackSecondSpeed;
+
+			ThirdSwordAttackSpeed = attackThirdSpeed;
+            MeleePowerAttackSpeed = attackPowerSpeed;
 			
             tossingUp = hasTossingUp;
             PopUpAfterHit = popUpAfterHit;
@@ -2582,11 +2822,11 @@ public class Player : Actor
     bool hasFreez, bool hasPowerAttackFreez, int freezDuration, int freezChance,
     bool hasPush, bool hasPowerAttackPush, int pushDistance,
     bool hasTossingUp, int popUpAfterHit, bool hasThroughShoot, bool hasPowerAttackThroughShoot,
-    bool hasAiming, int StepUpAfterHit, int PowerAttackPopUpAfterHit, bool hasPowerAttackAiming, 
-	bool rangedBlink, bool rangedHeal, int rangedHealCount,
-	bool hasPushUp, bool hasPowerAttackPushUp, int pushUpDistance,
-	bool hasStun, bool hasPowerAttackStun, int stunDuration, int stunChance,
-	int manaCost, int manaPowerCost)  
+    bool hasAiming, int StepUpAfterHit, int PowerAttackPopUpAfterHit, bool hasPowerAttackAiming,
+    bool rangedBlink, bool rangedHeal, int rangedHealCount,
+    bool hasPushUp, bool hasPowerAttackPushUp, int pushUpDistance,
+    bool hasStun, bool hasPowerAttackStun, int stunDuration, int stunChance,
+    int manaCost, int manaPowerCost, float attackSpeed, float attackPowerSpeed)
     {
         if (!hasBow)
         {
@@ -2608,7 +2848,7 @@ public class Player : Actor
             RangedPowerAttackCooldownTime = attackPowerCooldown;
             RangedPowerCriticalDamageMultiply = critPowerMultiply;
             RangedPowerChanceCriticalDamage = critPowerChance;
-            PowerShellsCount = powerShellsCount;
+            RangedPowerShellsCount = powerShellsCount;
 
             RangedAttackCanPoison = hasPoison;
             RangedPowerAttackCanPoison = hasPowerAttackPoison;
@@ -2633,32 +2873,34 @@ public class Player : Actor
             RangedPowerAttackCanPush = hasPowerAttackPush;
             RangedPushDistance = pushDistance;
 
-			RangedAttackCanPushUp = hasPushUp;
+            RangedAttackCanPushUp = hasPushUp;
             RangedPowerAttackCanPushUp = hasPowerAttackPushUp;
             RangedPushUpDistance = pushUpDistance;
-			
-			RangedAttackCanStun = hasStun;
+
+            RangedAttackCanStun = hasStun;
             RangedPowerAttackCanStun = hasPowerAttackStun;
             RangedStunDuration = stunDuration;
             RangedStunChance = stunChance;
-			
+
             RangedAttackCanThroughShoot = hasThroughShoot;
             RangedPowerAttackCanThroughShoot = hasPowerAttackThroughShoot;
             RangedAttackAiming = hasAiming;
             RangedPowerAttackAiming = hasPowerAttackAiming;
-			RangedPowerBlink = rangedBlink;
-			RangedHeal = rangedHeal;
-			RangedHealCount = rangedHealCount;
-			RangedManaCost = manaCost;
-			RangedPowerManaCost = manaPowerCost;
-			
-			
+            RangedPowerBlink = rangedBlink;
+            RangedHeal = rangedHeal;
+            RangedHealCount = rangedHealCount;
+            RangedManaCost = manaCost;
+            RangedPowerManaCost = manaPowerCost;
+
+			RangedAttackSpeed = attackSpeed;
+			RangedPowerAttackSpeed = attackPowerSpeed;
+
             RangedWeapon = rangedWeapon;
 
             activeWeapon = ActiveWeapon.Bow;
             hasBow = true;
             countShellText.GetComponent<Text>().text = ShellsCount.ToString();
-			countPowerShellText.GetComponent<Text>().text = PowerShellsCount.ToString();
+            countPowerShellText.GetComponent<Text>().text = RangedPowerShellsCount.ToString();
 
             var projectile = GetComponentInChildren<ProjectileSpawner>();
             projectile.ChangeProjectile((int)RangedWeaponClass);
@@ -2720,7 +2962,7 @@ public class Player : Actor
         else activeWeapon = ActiveWeapon.Hands;
         hasBow = false;
     }
-	
+
     public void PickUpArtifacts(ItemParameters item)
     {
         parameters.Add(item);
@@ -2926,10 +3168,10 @@ public class Player : Actor
         RangedFreezChance = 0;
         RangedAttackCanPush = false;
         RangedAttackCanThroughShoot = false;
-		RangedPowerAttackAiming = false;
-		RangedPowerBlink = false;
-		RangedHeal = false;
-		RangedHealCount = 0;
+        RangedPowerAttackAiming = false;
+        RangedPowerBlink = false;
+        RangedHeal = false;
+        RangedHealCount = 0;
 
     }
 
@@ -3110,33 +3352,33 @@ public class Player : Actor
 
             if (fsm.State == States.LedgeClimb)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "LedgeClimb"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("LedgeClimb"))
                 {
-                    animator.Play((string)MeleeWeaponType + "LedgeClimb");
+                    animator.Play("LedgeClimb");
                 }
                 // If on the ledge grab state
             }
             else if (fsm.State == States.LedgeGrab)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "LedgeHang"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("LedgeHang"))
                 {
-                    animator.Play((string)MeleeWeaponType + "LedgeHang");
+                    animator.Play("LedgeHang");
                 }
                 // If on the Ladder Climbing state
             }
             else if (fsm.State == States.Action)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Action"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Action"))
                 {
-                    animator.Play((string)MeleeWeaponType + "Action");
+                    animator.Play("Action");
                 }
                 // If on the Ladder Climbing state
             }
             else if (fsm.State == States.LadderClimb)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "LadderClimb"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("LadderClimb"))
                 {
-                    animator.Play((string)MeleeWeaponType + "LadderClimb");
+                    animator.Play("LadderClimb");
                 }
 
                 //animator.speed = Mathf.Abs(moveY);
@@ -3159,7 +3401,7 @@ public class Player : Actor
                     //animator.SetFloat("AttackSpeed", MeleeAttackSpeed);
                     animator.Play((string)MeleeWeaponType + "Attack");
                 }
-
+				animator.SetFloat("SwordAttackSpeed", MeleeAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.SecondSwordAttack)
@@ -3168,6 +3410,7 @@ public class Player : Actor
                 {
                     animator.Play((string)MeleeWeaponType + "SecondAttack");
                 }
+				animator.SetFloat("SwordAttackSpeed", SecondSwordAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.ThirdSwordAttack)
@@ -3176,6 +3419,7 @@ public class Player : Actor
                 {
                     animator.Play((string)MeleeWeaponType + "ThirdAttack");
                 }
+				animator.SetFloat("SwordAttackSpeed", ThirdSwordAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.PowerSwordAttack)
@@ -3184,6 +3428,8 @@ public class Player : Actor
                 {
                     animator.Play((string)MeleeWeaponType + "PowerAttack");
                 }
+				
+				animator.SetFloat("SwordAttackSpeed", MeleePowerAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.SwordBlock)
@@ -3196,25 +3442,25 @@ public class Player : Actor
             }
             else if (fsm.State == States.Dash)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Dash"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
                 {
-                    animator.Play((string)MeleeWeaponType + "Dash");
+                    animator.Play("Dash");
                 }
                 // If on the ground
             }
             else if (fsm.State == States.Selection)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Action"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Action"))
                 {
-                    animator.Play((string)MeleeWeaponType + "Action");
+                    animator.Play("Action");
                 }
                 // If on the ground
             }
             else if (fsm.State == States.Roll)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Roll"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
                 {
-                    animator.Play((string)MeleeWeaponType + "Roll");
+                    animator.Play("Roll");
                 }
                 // If on the ground
             }
@@ -3223,35 +3469,35 @@ public class Player : Actor
                 if (fsm.State == States.Ducking)
                 {
                     // Idle Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Ducking"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Ducking"))
                     {
-                        animator.Play((string)MeleeWeaponType + "Ducking");
+                        animator.Play("Ducking");
                     }
                     // If the is nohorizontal movement input
                 }
                 else if (moveX == 0)
                 {
                     // Idle Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Idle"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                     {
-                        animator.Play((string)MeleeWeaponType + "Idle");
+                        animator.Play("Idle");
                     }
                     // If there is horizontal movement input
                 }
                 else if (pushing)
                 {
                     // Push Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Push"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Push"))
                     {
-                        animator.Play((string)MeleeWeaponType + "Push");
+                        animator.Play("Push");
                     }
                 }
                 else
                 {
                     // Run Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Run"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
                     {
-                        animator.Play((string)MeleeWeaponType + "Run");
+                        animator.Play("Run");
                     }
                 }
                 // If not on the ground
@@ -3262,27 +3508,27 @@ public class Player : Actor
                 if (wallSlideDir != 0)
                 {
                     // Wall Slide Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "WallSlide"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("WallSlide"))
                     {
-                        animator.Play((string)MeleeWeaponType + "WallSlide");
+                        animator.Play("WallSlide");
                     }
                     // If not sliding and speed is upward
                 }
                 else if (Speed.y > 0)
                 {
                     // Jump Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Jump"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
                     {
-                        animator.Play((string)MeleeWeaponType + "Jump");
+                        animator.Play("Jump");
                     }
                     // if speed is not upwards then it is downward
                 }
                 else if (Speed.y <= 0)
                 {
                     // Fall Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)MeleeWeaponType + "Fall"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
                     {
-                        animator.Play((string)MeleeWeaponType + "Fall");
+                        animator.Play("Fall");
                     }
                 }
             }
@@ -3293,33 +3539,33 @@ public class Player : Actor
 
             if (fsm.State == States.LedgeClimb)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "LedgeClimb"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("LedgeClimb"))
                 {
-                    animator.Play((string)RangedWeaponType + "LedgeClimb");
+                    animator.Play("LedgeClimb");
                 }
                 // If on the ledge grab state
             }
             else if (fsm.State == States.LedgeGrab)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "LedgeHang"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("LedgeHang"))
                 {
-                    animator.Play((string)RangedWeaponType + "LedgeHang");
+                    animator.Play("LedgeHang");
                 }
                 // If on the Ladder Climbing state
             }
             else if (fsm.State == States.Action)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Action"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Action"))
                 {
-                    animator.Play((string)RangedWeaponType + "Action");
+                    animator.Play("Action");
                 }
                 // If on the Ladder Climbing state
             }
             else if (fsm.State == States.LadderClimb)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "LadderClimb"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("LadderClimb"))
                 {
-                    animator.Play((string)RangedWeaponType + "LadderClimb");
+                    animator.Play("LadderClimb");
                 }
 
                 //animator.speed = Mathf.Abs(moveY);
@@ -3344,7 +3590,7 @@ public class Player : Actor
                 }
                 // If on the attack state
             }
-			else if (fsm.State == States.DuckPowerShootPrepare)
+            else if (fsm.State == States.DuckPowerShootPrepare)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "DuckPowerShootPrepare"))
                 {
@@ -3358,6 +3604,7 @@ public class Player : Actor
                 {
                     animator.Play((string)RangedWeaponType + "Shoot");
                 }
+				animator.SetFloat("BowAttackSpeed", RangedAttackSpeed);
                 // If on the attack state
             }
             else if (fsm.State == States.DuckShoot)
@@ -3366,14 +3613,18 @@ public class Player : Actor
                 {
                     animator.Play((string)RangedWeaponType + "DuckShoot");
                 }
+				
+				animator.SetFloat("BowAttackSpeed", RangedAttackSpeed);
                 // If on the attack state
             }
-			else if (fsm.State == States.DuckPowerShoot)
+            else if (fsm.State == States.DuckPowerShoot)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "DuckPowerShoot"))
                 {
                     animator.Play((string)RangedWeaponType + "DuckPowerShoot");
                 }
+				
+				animator.SetFloat("BowAttackSpeed", RangedPowerAttackSpeed);
                 // If on the attack state
             }
             else if (fsm.State == States.BowPowerAttack)
@@ -3382,6 +3633,8 @@ public class Player : Actor
                 {
                     animator.Play((string)RangedWeaponType + "PowerShoot");
                 }
+				
+				animator.SetFloat("BowAttackSpeed", RangedPowerAttackSpeed);
                 // If on the attack state
             }
 
@@ -3404,25 +3657,25 @@ public class Player : Actor
             }
             else if (fsm.State == States.Dash)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Dash"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Dash"))
                 {
-                    animator.Play((string)RangedWeaponType + "Dash");
+                    animator.Play("Dash");
                 }
                 // If on the ground
             }
             else if (fsm.State == States.Selection)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Action"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Action"))
                 {
-                    animator.Play((string)RangedWeaponType + "Action");
+                    animator.Play("Action");
                 }
                 // If on the ground
             }
             else if (fsm.State == States.Roll)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Roll"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
                 {
-                    animator.Play((string)RangedWeaponType + "Roll");
+                    animator.Play("Roll");
                 }
                 // If on the ground
             }
@@ -3431,35 +3684,35 @@ public class Player : Actor
                 if (fsm.State == States.Ducking)
                 {
                     // Idle Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Ducking"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Ducking"))
                     {
-                        animator.Play((string)RangedWeaponType + "Ducking");
+                        animator.Play("Ducking");
                     }
                     // If the is nohorizontal movement input
                 }
                 else if (moveX == 0)
                 {
                     // Idle Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Idle"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                     {
-                        animator.Play((string)RangedWeaponType + "Idle");
+                        animator.Play("Idle");
                     }
                     // If there is horizontal movement input
                 }
                 else if (pushing)
                 {
                     // Push Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Push"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Push"))
                     {
-                        animator.Play((string)RangedWeaponType + "Push");
+                        animator.Play("Push");
                     }
                 }
                 else
                 {
                     // Run Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Run"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Run"))
                     {
-                        animator.Play((string)RangedWeaponType + "Run");
+                        animator.Play("Run");
                     }
                 }
                 // If not on the ground
@@ -3470,27 +3723,27 @@ public class Player : Actor
                 if (wallSlideDir != 0)
                 {
                     // Wall Slide Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "WallSlide"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("WallSlide"))
                     {
-                        animator.Play((string)RangedWeaponType + "WallSlide");
+                        animator.Play("WallSlide");
                     }
                     // If not sliding and speed is upward
                 }
                 else if (Speed.y > 0)
                 {
                     // Jump Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Jump"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
                     {
-                        animator.Play((string)RangedWeaponType + "Jump");
+                        animator.Play("Jump");
                     }
                     // if speed is not upwards then it is downward
                 }
                 else if (Speed.y <= 0)
                 {
                     // Fall Animation
-                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Fall"))
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Fall"))
                     {
-                        animator.Play((string)RangedWeaponType + "Fall");
+                        animator.Play("Fall");
                     }
                 }
             }
@@ -3510,6 +3763,7 @@ public class Player : Actor
             GameManager.instance.PlayerDead();
         }
     }
+	
     public void Action()
     {
         fsm.ChangeState(States.Action, StateTransition.Overwrite);
@@ -3520,12 +3774,12 @@ public class Player : Actor
         GameManager.instance.Emit(SparkParticle, Random.Range(5, 8), new Vector2(transform.position.x, transform.position.y + 10) + new Vector2(wallSlideDir * 2.5f, 4), Vector2.one * 1f);
     }
 
-	
+
     public void Blink(Vector3 pos)
-	{
-		transform.position = Vector2.Lerp(transform.position, new Vector3(pos.x, pos.y + 5, 0), 2); 
-	}
-	
+    {
+        transform.position = Vector2.Lerp(transform.position, new Vector3(pos.x, pos.y + 5, 0), 2);
+    }
+
     IEnumerator ManaRegeneration()
     {
         while (true)
@@ -3545,9 +3799,57 @@ public class Player : Actor
         }
     }
 
+	public bool Take_RangedShell(int ammount)
+    {
+		//return false; // если нету такого оржуия TODO
+		RangedWeapon.GetComponent<PickupRangedWeapons>().RangedShellsCountCurent+= ammount;
+        ShellsCount+= ammount;
+        countShellText.GetComponent<Text>().text = ShellsCount.ToString();
+		
+		return true;
+    }
+	
+	public bool Take_RangedPowerShell(int ammount)
+    {
+		//return false; // если нету такого оржуия TODO
+		RangedWeapon.GetComponent<PickupRangedWeapons>().RangedPowerShellsCountCurent+= ammount;
+        RangedPowerShellsCount+= ammount;
+        countPowerShellText.GetComponent<Text>().text = RangedPowerShellsCount.ToString();
+		
+		return true;
+    }
+
+	public bool Take_MeleeShell(int ammount)
+    {
+		//return false; // если нету такого оржуия TODO
+        MeleeWeapon.GetComponent<PickupMeleeWeapons>().MeleePowerShellsCountCurent+= ammount;
+        MeleePowerShellsCount += ammount;
+        //countMeleePowerShellText.GetComponent<Text>().text = MeleePowerShellsCount.ToString();
+		
+		return true;
+    }
+	
+	public bool Take_Money(int ammount)
+    {
+        countMoney += ammount;
+        countMoneyText.GetComponent<Text>().text = countMoney.ToString();
+		return true;
+    }
+	
+	public bool Spend_Money(int ammount)
+    {
+		if(countMoney >= ammount)
+		{
+        countMoney -= ammount;
+        countMoneyText.GetComponent<Text>().text = countMoney.ToString();
+		return true;
+		}
+		return false;
+    }
+	
     void OnTriggerEnter2D(Collider2D col)
     {
-        var component = col.GetComponent<Health>(); // TODO переделать для другого
+        var component = col.GetComponent<Health>(); // TODO переделать для другого разбивать вазы
         var worm = col.GetComponent<WormEnemy>();
         // If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
         if (component != null && component != owner && !healthsDamaged.Contains(component) && worm != null && fsm.State == States.Roll)

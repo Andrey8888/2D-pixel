@@ -124,7 +124,7 @@ public class ProjectileSpawner : MonoBehaviour
                     else
                     {
                         playercomponent.rangedPowerAttackCooldownTimer = 0;
-                    playercomponent.PowerShellsCount++;
+                    playercomponent.RangedPowerShellsCount++;
                     playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
                     }
             }
@@ -144,7 +144,7 @@ public class ProjectileSpawner : MonoBehaviour
                 else
                 {
                     playercomponent.rangedPowerAttackCooldownTimer = 0;
-                    playercomponent.PowerShellsCount++;
+                    playercomponent.RangedPowerShellsCount++;
                     playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
                 }
             }
@@ -200,7 +200,7 @@ public class ProjectileSpawner : MonoBehaviour
                 else
                 {
                     playercomponent.rangedPowerAttackCooldownTimer = 0;
-                    playercomponent.PowerShellsCount++;
+                    playercomponent.RangedPowerShellsCount++;
                     playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
                 }
             }
@@ -222,7 +222,7 @@ public class ProjectileSpawner : MonoBehaviour
                     else
                     {
                         playercomponent.rangedPowerAttackCooldownTimer = 0;
-                        playercomponent.PowerShellsCount++;
+                        playercomponent.RangedPowerShellsCount++;
                         playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
                     }
                 }
@@ -230,7 +230,7 @@ public class ProjectileSpawner : MonoBehaviour
                 {
                     playercomponent.aimSprite.GetComponent<SpriteRenderer>().sprite = playercomponent.AimSpriteRed;
                     playercomponent.rangedPowerAttackCooldownTimer = 0;
-                    playercomponent.PowerShellsCount++;
+                    playercomponent.RangedPowerShellsCount++;
                     playercomponent.fsm.ChangeState(Player.States.Normal, MonsterLove.StateMachine.StateTransition.Overwrite);
                 }
             }

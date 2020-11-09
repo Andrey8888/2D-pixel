@@ -21,31 +21,33 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 21300000, guid: d0244d9a24e6ba74e85e211986cf3dcc, type: 3}
-    - time: 0.033333335
+    - time: 0.051724136
       value: {fileID: 21300000, guid: 4bfb7f8d20dfe6748b87979655323654, type: 3}
-    - time: 0.083333336
+    - time: 0.12068965
       value: {fileID: 21300000, guid: 56c1b48c6c4aae14aaceff08f59200d3, type: 3}
-    - time: 0.15
+    - time: 0.22413793
       value: {fileID: 21300000, guid: 220e7deb894cf2e46b58b24edc6116dd, type: 3}
-    - time: 0.18333334
+    - time: 0.27586207
       value: {fileID: 21300000, guid: a628489dd114c2c47b850681b77fd5b3, type: 3}
-    - time: 0.25
+    - time: 0.3275862
       value: {fileID: 21300000, guid: 095557525395cae45a3e49036be73759, type: 3}
-    - time: 0.28333333
+    - time: 0.39655173
       value: {fileID: 21300000, guid: 0a7cc8cc0452bfd418f50165c71af210, type: 3}
-    - time: 0.31666666
+    - time: 0.46551725
       value: {fileID: 21300000, guid: 9445f4400d999ce4ab3e4c507404edca, type: 3}
-    - time: 0.35
+    - time: 0.53448284
       value: {fileID: 21300000, guid: 559f2150938dc9d41b48427beff9fd91, type: 3}
-    - time: 0.38333333
+    - time: 0.586207
       value: {fileID: 21300000, guid: 61e41d1c68f30bb4696a67b40f2b0536, type: 3}
-    - time: 0.41666666
+    - time: 0.6379311
+      value: {fileID: 21300000, guid: ff5e1e1e6cced50418bcfb88b3a26ef5, type: 3}
+    - time: 0.70689666
       value: {fileID: 21300000, guid: ff5e1e1e6cced50418bcfb88b3a26ef5, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
-  m_SampleRate: 60
+  m_SampleRate: 58
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -71,12 +73,13 @@ AnimationClip:
     - {fileID: 21300000, guid: 559f2150938dc9d41b48427beff9fd91, type: 3}
     - {fileID: 21300000, guid: 61e41d1c68f30bb4696a67b40f2b0536, type: 3}
     - {fileID: 21300000, guid: ff5e1e1e6cced50418bcfb88b3a26ef5, type: 3}
+    - {fileID: 21300000, guid: ff5e1e1e6cced50418bcfb88b3a26ef5, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.46666667
+    m_StopTime: 0.724138
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -96,63 +99,63 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.13333334
+  - time: 0.20689656
     functionName: PlayerSwordAttackMove
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.15
+  - time: 0.22413793
     functionName: setHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.2
+  - time: 0.31034482
     functionName: PlayerSwordAttackMoveEnd
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.23333333
+  - time: 0.3275862
     functionName: setHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 0.25
+  - time: 0.3275862
     functionName: setHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.25
+  - time: 0.3275862
     functionName: PlayerSwordAttackMove
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.31666666
+  - time: 0.46551725
     functionName: setHitBox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 0.35
+  - time: 0.5344828
     functionName: PlayerSwordAttackMoveEnd
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.46666667
+  - time: 0.7241379
     functionName: PlayerBackToNormalState
     data: 
     objectReferenceParameter: {fileID: 0}

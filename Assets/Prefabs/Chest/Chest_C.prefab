@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1533062177506212288}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6104770234579102292}
   m_RootOrder: 0
@@ -114,6 +114,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37600da5d188f58468f8b92b0f7eb0a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2155577194347086019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4160347678526924026}
+  m_Layer: 0
+  m_Name: DropPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4160347678526924026
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2155577194347086019}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 37, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_Children: []
+  m_Father: {fileID: 6104770234579102292}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6102395073742050342
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +156,7 @@ GameObject:
   - component: {fileID: 6102395073742050336}
   - component: {fileID: 6102395073742050338}
   - component: {fileID: 6102395073742050337}
-  - component: {fileID: 4686109381059582330}
+  - component: {fileID: 8528330055638159201}
   m_Layer: 0
   m_Name: Chest_C
   m_TagString: DestructibleObjects
@@ -146,6 +176,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children:
   - {fileID: 1533062177506212289}
+  - {fileID: 4160347678526924026}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -156,7 +187,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6102395073742050342}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f14087f7e08b094cacd5dbb0b816d1c, type: 3}
   m_Name: 
@@ -164,7 +195,7 @@ MonoBehaviour:
   OnTakeDamageEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4686109381059582330}
+      - m_Target: {fileID: 0}
         m_MethodName: Hit
         m_Mode: 1
         m_Arguments:
@@ -178,7 +209,13 @@ MonoBehaviour:
   OnPushedEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnPushedUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnBurnedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStunedEvent:
     m_PersistentCalls:
       m_Calls: []
   OnFreezedEvent:
@@ -193,6 +230,9 @@ MonoBehaviour:
   OnFreezedEndEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnStunedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -205,7 +245,7 @@ MonoBehaviour:
   OnDeathEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4686109381059582330}
+      - m_Target: {fileID: 0}
         m_MethodName: Die
         m_Mode: 1
         m_Arguments:
@@ -237,7 +277,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -1.7379122}
+  m_Offset: {x: 0, y: 9.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -248,7 +288,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 28.52597, y: 22.576117}
+  m_Size: {x: 24, y: 19}
   m_EdgeRadius: 0
 --- !u!50 &6102395073742050337
 Rigidbody2D:
@@ -271,7 +311,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &4686109381059582330
+--- !u!114 &8528330055638159201
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -280,37 +320,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6102395073742050342}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9b81f3e49132464fb1145fed56e4dec, type: 3}
+  m_Script: {fileID: 11500000, guid: 4cffd2f9005b06a43842851f25b6ec2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onGround: 1
-  wasOnGround: 1
-  canPushBlock: 0
-  pushing: 0
-  Speed: {x: 0, y: 0}
-  movementCounter: {x: 0, y: 0}
-  solid_layer:
-    serializedVersion: 2
-    m_Bits: 4352
-  bumper_layer:
-    serializedVersion: 2
-    m_Bits: 1024
-  box_layer:
-    serializedVersion: 2
-    m_Bits: 256
-  player_layer:
-    serializedVersion: 2
-    m_Bits: 8192
-  oneway_layer:
-    serializedVersion: 2
-    m_Bits: 512
-  ladder_layer:
-    serializedVersion: 2
-    m_Bits: 2048
-  myCollider: {fileID: 6102395073742050338}
-  Gravity: 0
-  MaxFall: 0
-  animator: {fileID: 1533062177506212290}
+  animator: {fileID: 0}
   Dropout:
   - {fileID: 5978178784321953259, guid: 730c733e1da9d5546a5071bc2da0a7d1, type: 3}
   - {fileID: 4765598502538143739, guid: 05bb5750d5056d94b982cf3b160bf6cb, type: 3}
@@ -318,3 +331,4 @@ MonoBehaviour:
   - {fileID: 3971711499331128897, guid: ab5ba5dbbcbf8be458168cb489429312, type: 3}
   - {fileID: 4918873826438345055, guid: df16cadc66182a6468b57d00efdda500, type: 3}
   - {fileID: 5523098073151036333, guid: 6f5398f4d2278f04a83477f1e2338c7a, type: 3}
+  dropPoint: {fileID: 4160347678526924026}

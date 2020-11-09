@@ -5,14 +5,14 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [Range(0, 99)]
-    public int Chance;
-    public GameObject[] enemy;
+    public int SpawnChance;
+    public GameObject[] SpawnObject;
     void Awake()
     {
-        if (Random.Range(0, 100) < Chance)
+        if (Random.Range(0, 100) < SpawnChance)
         {
-            var rnd = Random.Range(0, enemy.Length);
-            var p = Instantiate(enemy[rnd], gameObject.transform.position, Quaternion.identity);
+            var rnd = Random.Range(0, SpawnObject.Length);
+            var p = Instantiate(SpawnObject[rnd], gameObject.transform.position, Quaternion.identity);
         }
     }
 }

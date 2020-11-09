@@ -12,6 +12,8 @@ public class Chest : MonoBehaviour
     public StateMachine<States> fsm;
 
     public GameObject[] Dropout;
+    private bool IsDrop = false;
+    public Transform dropPoint;
 
     public enum States
     {
@@ -27,30 +29,35 @@ public class Chest : MonoBehaviour
     {
         fsm.ChangeState(States.Normal);
     }
-	
-	void OnTriggerStay2D(Collider2D col)
+
+    void Update()
     {
-		if (col.CompareTag("Player") && Input.GetKey(KeyCode.E) && col.GetComponent<Player>() != null)
+        UpdateSprite();
+    }
+    void OnTriggerStay2D(Collider2D col)
+    {
+		if (!IsDrop && col.CompareTag("Player") && Input.GetKey(KeyCode.E) && col.GetComponent<Player>() != null)
 		{
-			StartCoroutine("ActivationCoroutine");
+            IsDrop = true;
+            StartCoroutine("ActivationCoroutine");
 			col.GetComponent<Player>().Action();
 		}
 	}
-    void Open_Update()
+    void Open()
     {
-	        if (Dropout != null)
+        if (Dropout != null)
         {
             var rnd = Random.Range(0, Dropout.Length);
-            var p = Instantiate(Dropout[rnd], gameObject.transform.position, Quaternion.identity);
+            var p = Instantiate(Dropout[rnd], dropPoint.transform.position, Quaternion.identity);
         }
-	}
+    }
 	void UpdateSprite()
     {
             if (fsm.State == States.Open)
             {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Open"))
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
                 {
-                    animator.Play("Open");
+                    animator.Play("Death");
                 }
             }
     }
@@ -59,5 +66,6 @@ public class Chest : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
 		fsm.ChangeState(States.Open, StateTransition.Overwrite);
+        Open();
     }
 }

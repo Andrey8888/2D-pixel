@@ -316,6 +316,7 @@ GameObject:
   - component: {fileID: 8524039187701114779}
   - component: {fileID: 8524039187701114778}
   - component: {fileID: 6589543082364206000}
+  - component: {fileID: 8777781626466114958}
   m_Layer: 0
   m_Name: SpriteHolder
   m_TagString: Untagged
@@ -345,6 +346,7 @@ Transform:
   - {fileID: 8740590849487099045}
   - {fileID: 3950792627055825262}
   - {fileID: 6289719203073900952}
+  - {fileID: 7239064123143586669}
   m_Father: {fileID: 8524039188666438505}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -496,12 +498,12 @@ MonoBehaviour:
   powerProjectile:
   - {fileID: 5801730819362278875, guid: 6bf4cd82bb6c657499f2b82553bd2413, type: 3}
   - {fileID: 8085262812505040281, guid: cdf44aed80bbba945a8e32fd2cf888eb, type: 3}
-  - {fileID: 8315733683099106912, guid: 5d1c2451f782af344914bdf936f1c835, type: 3}
+  - {fileID: 8085262812505040281, guid: 13ca32ed4ed1cc14aaa0e2be23cfcc04, type: 3}
   - {fileID: 8579064368712909951, guid: 467ded2d7c365d54a85555a8d74cc54c, type: 3}
   RangedWeaponType: 0
   meleeProjectile: {fileID: 8579064368712909951, guid: 467ded2d7c365d54a85555a8d74cc54c,
     type: 3}
-  disCast: 200
+  disCast: 300
   gunBarrel:
   - {fileID: 8524039187663459909}
   - {fileID: 2403444942249462067}
@@ -536,6 +538,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 8524039187701114773}
   ice: {fileID: 6626830429048299786}
+--- !u!114 &8777781626466114958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8524039187701114775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cf860f4296d4d04fb8c9e2b8c326c7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_node0: {x: 0, y: 0}
+  m_node1: {x: 0, y: 0}
+  m_node2: {x: 0, y: 0}
+  m_node3: {x: 0, y: 0}
+  m_node4: {x: 0, y: 0}
+  m_node5: {x: 0, y: 0}
+  m_node6: {x: 0, y: 0}
+  m_node7: {x: 0, y: 0}
+  m_node8: {x: 0, y: 0}
+  m_node9: {x: 0, y: 0}
+  m_ang0: 0
+  m_ang1: 0
+  m_ang2: 0
+  m_ang3: 0
+  m_ang4: 0
+  m_ang5: 0
+  m_ang6: 0
+  m_ang7: 0
+  m_ang8: 0
+  m_ang9: 0
 --- !u!1 &8524039188666438502
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,19 +751,15 @@ MonoBehaviour:
   HandAttackMinDamage: 1
   HandAttackMaxDamage: 3
   HandStepUpAfterHit: 20
+  HandAttackCooldownTime: 0.8
   MeleeWeaponType: 
   MeleeAttackMaxDamage: 0
   MeleeAttackMinDamage: 0
   MeleeCriticalDamageMultiply: 0
   MeleeCriticalDamageChance: 0
-  StepUpAfterHit: 0
-  PopUpAfterHit: 0
   MeleeAttackCooldownTime: 0.8
-  SpeedOnSwordAttack: 20
-  ChangeCollider: 0
-  hasSeries: 0
-  hasPowerAttackShell: 0
-  MeleeCanThirdAttackCriticalDamage: 0
+  SecondSwordAttackCooldownTime: 0.4
+  ThirdSwordAttackCooldownTime: 0.4
   MeleeManaCost: 0
   MeleePowerAttackMinDamage: 0
   MeleePowerAttackMaxDamage: 0
@@ -737,6 +767,7 @@ MonoBehaviour:
   MeleePowerCriticalDamageMultiply: 1
   MeleePowerChanceCriticalDamage: 0
   MeleePowerManaCost: 0
+  MeleePowerShellsCount: 0
   MeleeAttackCanPoison: 0
   MeleePowerAttackCanPoison: 0
   MeleePoisonDamaged: 0
@@ -762,11 +793,16 @@ MonoBehaviour:
   MeleeAttackCanStun: 0
   MeleePowerAttackCanStun: 0
   MeleeStunDuration: 0
-  MeleeStunChance: 100
-  HandAttackCooldownTime: 0.8
-  SecondSwordAttackCooldownTime: 0.4
-  ThirdSwordAttackCooldownTime: 0.4
+  MeleeStunChance: 99
+  StepUpAfterHit: 0
+  PopUpAfterHit: 0
+  SpeedOnSwordAttack: 20
+  ChangeCollider: 0
+  hasSeries: 0
+  hasBlock: 0
   MeleeBlockCooldownTime: 0.2
+  hasPowerAttackShell: 0
+  MeleeCanThirdAttackCriticalDamage: 0
   RangedWeaponType: 
   RangedCriticalDamage: 0
   RangedCriticalDamageMultiply: 0
@@ -781,7 +817,7 @@ MonoBehaviour:
   RangedPowerAttackCooldownTime: 10
   RangedPowerCriticalDamageMultiply: 1
   RangedPowerChanceCriticalDamage: 0
-  PowerShellsCount: 0
+  RangedPowerShellsCount: 0
   RangedPowerManaCost: 0
   RangedAttackCanPoison: 0
   RangedPowerAttackCanPoison: 0
@@ -808,7 +844,7 @@ MonoBehaviour:
   RangedAttackCanStun: 0
   RangedPowerAttackCanStun: 0
   RangedStunDuration: 0
-  RangedStunChance: 100
+  RangedStunChance: 99
   RangedAttackCanThroughShoot: 0
   RangedTossingUp: 0
   RangedAttackAiming: 0
@@ -821,6 +857,24 @@ MonoBehaviour:
   RangedHeal: 0
   RangedHealCount: 0
   RangedPowerBlink: 0
+  hitCount: 0
+  hasPrepare: 0
+  countMoney: 0
+  canAim: 0
+  AimSpriteGreen: {fileID: 21300000, guid: ce095849d744cf74e8b810f4eb6b5f58, type: 3}
+  AimSpriteRed: {fileID: 21300000, guid: fb41f5105afa49543b024f00f8859694, type: 3}
+  aimSprite: {fileID: 225223686660090200}
+  OnAttackMove: 0
+  OnAttackMoveBack: 0
+  tossingUp: 0
+  PowerMeleeAttack: 0
+  PowerRangedAttack: 0
+  activeWeapon: 1
+  InitialWeapon: {fileID: 7325081864335052826, guid: 7fcda9774c39b3d43a737f8f09c492ea,
+    type: 3}
+  RangedWeapon: {fileID: 4064983902154758797, guid: 7fcda9774c39b3d43a737f8f09c492ea,
+    type: 3}
+  MeleeWeapon: {fileID: 0}
   Facing: 1
   wallSlideDir: 0
   isInLadder: 0
@@ -828,21 +882,13 @@ MonoBehaviour:
   myNormalCollider: {fileID: 8524039188666438504}
   myDuckingCollider: {fileID: 8524039188666438507}
   DuckingFrictionMultiplier: 0.5
+  wing: {fileID: 7620292425638733069}
+  flyingWeapon: {fileID: 0}
   curRun: 140
   sticking: 0
   secondSwordAttackCooldownTimer: 0
   thirdSwordAttackCooldownTimer: 0
   rangedPowerAttackCooldownTimer: 0
-  hitCount: 0
-  hasPrepare: 0
-  canAim: 0
-  AimSpriteGreen: {fileID: 21300000, guid: ce095849d744cf74e8b810f4eb6b5f58, type: 3}
-  AimSpriteRed: {fileID: 21300000, guid: fb41f5105afa49543b024f00f8859694, type: 3}
-  aimSprite: {fileID: 225223686660090200}
-  OnAttackMove: 0
-  tossingUp: 0
-  PowerMeleeAttack: 0
-  PowerRangedAttack: 0
   owner: {fileID: 0}
   parameters: []
   SpriteHolder: {fileID: 8524039187701114782}
@@ -856,12 +902,6 @@ MonoBehaviour:
     type: 3}
   BloodParticle: {fileID: 1145837783617200, guid: d34108a4353e0b94bb2f012ea46eb1b1,
     type: 3}
-  activeWeapon: 1
-  InitialWeapon: {fileID: 7325081864335052826, guid: 7fcda9774c39b3d43a737f8f09c492ea,
-    type: 3}
-  RangedWeapon: {fileID: 4064983902154758797, guid: 7fcda9774c39b3d43a737f8f09c492ea,
-    type: 3}
-  MeleeWeapon: {fileID: 0}
 --- !u!114 &8524039188666438500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1392,4 +1432,90 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8566484902299636615, guid: 860031615a5481e43844b0e96abd071f,
     type: 3}
   m_PrefabInstance: {fileID: 4626969607670072041}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6385261180141922286
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8524039187701114782}
+    m_Modifications:
+    - target: {fileID: 3557200079854535395, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_Name
+      value: Wings1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3557200079854535395, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a7bfd640984eafa4a8f29473372dd025, type: 3}
+--- !u!1 &7620292425638733069 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3557200079854535395, guid: a7bfd640984eafa4a8f29473372dd025,
+    type: 3}
+  m_PrefabInstance: {fileID: 6385261180141922286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7239064123143586669 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
+    type: 3}
+  m_PrefabInstance: {fileID: 6385261180141922286}
   m_PrefabAsset: {fileID: 0}

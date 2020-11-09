@@ -34,3 +34,13 @@ public enum Artifacts
     HighBoots,
     Wings
 }
+
+public enum Ammo
+{
+    healAmount,
+    rangedShell,
+    rangedPowerShell,
+	meleeRune,
+	money,
+	mana
+}
