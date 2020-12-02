@@ -47,9 +47,10 @@ public class AmmoItem : MonoBehaviour {
 			Pickable = false;
 		}
 		
-		if (AmmoType == Ammo.money && player.Take_Money(Amount)) {
-			Pickable = false;
-		}
+		//if (AmmoType == Ammo.money && player.Take_Money(Amount)) {
+		//	Pickable = false;
+		//}
+
 		var manacomp = player.GetComponent<Mana> ();
 		if (AmmoType == Ammo.mana && manacomp != null &&  manacomp.TakeRefresh(Amount)) {
 			Pickable = false;

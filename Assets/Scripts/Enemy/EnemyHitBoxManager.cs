@@ -62,8 +62,10 @@ public class EnemyHitBoxManager : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D col)
     {
         var component = col.GetComponent<Health>();
+		var PlayerComponent = col.GetComponent<Player>();
+		
         // If the target the hitbox collided with has a health component and it is not our owner and it is not on the already on the list of healths damaged by the current hitbox
-        if (component != null && component != owner && !healthsDamaged.Contains(component))
+        if (PlayerComponent != null && component != null && component != owner && !healthsDamaged.Contains(component))
         {
             // Try to Apply the damage
             var EnemyComponent = GetComponentInParent<Enemy>();

@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CodeMonkey.Utils;
 using CodeMonkey;
+using TMPro;
 
 public class ManaBarFade : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class ManaBarFade : MonoBehaviour
     private float damagedHealthFadeTimer;
     private HealthSystem manaSystem;
     private int startMana;
+    public TextMeshProUGUI textCount;
 
     public static ManaBarFade instance = null;
 
@@ -96,22 +98,33 @@ public class ManaBarFade : MonoBehaviour
     private void SetHealth(float healthNormalized)
     {
         barImage.fillAmount = healthNormalized;
+        textCount.text = startMana.ToString();
+
+        var player = GameObject.FindGameObjectWithTag("Player").transform;
+        textCount.text = startMana.ToString() + "/" + player.GetComponent<Mana>().maxMana;
     }
 
     public void Cast(int coast)
     {
         manaSystem.Damage(startMana - coast);
         startMana = startMana - (startMana - coast);
+
+        var player = GameObject.FindGameObjectWithTag("Player").transform;
+        textCount.text = startMana.ToString() + "/" + player.GetComponent<Mana>().maxMana;
     }
 
     public void Refill(int mana)
     {
         manaSystem.Heal(-startMana + mana);
         startMana = startMana + (-startMana + mana);
+
+        var player = GameObject.FindGameObjectWithTag("Player").transform;
+        textCount.text = startMana.ToString() + "/" + player.GetComponent<Mana>().maxMana;
     }
     public void Refresh()
     {
         var player = GameObject.FindGameObjectWithTag("Player").transform;
         manaSystem.healthAmount = player.GetComponent<Mana>().maxMana;
+        textCount.text = manaSystem.healthAmount.ToString() + "/" + player.GetComponent<Mana>().maxMana;
     }
 }

@@ -1,10 +1,12 @@
 ﻿#pragma warning disable 0649
 
 using System.Collections;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 using MonsterLove.StateMachine;
 using UnityEngine.UI;
+using Pathfinding;
 
 public class Enemy : Actor
 {
@@ -36,7 +38,6 @@ public class Enemy : Actor
     private float BlinkCooldownTime = 10f;
     private float ExpectationCooldownTime = 2f;
     private float turnCooldownTimer = 0f;
-    private float aggressionCooldownTimer = 0f;
     private float blinkCooldownTimer = 0f;
     private float expectationCooldownTimer = 0f;
     //public float StunedCooldownTime = 0.25f;
@@ -66,94 +67,173 @@ public class Enemy : Actor
     public GameObject BloodParticle;
 
 
-    [Header("MeleeAttacks")]
+    [Header("MeleeWeapons")]
+    [TabGroup("MeleeWeapons")]
     public int MeleeCriticalDamage = 0;
-    public float MeleeAttackCooldownTime = 2f; // Задержка по ближней атаке  
+    [TabGroup("MeleeWeapons")]
+    public float MeleeAttackCooldownTime = 2f; // Задержка по ближней атаке 
+    [TabGroup("MeleeWeapons")]
     public int MeleeAttackMaxDamage;
+    [TabGroup("MeleeWeapons")]
     public int MeleeAttackMinDamage;
+    [TabGroup("MeleeWeapons")]
     public int MeleeCriticalDamageMultiply;
+    [TabGroup("MeleeWeapons")]
     public int MeleeCriticalDamageChance;
+    [TabGroup("MeleeWeapons")]
     public int MeleeDistanceForAttack = 18;
 
+    [Header("RangedWeapons")]
+    [TabGroup("RangedWeapons")]
+    public float BowAttackCooldownTime = 4f;     // Задержка по выстрелу
+    [TabGroup("RangedWeapons")]
+    public float CastAttackCooldownTime = 2f;     // Задержка по выстрелу
+    [TabGroup("RangedWeapons")]
+    public int RangedCriticalDamage = 0;
+    [TabGroup("RangedWeapons")]
+    public int RangedAttackMinDamage = 1;
+    [TabGroup("RangedWeapons")]
+    public int RangedAttackMaxDamage = 1;
+    [TabGroup("RangedWeapons")]
+    public int RangedCriticalDamageMultiply;
+    [TabGroup("RangedWeapons")]
+    public int RangedCriticalDamageChance;
+    [TabGroup("RangedWeapons")]
+    public Transform GunBarrel;                  // Позиция точки выстрела
 
     [Header("SpecialAttack")]
+    [TabGroup("SpecialAttack")]
     public bool hasFirstSpecial = false;
+    [TabGroup("SpecialAttack")]
     public bool hasSecondSpecial = false;
+    [TabGroup("SpecialAttack")]
     public bool hasThirdSpecial = false;
+    [TabGroup("SpecialAttack")]
     public float FirstSpecialAttackCooldownTime = 10f;
+    [TabGroup("SpecialAttack")]
     public float SecondSpecialAttackCooldownTime = 10f;
+    [TabGroup("SpecialAttack")]
     public float ThirdSpecialAttackCooldownTime = 10f;
+    [TabGroup("SpecialAttack")]
     public float FirstSpecialTimer = 10f;
+    [TabGroup("SpecialAttack")]
     public float SecondSpecialTimer = 10f;
+    [TabGroup("SpecialAttack")]
     public float ThirdSpecialTimer = 10f;
+    [TabGroup("SpecialAttack")]
     public int DistanceForFirstSpecial = 30;
+    [TabGroup("SpecialAttack")]
     public int DistanceForSecondSpecial = 0;
+    [TabGroup("SpecialAttack")]
     public int DistanceForThirdSpecial = 0;
 
+    [TabGroup("Tab Group 2", "Poison")]
     [Header("Poison")]
     public bool MeleeAttackCanPoison = false;
+    [TabGroup("Tab Group 2", "Poison")]
     public int MeleePoisonDamaged = 0;
+    [TabGroup("Tab Group 2", "Poison")]
     public int MeleePoisonFrequency = 0;
+    [TabGroup("Tab Group 2", "Poison")]
     public int MeleePoisonTick = 0;
+    [TabGroup("Tab Group 2", "Poison")]
     public int MeleePoisonChance = 100;
+
+    [TabGroup("Tab Group 2", "Fire")]
     [Header("Fire")]
     public bool MeleeAttackCanFire = false;
+    [TabGroup("Tab Group 2", "Fire")]
     public int MeleeFireDamaged = 0;
+    [TabGroup("Tab Group 2", "Fire")]
     public int MeleeFireFrequency = 0;
+    [TabGroup("Tab Group 2", "Fire")]
     public int MeleeFireTick = 0;
+    [TabGroup("Tab Group 2", "Fire")]
     public int MeleeFireChance = 100;
+
+
+    [TabGroup("Tab Group 2", "Freez")]
     [Header("Freez")]
     public bool MeleeAttackCanFreez = false;
+    [TabGroup("Tab Group 2", "Freez")]
     public int MeleeFreezDuration = 0;
+    [TabGroup("Tab Group 2", "Freez")]
     public int MeleeFreezChance = 100;
+
+
     [Header("Push")]
+    [TabGroup("Tab Group 2", "Push")]
     public bool MeleeAttackCanPush = false;
+    [TabGroup("Tab Group 2", "Push")]
     public int MeleePushDistance = 0;
-    [Header("PushUp")]
+    [TabGroup("Tab Group 2", "Push")]
     public bool MeleeAttackCanPushUp = false;
+    [TabGroup("Tab Group 2", "Push")]
     public int MeleePushUpDistance = 0;
+
     [Header("Stun")]
+    [TabGroup("Tab Group 2", "Stun")]
     public bool MeleeAttackCanStun = false;
+    [TabGroup("Tab Group 2", "Stun")]
     public int MeleeStunDuration = 0;
+    [TabGroup("Tab Group 2", "Stun")]
     [Range(0, 99)]
     public int MeleeStunChance = 100;
 
 
-    [Header("RangedAttacks")]
-    public float BowAttackCooldownTime = 4f;     // Задержка по выстрелу     
-    public float CastAttackCooldownTime = 2f;     // Задержка по выстрелу  
-    public int RangedCriticalDamage = 0;
-    public int RangedAttackMinDamage = 1;
-    public int RangedAttackMaxDamage = 1;
-    public int RangedCriticalDamageMultiply;
-    public int RangedCriticalDamageChance;
-    public Transform GunBarrel;                  // Позиция точки выстрела
 
+    [TabGroup("Tab Group 3", "Poison")]
     [Header("Poison")]
     public bool RangedAttackCanPoison = false;
+    [TabGroup("Tab Group 3", "Poison")]
     public int RangedPoisonDamaged = 0;
+    [TabGroup("Tab Group 3", "Poison")]
     public int RangedPoisonFrequency = 0;
+    [TabGroup("Tab Group 3", "Poison")]
     public int RangedPoisonTick = 0;
+    [TabGroup("Tab Group 3", "Poison")]
     public int RangedPoisonChance = 100;
+
+
+    [TabGroup("Tab Group 3", "Fire")]
     [Header("Fire")]
     public bool RangedAttackCanFire = false;
+    [TabGroup("Tab Group 3", "Fire")]
     public int RangedFireDamaged = 0;
+    [TabGroup("Tab Group 3", "Fire")]
     public int RangedFireFrequency = 0;
+    [TabGroup("Tab Group 3", "Fire")]
     public int RangedFireTick = 0;
+    [TabGroup("Tab Group 3", "Fire")]
     public int RangedFireChance = 100;
+
+
+    [TabGroup("Tab Group 3", "Freez")]
     [Header("Freez")]
     public bool RangedAttackCanFreez = false;
+    [TabGroup("Tab Group 3", "Freez")]
     public int RangedFreezDuration = 0;
+    [TabGroup("Tab Group 3", "Freez")]
     public int RangedFreezChance = 100;
+
+
     [Header("Push")]
+    [TabGroup("Tab Group 3", "Push")]
     public bool RangedAttackCanPush = false;
+    [TabGroup("Tab Group 3", "Push")]
     public int RangedPushDistance = 0;
-    [Header("PushUp")]
+    [TabGroup("Tab Group 3", "Push")]
     public bool RangedAttackCanPushUp = false;
+    [TabGroup("Tab Group 3", "Push")]
     public int RangedPushUpDistance = 0;
+
+
     [Header("Stun")]
+    [TabGroup("Tab Group 3", "Stun")]
     public bool RangedAttackCanStun = false;
+    [TabGroup("Tab Group 3", "Stun")]
     public int RangedStunDuration = 0;
+    [TabGroup("Tab Group 3", "Stun")]
     [Range(0, 99)]
     public int RangedStunChance = 100;
 
@@ -166,7 +246,7 @@ public class Enemy : Actor
     private float thirdSpecialAttackCooldownTimer = 0f; // Таймер до спец приема
     private float bowAttackCooldownTimer = 0f;   // Таймер до выстрела
     private float castAttackCooldownTimer = 0f;   // Таймер до выстрела
-    private Player Player;
+    private Transform Player;
 
 
 
@@ -206,7 +286,7 @@ public class Enemy : Actor
     {
         Following,                          // Преследование
         Patroling,                          // Патрулирование
-        FreeWalking,                        // патрулирование без преследования
+        Flying,
         Idle,                               // Покой для лет тоже
         Aggression
     }
@@ -219,6 +299,8 @@ public class Enemy : Actor
     private EnemyDetection EnemyDetection;  // Скрипт обнаружения
     private EnemyAttacking EnemyAttacking;// Скрипт зоны для атаки
     public float PatrolTimer = 0;
+
+    public float distanceDetecting = 50;
 
     public bool CanShoot
     {
@@ -296,7 +378,7 @@ public class Enemy : Actor
     {
         get
         {
-            return !(TypeEnemy == Type.Snake) && OnAggression;
+            return OnAggression;
         }
     }
 
@@ -333,7 +415,10 @@ public class Enemy : Actor
         MyGUI = GameObject.Find("Canvas");
         SetHPBar();
         walkSpeed = WalkSpeed;
-        Player = FindObjectOfType<Player>();
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        if (BehaivourType == Behaivour.Flying)
+            GetComponent<AIDestinationSetter>().target = Player;
     }
 
     new void Update()
@@ -344,6 +429,17 @@ public class Enemy : Actor
         onGround = OnGround();
 
         //Debug.Log(BehaivourType.ToString());
+
+        //if (BehaivourType == Behaivour.Flying)
+        //{
+        //    float dist = Vector3.Distance(transform.position, Player.transform.position);
+
+        //    if (dist < distanceDetecting)
+        //    {
+        //        Debug.Log("враг заметил");
+        //        //TODO враг в зоне и движется 
+        //    }
+        //}
 
         EnemyVisibility = VisibilityZone.GetComponentInChildren<EnemyVisibility>();
         InVisibilityZone = EnemyVisibility.InVisibilityZone;
@@ -382,11 +478,6 @@ public class Enemy : Actor
         if (thirdSpecialAttackCooldownTimer > 0f)
         {
             thirdSpecialAttackCooldownTimer -= Time.deltaTime;
-        }
-
-        if (aggressionCooldownTimer > 0f)
-        {
-            aggressionCooldownTimer -= Time.deltaTime;
         }
 
         if (blinkCooldownTimer > 0f)
@@ -505,8 +596,8 @@ public class Enemy : Actor
         if (CanAggression)
         {
             BehaivourType = Behaivour.Aggression;
+            StartCoroutine("PatrolingCor");
             OnAggression = false;
-            aggressionCooldownTimer = AggressionCooldownTime;
         }
 
         if (CanIdle)
@@ -524,51 +615,12 @@ public class Enemy : Actor
             return;
         }
 
-        else if (BehaivourType == Behaivour.Idle)//if (expectationCooldownTimer >= 0f)
+        if (BehaivourType == Behaivour.Idle)//if (expectationCooldownTimer >= 0f)
         {
-            //expectationCooldownTimer = ExpectationCooldownTime;
-            if (AttackType == Attack.Melee && TypeEnemy != Type.Snake)
-                BehaivourType = Behaivour.Patroling;
-            if (AttackType == Attack.Archery || AttackType == Attack.Magic)
-            {
-                BehaivourType = Behaivour.FreeWalking;
-            }
+            BehaivourType = Behaivour.Patroling;
         }
 
         float num = onGround ? 1f : 0.65f;
-
-        if (BehaivourType == Behaivour.FreeWalking)
-        {
-            // преследование
-            if (InDetectionZone)
-            {
-                OnAggression = true;
-                OnBlink = true;
-            }
-            // патрулироавние
-            else if (!InVisibilityZone)
-            {
-                aggressionCooldownTimer = AggressionCooldownTime;
-                Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
-
-                if (!onGround)
-                {
-                    float target = MaxFall;
-                    Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
-                }
-
-                if (moveX != 0 && CheckColInDir(new Vector2(moveX, 0), bumper_layer) || CheckColInDir(new Vector2(moveX, 0), solid_layer))
-                {
-                    if (turnCooldownTimer <= 0f)
-                    {
-                        CharacterRotation();
-                        moveX *= -1;
-                        turnCooldownTimer = TurnCooldownTime;
-                    }
-                }
-            }
-        }
-
 
         if (BehaivourType == Behaivour.Patroling)
         {
@@ -581,7 +633,6 @@ public class Enemy : Actor
             // патрулироавние
             else if (!InVisibilityZone)
             {
-                aggressionCooldownTimer = AggressionCooldownTime;
                 Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
 
                 if (!onGround)
@@ -601,7 +652,6 @@ public class Enemy : Actor
                 }
             }
         }
-
 
         if (BehaivourType == Behaivour.Following)
         {
@@ -616,6 +666,7 @@ public class Enemy : Actor
                         turnCooldownTimer = TurnCooldownTime;
                     }
                 }
+
                 if (!InVisibilityZone)
                 {
                     if (turnCooldownTimer <= 0f)
@@ -638,55 +689,31 @@ public class Enemy : Actor
 
         if (BehaivourType == Behaivour.Aggression)  // переделать новую зону
         {
-            if (AttackType == Attack.Archery || AttackType == Attack.Magic)
+            Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
+
+            if (!(moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer)))
             {
-                Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
-
-                var diff = Player.transform.position.x - transform.position.x; //позиция
-
-                if (-(int)Facing * diff < 0)  // разворот за игроком
-                {
-                    if (turnCooldownTimer <= 0f)
-                    {
-                        CharacterRotation();
-                        moveX *= -1;
-                        turnCooldownTimer = TurnCooldownTime;
-                    }
-                }
-                if (!onGround)
-                {
-                    float target = MaxFall;
-                    Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
-                }
+                Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
             }
 
-            if (AttackType == Attack.Melee)
+            var diff = Player.transform.position.x - transform.position.x; //позиция
+
+            if (-(int)Facing * diff < 0)  // разворот за игроком
             {
-                Speed.x = Calc.Approach(Speed.x, 0f, RunReduce * num * Time.deltaTime);
-
-                if (!(moveX != 0 && CheckColInDir(new Vector2(moveX, 0), solid_layer)))
+                if (turnCooldownTimer <= 0f)
                 {
-                    Speed.x = Calc.Approach(Speed.x, moveX * walkSpeed, RunReduce * num * Time.deltaTime);
+                    CharacterRotation();
+                    moveX *= -1;
+                    turnCooldownTimer = TurnCooldownTime;
                 }
-
-                var diff = Player.transform.position.x - transform.position.x; //позиция
-
-                if (-(int)Facing * diff < 0)  // разворот за игроком
-                {
-                    if (turnCooldownTimer <= 0f)
-                    {
-                        CharacterRotation();
-                        moveX *= -1;
-                        turnCooldownTimer = TurnCooldownTime;
-                    }
-                }
-                if (!onGround)
-                {
-                    float target = MaxFall;
-                    Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
-                }
+            }
+            if (!onGround)
+            {
+                float target = MaxFall;
+                Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
             }
         }
+
         if (BehaivourType == Behaivour.Idle)
         {
             // Horizontal Speed Update Section
@@ -713,6 +740,12 @@ public class Enemy : Actor
                 StartCoroutine("ThirdSpecialCoroutine");
         }
 
+    }
+
+    IEnumerator PatrolingCor()
+    {
+        yield return new WaitForSeconds(AggressionCooldownTime);
+        BehaivourType = Behaivour.Patroling;
     }
 
     IEnumerator FirstSpecialCoroutine()
@@ -1284,9 +1317,35 @@ public class Enemy : Actor
                 }
             }
         }
+
+        if (TypeEnemy == Type.Bat)
+        {
+            if (fsm.State == States.Attack)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+                {
+                    animator.Play("Attack");
+                }
+            } // If on the ground
+
+            if (fsm.State == States.Death)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
+                {
+                    animator.Play("Death");
+                }
+            }
+
+            else
+            {
+                // Walk Animation
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Fly"))
+                {
+                    animator.Play("Fly");
+                }
+            }
+        }
     }
-
-
 
     void Blink_Update()
     {

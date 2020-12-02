@@ -154,9 +154,7 @@ public class Projectile : MonoBehaviour
         PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
         PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleePowerAttackCanFreez,
         PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleePowerAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
-        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
-
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleePowerManaCost);			
+        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);		
 		
         if (!damageShow)
         {
@@ -176,8 +174,6 @@ public class Projectile : MonoBehaviour
         PlayerComponent.RangedAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedAttackCanFreez,
         PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance, PlayerComponent.RangedAttackCanPushUp, PlayerComponent.RangedPushUpDistance,
         PlayerComponent.RangedAttackCanStun, PlayerComponent.RangedStunDuration, PlayerComponent.RangedStunChance);
-
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.RangedManaCost);
 
         if (!damageShow)
         {
@@ -199,8 +195,6 @@ public class Projectile : MonoBehaviour
         PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance, PlayerComponent.RangedAttackCanPushUp, PlayerComponent.RangedPushUpDistance,
         PlayerComponent.RangedAttackCanStun, PlayerComponent.RangedStunDuration, PlayerComponent.RangedStunChance);
 
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.RangedManaCost);
-
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
@@ -219,8 +213,6 @@ public class Projectile : MonoBehaviour
         PlayerComponent.RangedPowerAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedPowerAttackCanFreez,
         PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance, PlayerComponent.RangedPowerAttackCanPushUp, PlayerComponent.RangedPushUpDistance,
         PlayerComponent.RangedPowerAttackCanStun, PlayerComponent.RangedStunDuration, PlayerComponent.RangedStunChance);
-
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.RangedPowerManaCost);
 
         if (!damageShow)
         {
@@ -241,8 +233,6 @@ public class Projectile : MonoBehaviour
         PlayerComponent.RangedPowerAttackCanPush, PlayerComponent.RangedPushDistance, PlayerComponent.RangedPowerAttackCanFreez,
         PlayerComponent.RangedFreezDuration, PlayerComponent.RangedFreezChance, PlayerComponent.RangedPowerAttackCanPushUp, PlayerComponent.RangedPushUpDistance,
         PlayerComponent.RangedPowerAttackCanStun, PlayerComponent.RangedStunDuration, PlayerComponent.RangedStunChance);
-
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.RangedPowerManaCost);
 
         if (!damageShow)
         {

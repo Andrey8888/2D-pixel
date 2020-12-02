@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7325081864335052826}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 289.9, y: -138.1, z: 0}
+  m_LocalPosition: {x: 60.900017, y: 11.900002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -103,15 +103,17 @@ MonoBehaviour:
   RangedAttackCooldownTime: 1
   RangedAttackCriticalDamageMultiply: 1
   RangedAttackChanceCriticalDamage: 0
-  ShellsCountCurrent: 30
-  ShellsCount: 22
+  RangedAttackSpeed: 1
+  RangedShellsCountCurent: 30
+  ShellsCount: 30
   ManaCost: 0
   RangedPowerAttackMinDamage: 0
   RangedPowerAttackMaxDamage: 0
   RangedPowerAttackCooldownTime: 2
   RangedPowerCriticalDamageMultiply: 1
   RangedPowerChanceCriticalDamage: 0
-  PowerShellsCountCurent: 0
+  RangedPowerAttackSpeed: 1
+  RangedPowerShellsCountCurent: 0
   PowerShells: 0
   PowerManaCost: 0
   CanPoison: 0
@@ -158,7 +160,7 @@ MonoBehaviour:
   itemButton: {fileID: 1264874094776755892, guid: f804cfd50c293704ebb8d3d9be61c324,
     type: 3}
   tooltip: {fileID: 0}
-  tooltipDescription: {fileID: 0}
+  tooltipDescription: 
 --- !u!61 &1636290072141247781
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CodeMonkey.Utils;
 using CodeMonkey;
+using TMPro;
 
 public class HealthBarFade : MonoBehaviour {
 
@@ -27,6 +28,7 @@ public class HealthBarFade : MonoBehaviour {
     private float damagedHealthFadeTimer;
     private HealthSystem healthSystem;
     private int startHealth;
+    public TextMeshProUGUI textCount;
 
     public static HealthBarFade instance = null;
 
@@ -87,23 +89,31 @@ public class HealthBarFade : MonoBehaviour {
 
     private void SetHealth(float healthNormalized) {
         barImage.fillAmount = healthNormalized;
+        var player = GameObject.FindGameObjectWithTag("Player").transform;
+        textCount.text = startHealth.ToString() + "/" + player.GetComponent<Health>().maxHealth;
     }
 
     public void Damage(int dmg)
     {
         healthSystem.Damage(startHealth - dmg);
         startHealth = startHealth - (startHealth - dmg);
+
+        var player = GameObject.FindGameObjectWithTag("Player").transform;
+        textCount.text = startHealth.ToString() + "/" + player.GetComponent<Health>().maxHealth;
     }
 
     public void Heal(int heal)
     {
         healthSystem.Heal(-startHealth + heal);
         startHealth = startHealth + (-startHealth + heal);
+        var player = GameObject.FindGameObjectWithTag("Player").transform;
+        textCount.text = startHealth.ToString() + "/" + player.GetComponent<Health>().maxHealth;
     }
     public void Refresh()
     {
         var player = GameObject.FindGameObjectWithTag("Player").transform;
 
         healthSystem.healthAmount = player.GetComponent<Health>().maxHealth;
+        textCount.text = healthSystem.healthAmount.ToString() + "/" + player.GetComponent<Health>().maxHealth;
     }
 }

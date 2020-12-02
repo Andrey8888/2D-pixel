@@ -99,7 +99,7 @@ public class HitBoxManager : MonoBehaviour
             {
                 if (PlayerComponent.MeleeCanThirdAttackCriticalDamage == true)
                 {
-                    if (PlayerComponent.hitCount == 3)
+                    if (PlayerComponent.meleeHitCount == 3)
                     {
                         CriticalDamage(PlayerComponent, component, didDamage);
                     }
@@ -149,9 +149,6 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleeAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
         PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleeAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
         PlayerComponent.MeleeAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
-
-
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleeManaCost);	
 		
         if (!damageShow)
         {
@@ -173,10 +170,6 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleeAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
         PlayerComponent.MeleeAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
 
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleeManaCost);
-        Debug.Log(PlayerComponent.MeleeManaCost);
-
-
         if (!damageShow)
         {
             Transform damagePopupTransform = Instantiate(PopUpDamage, transform.position, Quaternion.identity);
@@ -195,9 +188,7 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
         PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleePowerAttackCanFreez,
         PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleePowerAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
-        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
-
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleePowerManaCost);			
+        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);			
 		
         if (!damageShow)
         {
@@ -217,9 +208,7 @@ public class HitBoxManager : MonoBehaviour
         PlayerComponent.MeleeFireDamaged, PlayerComponent.MeleeFireFrequency, PlayerComponent.MeleeFireTick, PlayerComponent.MeleeFireChance,
         PlayerComponent.MeleePowerAttackCanPush, PlayerComponent.MeleePushDistance, PlayerComponent.MeleeAttackCanFreez,
         PlayerComponent.MeleeFreezDuration, PlayerComponent.MeleeFreezChance, PlayerComponent.MeleePowerAttackCanPushUp, PlayerComponent.MeleePushUpDistance,
-        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);
-
-        PlayerComponent.GetComponent<Mana>().TakeExpense(PlayerComponent.MeleePowerManaCost);			
+        PlayerComponent.MeleePowerAttackCanStun, PlayerComponent.MeleeStunDuration, PlayerComponent.MeleeStunChance);	
 		
         if (!damageShow)
         {

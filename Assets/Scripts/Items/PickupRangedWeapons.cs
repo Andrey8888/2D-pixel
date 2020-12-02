@@ -13,6 +13,10 @@ public class PickupRangedWeapons : MonoBehaviour
 	public RangedWeapon Type = RangedWeapon.Bow;
 	[VerticalGroup("base/column 1")]
     public SpriteRenderer Sprite;
+	[VerticalGroup("base/column 1")]
+	public bool IsSell = false;
+	[VerticalGroup("base/column 1")]
+	public int cost = 0;
     [VerticalGroup("base/column 1")]
     public int Rarity = 1;
     [VerticalGroup("base/column 1")]
@@ -35,7 +39,7 @@ public class PickupRangedWeapons : MonoBehaviour
     [Range(0, 99)]
     public int RangedAttackChanceCriticalDamage = 0;
 	[TabGroup("NormalAttack")]
-    private float RangedAttackSpeed = 1f;
+    public float RangedAttackSpeed = 1f;
     [HideInInspector]
     public int RangedShellsCountCurent = 0;
     [TabGroup("NormalAttack")]
@@ -57,7 +61,7 @@ public class PickupRangedWeapons : MonoBehaviour
     [Range(0, 99)]
     public int RangedPowerChanceCriticalDamage = 0;
 	[TabGroup("PowerAttack")]
-    private float RangedPowerAttackSpeed = 1f;
+    public float RangedPowerAttackSpeed = 1f;
     [HideInInspector]
     public int RangedPowerShellsCountCurent = 0;
     [TabGroup("PowerAttack")]
@@ -248,19 +252,7 @@ public class PickupRangedWeapons : MonoBehaviour
 
             if (inventory.isFull[1] == false && Input.GetKey(KeyCode.E))
             {
-                if (player.PickUpRangedWeapon(this, Type, RangedAttackMinDamage, RangedAttackMaxDamage, RangedShellsCountCurent,
-                    RangedAttackCooldownTime, RangedAttackCriticalDamageMultiply, RangedAttackChanceCriticalDamage,
-                    RangedPowerAttackMinDamage, RangedPowerAttackMaxDamage, RangedPowerShellsCountCurent,
-                    RangedPowerAttackCooldownTime, RangedPowerCriticalDamageMultiply, RangedPowerChanceCriticalDamage,
-                    CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
-                    CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
-                    CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-                    CanPush, CanPowerAttackPush, PushDistance,
-                    CanThroughShoot, RangedUpAfterHit, CanThroughShoot, CanPowerAttackThroughShoot,
-                    Aiming, StepUpAfterHit, PowerAttackPopUpAfterHit, PowerAttackAiming, RangedBlink, RangedHeal, RangedHealCount,
-					CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-					CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-					ManaCost, PowerManaCost, RangedAttackSpeed, RangedPowerAttackSpeed))
+                if (player.PickUpRangedWeapon(this))
                 {
                     //// Screenshake
                     //if (PixelCameraController.instance != null)
@@ -313,6 +305,12 @@ public class PickupRangedWeapons : MonoBehaviour
     {
         if (inventory.isFull[1] == true && Input.GetKey(KeyCode.E))
         {
+			if(IsSell)
+			{
+				if(!Sell(player))
+				return;
+			}
+			
             inventory.isFull[1] = false;
             //if(gameObject.activeSelf)
             {
@@ -326,19 +324,7 @@ public class PickupRangedWeapons : MonoBehaviour
 
         if (inventory.isFull[1] == false && player.CompareTag("Player"))
         {
-            if (player.PickUpRangedWeapon(this, Type, RangedAttackMinDamage, RangedAttackMaxDamage, RangedShellsCountCurent,
-                RangedAttackCooldownTime, RangedAttackCriticalDamageMultiply, RangedAttackChanceCriticalDamage,
-                RangedPowerAttackMinDamage, RangedPowerAttackMaxDamage, RangedPowerShellsCountCurent,
-                RangedPowerAttackCooldownTime, RangedPowerCriticalDamageMultiply, RangedPowerChanceCriticalDamage,
-                CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
-                CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
-                CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-                CanPush, CanPowerAttackPush, PushDistance,
-                CanThroughShoot, RangedUpAfterHit, CanThroughShoot, CanPowerAttackThroughShoot,
-                Aiming, StepUpAfterHit, PowerAttackPopUpAfterHit, PowerAttackAiming, RangedBlink, RangedHeal, RangedHealCount,
-				CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-				ManaCost, PowerManaCost, RangedAttackSpeed, RangedPowerAttackSpeed))
+            if (player.PickUpRangedWeapon(this))
             {
 
                 //// Screenshake
@@ -355,25 +341,21 @@ public class PickupRangedWeapons : MonoBehaviour
         }
     }
 
+	public bool Sell(Player player)
+	{
+		var money = player.GetComponent<Gold>();
+		if(money.Spend_Money(cost))
+			return true;
+			else return false;
+	}
+	
     public void OnPlayer(Player player)
     {
         inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
         inventory.isFull[1] = true;
         RangedShellsCountCurent = ShellsCount;
         RangedPowerShellsCountCurent = PowerShells;
-        if (player.PickUpRangedWeapon(this, Type, RangedAttackMinDamage, RangedAttackMaxDamage, RangedShellsCountCurent,
-            RangedAttackCooldownTime, RangedAttackCriticalDamageMultiply, RangedAttackChanceCriticalDamage,
-            RangedPowerAttackMinDamage, RangedPowerAttackMaxDamage, RangedPowerShellsCountCurent,
-            RangedPowerAttackCooldownTime, RangedPowerCriticalDamageMultiply, RangedPowerChanceCriticalDamage,
-            CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
-            CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
-            CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-            CanPush, CanPowerAttackPush, PushDistance,
-            CanThroughShoot, RangedUpAfterHit, CanThroughShoot, CanPowerAttackThroughShoot,
-            Aiming, StepUpAfterHit, PowerAttackPopUpAfterHit, PowerAttackAiming, RangedBlink, RangedHeal, RangedHealCount,
-			CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-			CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-			ManaCost, PowerManaCost, RangedAttackSpeed, RangedPowerAttackSpeed))
+        if (player.PickUpRangedWeapon(this))
         {
             RangedShellsCountCurent = ShellsCount;
             RangedPowerShellsCountCurent = PowerShells;

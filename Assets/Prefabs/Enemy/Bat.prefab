@@ -1,5 +1,186 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &28513857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 28513858}
+  m_Layer: 0
+  m_Name: hpPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &28513858
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28513857}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.3, y: 17, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5252064026491600164}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &305161634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 305161637}
+  - component: {fileID: 305161636}
+  - component: {fileID: 305161635}
+  m_Layer: 0
+  m_Name: VisibilityZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &305161637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305161634}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -139.8, y: -16, z: 0}
+  m_LocalScale: {x: 100, y: 100, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5252064026491600164}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &305161636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305161634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0aed3125eba3b94682deeecf683b8ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InVisibilityZone: 0
+  PlayerPos: {x: 0, y: 0, z: 0}
+--- !u!60 &305161635
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 305161634}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.032675162, y: 0.5840308}
+      - {x: -0.028273305, y: -0.19632076}
+      - {x: -0.013988027, y: -0.19989204}
+      - {x: 2.8364534, y: -0.18156868}
+      - {x: 2.825627, y: 0.57993346}
+--- !u!1 &1021381051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1021381054}
+  - component: {fileID: 1021381053}
+  - component: {fileID: 1021381052}
+  m_Layer: 0
+  m_Name: DetectionZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1021381054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021381051}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -96.9, y: -16.8, z: 0}
+  m_LocalScale: {x: 100, y: 100, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5252064026491600164}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!60 &1021381053
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021381051}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.87305784, y: 0.5245052}
+      - {x: -0.88264495, y: -0.27040485}
+      - {x: 2.9350252, y: -0.2587102}
+      - {x: 2.9228036, y: 0.5447782}
+--- !u!114 &1021381052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021381051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91ce147b214451d42842155355b90163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InDetectionZone: 0
+  PlayerPos: {x: 0, y: 0, z: 0}
 --- !u!1 &123993665212577001
 GameObject:
   m_ObjectHideFlags: 0
@@ -14,6 +195,8 @@ GameObject:
   - component: {fileID: 123993665212577000}
   - component: {fileID: 123993665212577004}
   - component: {fileID: 123993665212577005}
+  - component: {fileID: 1062616408}
+  - component: {fileID: 1062616409}
   m_Layer: 0
   m_Name: Bat
   m_TagString: Untagged
@@ -33,6 +216,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8216428129438472525}
+  - {fileID: 28513858}
+  - {fileID: 1021381054}
+  - {fileID: 305161637}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1
-  target: {fileID: 8524039188666438505, guid: ffc2937550f37f840a9fc59061b08496, type: 3}
+  target: {fileID: 0}
 --- !u!114 &123993665212577007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,6 +347,321 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 16, y: 17.920914}
   m_EdgeRadius: 0
+--- !u!114 &1062616408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123993665212577001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20771cfbc77813c4abed059702d33aa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onGround: 1
+  wasOnGround: 1
+  canPushBlock: 0
+  pushing: 0
+  Speed: {x: 0, y: 0}
+  movementCounter: {x: 0, y: 0}
+  solid_layer:
+    serializedVersion: 2
+    m_Bits: 256
+  bumper_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  box_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  player_layer:
+    serializedVersion: 2
+    m_Bits: 8192
+  oneway_layer:
+    serializedVersion: 2
+    m_Bits: 512
+  ladder_layer:
+    serializedVersion: 2
+    m_Bits: 0
+  myCollider: {fileID: 123993665212577005}
+  TypeEnemy: 5
+  Gravity: 900
+  MaxFall: -160
+  RunReduce: 400
+  WalkSpeed: 30
+  RunAccel: 1000
+  AirMult: 0.65
+  TurnCooldownTime: 1
+  OnStun: 0
+  OnAggression: 0
+  OnBlink: 0
+  OnSpecial: 0
+  firstHit: 1
+  DpsTestTime: 30
+  Facing: 1
+  SpriteHolder: {fileID: 8216428129438472525}
+  SpriteScale: {x: 1, y: 1}
+  animator: {fileID: 8216428129438472515}
+  BloodParticle: {fileID: 1145837783617200, guid: d34108a4353e0b94bb2f012ea46eb1b1,
+    type: 3}
+  MeleeCriticalDamage: 0
+  MeleeAttackCooldownTime: 2
+  MeleeAttackMaxDamage: 1
+  MeleeAttackMinDamage: 3
+  MeleeCriticalDamageMultiply: 0
+  MeleeCriticalDamageChance: 0
+  MeleeDistanceForAttack: 2
+  BowAttackCooldownTime: 4
+  CastAttackCooldownTime: 2
+  RangedCriticalDamage: 0
+  RangedAttackMinDamage: 1
+  RangedAttackMaxDamage: 1
+  RangedCriticalDamageMultiply: 0
+  RangedCriticalDamageChance: 0
+  GunBarrel: {fileID: 0}
+  hasFirstSpecial: 0
+  hasSecondSpecial: 0
+  hasThirdSpecial: 0
+  FirstSpecialAttackCooldownTime: 10
+  SecondSpecialAttackCooldownTime: 10
+  ThirdSpecialAttackCooldownTime: 10
+  FirstSpecialTimer: 10
+  SecondSpecialTimer: 10
+  ThirdSpecialTimer: 10
+  DistanceForFirstSpecial: 30
+  DistanceForSecondSpecial: 0
+  DistanceForThirdSpecial: 0
+  MeleeAttackCanPoison: 0
+  MeleePoisonDamaged: 0
+  MeleePoisonFrequency: 0
+  MeleePoisonTick: 0
+  MeleePoisonChance: 100
+  MeleeAttackCanFire: 0
+  MeleeFireDamaged: 0
+  MeleeFireFrequency: 0
+  MeleeFireTick: 0
+  MeleeFireChance: 100
+  MeleeAttackCanFreez: 0
+  MeleeFreezDuration: 0
+  MeleeFreezChance: 100
+  MeleeAttackCanPush: 0
+  MeleePushDistance: 0
+  MeleeAttackCanPushUp: 0
+  MeleePushUpDistance: 0
+  MeleeAttackCanStun: 0
+  MeleeStunDuration: 0
+  MeleeStunChance: 100
+  RangedAttackCanPoison: 0
+  RangedPoisonDamaged: 0
+  RangedPoisonFrequency: 0
+  RangedPoisonTick: 0
+  RangedPoisonChance: 100
+  RangedAttackCanFire: 0
+  RangedFireDamaged: 0
+  RangedFireFrequency: 0
+  RangedFireTick: 0
+  RangedFireChance: 100
+  RangedAttackCanFreez: 0
+  RangedFreezDuration: 0
+  RangedFreezChance: 100
+  RangedAttackCanPush: 0
+  RangedPushDistance: 0
+  RangedAttackCanPushUp: 0
+  RangedPushUpDistance: 0
+  RangedAttackCanStun: 0
+  RangedStunDuration: 0
+  RangedStunChance: 100
+  EnemyHP: {fileID: 6886868313733489362, guid: 6affc755d48261040900328762443f74, type: 3}
+  metka: {fileID: 28513858}
+  AttackType: 0
+  BehaivourType: 2
+  DetectionZone: {fileID: 1021381051}
+  VisibilityZone: {fileID: 305161634}
+  PatrolTimer: 0
+  distanceDetecting: 50
+--- !u!114 &1062616409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123993665212577001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f14087f7e08b094cacd5dbb0b816d1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnTakeDamageEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: FlashMe
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1062616408}
+        m_MethodName: Hit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnPushedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPushedUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBurnedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 473680293}
+        m_MethodName: Burned
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnStunedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFreezedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 473680293}
+        m_MethodName: Freezed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1062616408}
+        m_MethodName: Freez
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnPoisonedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: Poison
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnBurnedEndEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 473680293}
+        m_MethodName: BurnedEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnFreezedEndEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 473680293}
+        m_MethodName: FreezedEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: UnFreez
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnStunedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPoisonedEndEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 473680293}
+        m_MethodName: PoisonEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDamageBlockEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTakeHealEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeathEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1062616408}
+        m_MethodName: Die
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  maxHealth: 5
+  health: 5
+  dead: 0
+  invincible: 0
+  block: 0
+  becomeInvincibleOnHit: 0
+  invincibleTimeOnHit: 0.5
+  DieEventsAfterTime: 0
 --- !u!1 &8216428129438472526
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,6 +673,7 @@ GameObject:
   - component: {fileID: 8216428129438472525}
   - component: {fileID: 8216428129438472513}
   - component: {fileID: 8216428129438472515}
+  - component: {fileID: 473680293}
   m_Layer: 0
   m_Name: SpriteHolder
   m_TagString: Untagged
@@ -261,3 +763,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &473680293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8216428129438472526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 153d544969482484f89e2bac42283c04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 8216428129438472513}
+  ice: {fileID: 0}

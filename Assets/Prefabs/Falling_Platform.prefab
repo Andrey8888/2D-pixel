@@ -150,6 +150,9 @@ MonoBehaviour:
   isTriggered: 0
   timeBeforeFalling: 0.5
   destroyAfterTime: 0.5
+  player_layer:
+    serializedVersion: 2
+    m_Bits: 8192
   myCollider: {fileID: 61711167445018826}
   myAnimator: {fileID: 95300389119978898}
 --- !u!61 &61711167445018826

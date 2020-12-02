@@ -16,6 +16,7 @@ TagManager:
   - BackGround
   - ShellCount
   - PowerShellCount
+  - PointToFollow
   layers:
   - Default
   - TransparentFX

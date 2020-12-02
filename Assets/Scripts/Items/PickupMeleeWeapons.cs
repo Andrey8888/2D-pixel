@@ -6,61 +6,65 @@ using Sirenix.OdinInspector;
 
 public class PickupMeleeWeapons : MonoBehaviour
 {
-#region Params
+    #region Params
     [Header("MeleeWeapons")]
     [HorizontalGroup("base", LabelWidth = 80)]
     [VerticalGroup("base/column 1")]
-	public MeleeWeapon Type = MeleeWeapon.Sword;
-	[VerticalGroup("base/column 1")]
-	public SpriteRenderer Sprite;
-	[VerticalGroup("base/column 1")]
+    public MeleeWeapon Type = MeleeWeapon.Sword;
+    [VerticalGroup("base/column 1")]
+    public SpriteRenderer Sprite;
+    [VerticalGroup("base/column 1")]
+    public bool IsSell = false;
+    [VerticalGroup("base/column 1")]
+    public int cost = 0;
+    [VerticalGroup("base/column 1")]
     public int Rarity = 1;
     [VerticalGroup("base/column 1")]
     [Range(1, 10)]
     public int level = 1;  // Multiply damage
-	
+
     private Inventory inventory;
 
-	[Header("NormalAttack")]
+    [Header("NormalAttack")]
     [TabGroup("NormalAttack")]
     public int MeleeAttackMinDamage = 0;
-	[TabGroup("NormalAttack")]
+    [TabGroup("NormalAttack")]
     public int MeleeAttackMaxDamage = 0;
-	[TabGroup("NormalAttack")]
+    [TabGroup("NormalAttack")]
     public float MeleeAttackCooldownTime = 0.2f;
-	[TabGroup("NormalAttack")]
+    [TabGroup("NormalAttack")]
     public bool CanThirdAttackCriticalDamage = false; // or all attack
-    //public bool CanPowerAttackCriticalDamage = false;
-	[TabGroup("NormalAttack")]
+                                                      //public bool CanPowerAttackCriticalDamage = false;
+    [TabGroup("NormalAttack")]
     [Range(1, 10)]
     public int MeleeCriticalDamageMultiply = 1;
-	[TabGroup("NormalAttack")]
+    [TabGroup("NormalAttack")]
     [Range(0, 99)]
     public int MeleeChanceCriticalDamage = 0;
-	[TabGroup("NormalAttack")]
-    private float MeleeAttackSpeed = 1f;
-	[TabGroup("NormalAttack")]
-    private float SecondSwordAttackSpeed = 1f;
-	[TabGroup("NormalAttack")]
-    private float ThirdSwordAttackSpeed = 1f;
+    [TabGroup("NormalAttack")]
+    public float MeleeAttackSpeed = 1f;
+    [TabGroup("NormalAttack")]
+    public float SecondSwordAttackSpeed = 1f;
+    [TabGroup("NormalAttack")]
+    public float ThirdSwordAttackSpeed = 1f;
     [TabGroup("NormalAttack")]
     public int ManaCost = 0;
 
     [Header("PowerAttack")]
     [TabGroup("PowerAttack")]
     public int MeleePowerAttackMinDamage = 0;
-	[TabGroup("PowerAttack")]
+    [TabGroup("PowerAttack")]
     public int MeleePowerAttackMaxDamage = 0;
-	[TabGroup("PowerAttack")]
+    [TabGroup("PowerAttack")]
     [Range(1, 10)]
     public int MeleePowerCriticalDamageMultiply = 1;
-	[TabGroup("PowerAttack")]
+    [TabGroup("PowerAttack")]
     [Range(0, 99)]
     public int MeleePowerChanceCriticalDamage = 0;
-	[TabGroup("PowerAttack")]
+    [TabGroup("PowerAttack")]
     public float MeleePowerAttackCooldownTime = 0.2f;
-	[TabGroup("PowerAttack")]
-    private float MeleePowerAttackSpeed = 1f;
+    [TabGroup("PowerAttack")]
+    public float MeleePowerAttackSpeed = 1f;
     [HideInInspector]
     public int MeleePowerShellsCountCurent = 0;
     [TabGroup("PowerAttack")]
@@ -71,96 +75,96 @@ public class PickupMeleeWeapons : MonoBehaviour
     [TabGroup("Tab Group 2", "Poison")]
     [Header("Poison")]
     public bool CanPoison = false;
-	[TabGroup("Tab Group 2", "Poison")]
+    [TabGroup("Tab Group 2", "Poison")]
     public bool CanPowerAttackPoison = false;
-	[TabGroup("Tab Group 2", "Poison")]
+    [TabGroup("Tab Group 2", "Poison")]
     public int PoisonDamaged = 0;
-	[TabGroup("Tab Group 2", "Poison")]
+    [TabGroup("Tab Group 2", "Poison")]
     public int PoisonFrequency = 0;
-	[TabGroup("Tab Group 2", "Poison")]
+    [TabGroup("Tab Group 2", "Poison")]
     public int PoisonTick = 0;
-	[TabGroup("Tab Group 2", "Poison")]
+    [TabGroup("Tab Group 2", "Poison")]
     [Range(0, 99)]
     public int PoisonChance = 0;
-	
+
     [TabGroup("Tab Group 2", "Fire")]
     [Header("Fire")]
     public bool CanFire = false;
-	[TabGroup("Tab Group 2", "Fire")]
+    [TabGroup("Tab Group 2", "Fire")]
     public bool CanPowerAttackFire = false;
-	[TabGroup("Tab Group 2", "Fire")]
+    [TabGroup("Tab Group 2", "Fire")]
     public int FireDamaged = 0;
-	[TabGroup("Tab Group 2", "Fire")]
+    [TabGroup("Tab Group 2", "Fire")]
     public int FireFrequency = 0;
-	[TabGroup("Tab Group 2", "Fire")]
+    [TabGroup("Tab Group 2", "Fire")]
     public int FireTick = 0;
-	[TabGroup("Tab Group 2", "Fire")]
+    [TabGroup("Tab Group 2", "Fire")]
     [Range(0, 99)]
     public int FireChance = 0;
-	
+
     [TabGroup("Tab Group 2", "Freez")]
     [Header("Freez")]
     public bool CanFreez = false;
-	[TabGroup("Tab Group 2", "Freez")]
+    [TabGroup("Tab Group 2", "Freez")]
     public bool CanPowerAttackFreez = false;
-	[TabGroup("Tab Group 2", "Freez")]
+    [TabGroup("Tab Group 2", "Freez")]
     public int FreezDuration = 0;
-	[TabGroup("Tab Group 2", "Freez")]
+    [TabGroup("Tab Group 2", "Freez")]
     [Range(0, 99)]
     public int FreezChance = 0;
-	
+
     [Header("Push")]
     [TabGroup("Tab Group 2", "Push")]
     public bool CanPush = false;
-	[TabGroup("Tab Group 2", "Push")]
+    [TabGroup("Tab Group 2", "Push")]
     public bool CanPowerAttackPush = false;
-	[TabGroup("Tab Group 2", "Push")]
+    [TabGroup("Tab Group 2", "Push")]
     public int PushDistance = 0;
-	[TabGroup("Tab Group 2", "Push")]
+    [TabGroup("Tab Group 2", "Push")]
     public bool CanPushUp = false;
-	[TabGroup("Tab Group 2", "Push")]
+    [TabGroup("Tab Group 2", "Push")]
     public bool CanPowerAttackPushUp = false;
-	[TabGroup("Tab Group 2", "Push")]
+    [TabGroup("Tab Group 2", "Push")]
     public int PushUpDistance = 0;
-	
+
     [Header("Stun")]
     [TabGroup("Tab Group 2", "Stun")]
     public bool CanStun = false;
-	[TabGroup("Tab Group 2", "Stun")]
+    [TabGroup("Tab Group 2", "Stun")]
     public bool CanPowerAttackStun = false;
-	[TabGroup("Tab Group 2", "Stun")]
+    [TabGroup("Tab Group 2", "Stun")]
     public int StunDuration = 0;
-	[TabGroup("Tab Group 2", "Stun")]
-	[Range(0, 99)]
+    [TabGroup("Tab Group 2", "Stun")]
+    [Range(0, 99)]
     public int StunChance = 100;
-	
+
     [Header("Other")]
     [TabGroup("Tab Group 2", "Other")]
     public bool hasBlock = false;
-	[TabGroup("Tab Group 2", "Other")]
+    [TabGroup("Tab Group 2", "Other")]
     public bool hasSeries = false;
-	[TabGroup("Tab Group 2", "Other")]
+    [TabGroup("Tab Group 2", "Other")]
     public bool hasPowerAttackShell = false;
-	[TabGroup("Tab Group 2", "Other")]
+    [TabGroup("Tab Group 2", "Other")]
     public int StepUpAfterHit = 0;
-	[TabGroup("Tab Group 2", "Other")]
-	public int PowerStepUpAfterHit = 0;
-	[TabGroup("Tab Group 2", "Other")]
+    [TabGroup("Tab Group 2", "Other")]
+    public int PowerStepUpAfterHit = 0;
+    [TabGroup("Tab Group 2", "Other")]
     public bool MeleeTossingUp = false;
-	[TabGroup("Tab Group 2", "Other")]
+    [TabGroup("Tab Group 2", "Other")]
     public int MeleePopUpAfterHit = 0;
-	[TabGroup("Tab Group 2", "Other")]
+    [TabGroup("Tab Group 2", "Other")]
     public int MeleePowerPopUpAfterHit = 0;
     #endregion
-	
-	public Sprite spriteHighlight;
+
+    public Sprite spriteHighlight;
     public Sprite spriteNormal;
-	
+
     public GameObject itemButton;
-	
-	public GameObject tooltip;
+
+    public GameObject tooltip;
     public Text tooltipDescription;
-	
+
     private bool OnTrigger;
     private Player player;
     private bool OnMouse;
@@ -186,10 +190,10 @@ public class PickupMeleeWeapons : MonoBehaviour
     {
         Sprite.enabled = true;
         MeleePowerShellsCountCurent = PowerShells;
-		
-		//tooltipDescription = ("MeleeWeapon " + Type + "; Level " + level + "; Min Damage: " + MeleeAttackMinDamage + "' Max Damage: " + MeleeAttackMinDamage )
-		//tooltip.Text = tooltipDescription;
-		
+
+        //tooltipDescription = ("MeleeWeapon " + Type + "; Level " + level + "; Min Damage: " + MeleeAttackMinDamage + "' Max Damage: " + MeleeAttackMinDamage )
+        //tooltip.Text = tooltipDescription;
+
         if (Sprite == null)
         {
             Sprite = GetComponent<SpriteRenderer>();
@@ -206,9 +210,9 @@ public class PickupMeleeWeapons : MonoBehaviour
     void Update()
     {
         dist = Vector3.Distance(player.transform.position, transform.position);
-		
-		//Vector3 tooltipPos = Camera.main.WorldToScreenPoint(gameObject.transform.position + new Vector3(0, 50, 0));
-		//tooltip.transform.position = tooltipPos;
+
+        //Vector3 tooltipPos = Camera.main.WorldToScreenPoint(gameObject.transform.position + new Vector3(0, 50, 0));
+        //tooltip.transform.position = tooltipPos;
 
         Vector3 Cursor = Input.mousePosition;
         Cursor = Camera.main.ScreenToWorldPoint(Cursor);
@@ -217,7 +221,7 @@ public class PickupMeleeWeapons : MonoBehaviour
         if (dist < 50 && OnMouse)
         {
             Sprite.sprite = spriteHighlight;
-            if (inventory.isFull[0] == true && Input.GetKey(KeyCode.E) )
+            if (inventory.isFull[0] == true && Input.GetKey(KeyCode.E))
             {
                 inventory.isFull[0] = false;
                 //if(gameObject.activeSelf)
@@ -232,19 +236,7 @@ public class PickupMeleeWeapons : MonoBehaviour
 
             if (inventory.isFull[0] == false && Input.GetKey(KeyCode.E))
             {
-                if (player.PickUpMeleeWeapon(this, Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
-                MeleeAttackCooldownTime, MeleeCriticalDamageMultiply, MeleeChanceCriticalDamage,
-                MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage,
-                MeleePowerAttackCooldownTime, MeleePowerCriticalDamageMultiply, MeleePowerChanceCriticalDamage,
-                StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
-                CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
-                CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
-                CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-                CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit,
-				CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost,
-				hasPowerAttackShell, MeleePowerShellsCountCurent, MeleeAttackSpeed, MeleePowerAttackSpeed,
-				SecondSwordAttackSpeed, ThirdSwordAttackSpeed))
+                if (player.PickUpMeleeWeapon(this))
                 {
 
                     // Screenshake
@@ -285,7 +277,7 @@ public class PickupMeleeWeapons : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") )
+        if (other.CompareTag("Player"))
         {
             Sprite.sprite = spriteNormal;
         }
@@ -310,21 +302,14 @@ public class PickupMeleeWeapons : MonoBehaviour
 
         if (inventory.isFull[0] == false && player.CompareTag("Player") && Input.GetKey(KeyCode.E))
         {
-            if (player.PickUpMeleeWeapon(this, Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
-                MeleeAttackCooldownTime, MeleeCriticalDamageMultiply, MeleeChanceCriticalDamage,
-                MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage,
-                MeleePowerAttackCooldownTime, MeleePowerCriticalDamageMultiply, MeleePowerChanceCriticalDamage,
-                StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
-                CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
-                CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
-                CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-                CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit,
-				CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-				CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost, 
-				hasPowerAttackShell, MeleePowerShellsCountCurent, MeleeAttackSpeed, MeleePowerAttackSpeed,
-				SecondSwordAttackSpeed, ThirdSwordAttackSpeed))
+            if (IsSell)
             {
+                if (!Sell(player))
+                    return;
+            }
 
+            if (player.PickUpMeleeWeapon(this))
+            {
                 // Screenshake
                 if (PixelCameraController.instance != null)
                 {
@@ -339,25 +324,21 @@ public class PickupMeleeWeapons : MonoBehaviour
         }
     }
 
+    public bool Sell(Player player)
+    {
+        var money = player.GetComponent<Gold>();
+        if (money.Spend_Money(cost))
+            return true;
+        else return false;
+    }
+
     public void OnPlayer(Player player)
     {
         inventory = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Inventory>();
         inventory.isFull[0] = true;
         MeleePowerShellsCountCurent = PowerShells;
-				
-        if (player.PickUpMeleeWeapon(this, Type, MeleeAttackMinDamage * level, MeleeAttackMaxDamage * level,
-            MeleeAttackCooldownTime, MeleeCriticalDamageMultiply, MeleeChanceCriticalDamage,
-            MeleePowerAttackMinDamage, MeleePowerAttackMaxDamage,
-            MeleePowerAttackCooldownTime, MeleePowerCriticalDamageMultiply, MeleePowerChanceCriticalDamage,
-            StepUpAfterHit, hasSeries, hasBlock, CanThirdAttackCriticalDamage,
-            CanPoison, CanPowerAttackPoison, PoisonDamaged, PoisonFrequency, PoisonTick, PoisonChance,
-            CanFire, CanPowerAttackFire, FireDamaged, FireFrequency, FireTick, FireChance,
-            CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance,
-            CanPush, CanPowerAttackPush, PushDistance, MeleeTossingUp, MeleePopUpAfterHit,
-			CanPushUp, CanPowerAttackPushUp, PushUpDistance,
-			CanFreez, CanPowerAttackFreez, FreezDuration, FreezChance, ManaCost, PowerManaCost, 
-			hasPowerAttackShell, MeleePowerShellsCountCurent, MeleeAttackSpeed, MeleePowerAttackSpeed,
-			SecondSwordAttackSpeed, ThirdSwordAttackSpeed))
+
+        if (player.PickUpMeleeWeapon(this))
         {
             MeleePowerShellsCountCurent = PowerShells;
         }

@@ -30,6 +30,36 @@ Transform:
   m_Father: {fileID: 8524039187701114782}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2553965498753612721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1587781769095633941}
+  m_Layer: 0
+  m_Name: PointToFollow
+  m_TagString: PointToFollow
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1587781769095633941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2553965498753612721}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -16, y: -6.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8524039187701114782}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2623542864934043413
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +188,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8524039187701114782}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6626830429048299786
 GameObject:
@@ -332,7 +362,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8524039187701114775}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11, y: 33, z: 0}
+  m_LocalPosition: {x: 10, y: 13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8524039189068760227}
@@ -345,6 +375,7 @@ Transform:
   - {fileID: 2403444942249462067}
   - {fileID: 8740590849487099045}
   - {fileID: 3950792627055825262}
+  - {fileID: 1587781769095633941}
   - {fileID: 6289719203073900952}
   - {fileID: 7239064123143586669}
   m_Father: {fileID: 8524039188666438505}
@@ -620,7 +651,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 20}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -646,7 +677,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 13.5}
+  m_Offset: {x: 0, y: -6.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -882,8 +913,13 @@ MonoBehaviour:
   myNormalCollider: {fileID: 8524039188666438504}
   myDuckingCollider: {fileID: 8524039188666438507}
   DuckingFrictionMultiplier: 0.5
+  manaRegenerationTime: 5
+  flyingWeapon: {fileID: 972702951432764564, guid: 0776244c75fd97e448a97a8f6c26d581,
+    type: 3}
+  pointWeapon: {fileID: 1587781769095633941}
+  maxDist: 200
+  timeDisapear: 5
   wing: {fileID: 7620292425638733069}
-  flyingWeapon: {fileID: 0}
   curRun: 140
   sticking: 0
   secondSwordAttackCooldownTimer: 0
@@ -1488,7 +1524,7 @@ PrefabInstance:
     - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4389693801620104323, guid: a7bfd640984eafa4a8f29473372dd025,
         type: 3}

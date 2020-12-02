@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6857565243922694218}
   - component: {fileID: 2768751930202671590}
   m_Layer: 0
-  m_Name: "DoorsUP_1_U-D \u2014 \u043A\u043E\u043F\u0438\u044F (6)"
+  m_Name: FoolPortal_LR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
