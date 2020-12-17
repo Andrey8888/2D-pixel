@@ -90,6 +90,7 @@ public class Player : Actor
     public int HandAttackMaxDamage = 2;//new int[2] {2, 0, 0};
     public int HandStepUpAfterHit = 20; //new int[2] {20,0,0};
     public float HandAttackCooldownTime = 0.8f;
+    public float HandAttackSpeed = 1;
 
     #region MeleeWeapons
     [Header("MeleeWeapons")]
@@ -466,7 +467,7 @@ public class Player : Actor
     private float rangedAttackCooldownTimer = 0f; // Таймер для сохранения времени восстановления, оставшегося после атаки лука
     [HideInInspector]
     public float rangedPowerAttackCooldownTimer = 0f; // Таймер для сохранения времени восстановления, оставшегося после атаки лука
-    [HideInInspector]
+
     public float rangedPowerAccumulateTimer = 0f;
     private float moveToRespawnPositionAfter = .5f; // Пора подождать, прежде чем перейти на позицию респауна
     private float moveToRespawnPosTimer = 0f; // Таймер, чтобы запомнить, сколько времени осталось до перехода в позицию респауна
@@ -596,18 +597,16 @@ public class Player : Actor
     {
         get
         {
-            return canAim && activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack");
+            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack") && rangedPowerAccumulateTimer > 0f;
         }
     }
-
     public bool CanAccumulateShoot
     {
         get
         {
-            return canAim && activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack") && rangedPowerAccumulateTimer <= 0f;
+            return activeWeapon == ActiveWeapon.Bow && Input.GetButtonUp("Attack") && rangedPowerAccumulateTimer <= 0f;
         }
     }
-
     public bool CanSecondShoot
     {
         get
@@ -2310,7 +2309,7 @@ public class Player : Actor
         //        Facing = (Facings)(1);
         //}
 
-        // Bow Attack over here
+        //Bow Attack over here
         if (CanShoot)
         {
             rangedAttackCooldownTimer = RangedAttackCooldownTime;
@@ -2319,17 +2318,15 @@ public class Player : Actor
             return;
         }
 
-        if (CanAccumulateShoot)
-        {
-            rangedPowerAccumulateTimer = RangedPowerAccumulateTime;
-            fsm.ChangeState(States.AccumulateShoot, StateTransition.Overwrite);
-            return;
-        }
-
-        //Bow Power Attack timer
         if (rangedPowerAccumulateTimer > 0f)
         {
             rangedPowerAccumulateTimer -= Time.deltaTime;
+        }
+
+        if (CanAccumulateShoot)
+        {
+            fsm.ChangeState(States.AccumulateShoot, StateTransition.Overwrite);
+            return;
         }
 
         // Horizontal Speed Update Section
@@ -2346,6 +2343,7 @@ public class Player : Actor
 
     void BowPrepare_Enter()
     {
+        rangedPowerAccumulateTimer = RangedPowerAccumulateTime;
         GetComponent<Mana>().TakeExpense(RangedManaCost);
         FlyingWeapon.SetActive(false);
     }
@@ -3448,14 +3446,6 @@ public class Player : Actor
                 }
                 // If on the attack state
             }
-            else if (fsm.State == States.AccumulateShoot)
-            {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot"))
-                {
-                    animator.Play("Shoot");
-                }
-                // If on the attack state
-            }
 
             else if (fsm.State == States.Attack)
             {
@@ -3463,6 +3453,7 @@ public class Player : Actor
                 {
                     animator.Play("Attack");
                 }
+                animator.SetFloat("MeleeAttackSpeed", HandAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.Dash)
@@ -3613,7 +3604,7 @@ public class Player : Actor
                     //animator.SetFloat("AttackSpeed", MeleeAttackSpeed);
                     animator.Play((string)MeleeWeaponType + "Attack");
                 }
-                animator.SetFloat("SwordAttackSpeed", MeleeAttackSpeed);
+                animator.SetFloat("MeleeAttackSpeed", MeleeAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.SecondSwordAttack)
@@ -3622,7 +3613,7 @@ public class Player : Actor
                 {
                     animator.Play((string)MeleeWeaponType + "SecondAttack");
                 }
-                animator.SetFloat("SwordAttackSpeed", SecondSwordAttackSpeed);
+                animator.SetFloat("MeleeAttackSpeed", SecondSwordAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.ThirdSwordAttack)
@@ -3631,7 +3622,7 @@ public class Player : Actor
                 {
                     animator.Play((string)MeleeWeaponType + "ThirdAttack");
                 }
-                animator.SetFloat("SwordAttackSpeed", ThirdSwordAttackSpeed);
+                animator.SetFloat("MeleeAttackSpeed", ThirdSwordAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.PowerSwordAttack)
@@ -3641,7 +3632,7 @@ public class Player : Actor
                     animator.Play((string)MeleeWeaponType + "PowerAttack");
                 }
 
-                animator.SetFloat("SwordAttackSpeed", MeleePowerAttackSpeed);
+                animator.SetFloat("MeleeAttackSpeed", MeleePowerAttackSpeed);
                 // If on the dash state
             }
             else if (fsm.State == States.SwordBlock)
@@ -3813,6 +3804,15 @@ public class Player : Actor
             else if (fsm.State == States.Shoot)
             {
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName((string)RangedWeaponType + "Shoot"))
+                {
+                    animator.Play((string)RangedWeaponType + "Shoot");
+                }
+                animator.SetFloat("ShootSpeed", RangedAttackSpeed);
+                // If on the attack state
+            }
+            else if (fsm.State == States.AccumulateShoot)
+            {
+                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Shoot"))
                 {
                     animator.Play((string)RangedWeaponType + "Shoot");
                 }

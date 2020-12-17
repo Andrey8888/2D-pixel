@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour {
 	[Header ("Level Spawn Point")]
 	public Transform LevelSpawnPoint; // Currently active Spawn Point
 
+	[Header ("Player Prefab")]
+	public GameObject PlayerPref;
+	[HideInInspector]
+	public GameObject player;
+	
 	[Header ("Events")]
 	// Called from the player Die function
 	public UnityEvent OnPlayerDeadEvents;
@@ -34,6 +39,8 @@ public class GameManager : MonoBehaviour {
 
 		// Set the maximun FPS to 60
 		Application.targetFrameRate = 60;
+		
+		player = Instantiate(PlayerPref, LevelSpawnPoint.position, Quaternion.identity);
 	}
 
 	// Update is called once per frame

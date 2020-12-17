@@ -160,6 +160,9 @@ MonoBehaviour:
   OnStun: 0
   OnAggression: 0
   OnBlink: 0
+  OnSpecial: 0
+  firstHit: 1
+  DpsTestTime: 30
   Facing: -1
   SpriteHolder: {fileID: 1861400158198977870}
   SpriteScale: {x: 1, y: 1}
@@ -172,6 +175,27 @@ MonoBehaviour:
   MeleeAttackMinDamage: 0
   MeleeCriticalDamageMultiply: 0
   MeleeCriticalDamageChance: 0
+  MeleeDistanceForAttack: 18
+  BowAttackCooldownTime: 3
+  CastAttackCooldownTime: 3
+  RangedCriticalDamage: 0
+  RangedAttackMinDamage: 1
+  RangedAttackMaxDamage: 1
+  RangedCriticalDamageMultiply: 1
+  RangedCriticalDamageChance: 0
+  GunBarrel: {fileID: 6073554510267883467}
+  hasFirstSpecial: 0
+  hasSecondSpecial: 0
+  hasThirdSpecial: 0
+  FirstSpecialAttackCooldownTime: 10
+  SecondSpecialAttackCooldownTime: 10
+  ThirdSpecialAttackCooldownTime: 10
+  FirstSpecialTimer: 10
+  SecondSpecialTimer: 10
+  ThirdSpecialTimer: 10
+  DistanceForFirstSpecial: 30
+  DistanceForSecondSpecial: 0
+  DistanceForThirdSpecial: 0
   MeleeAttackCanPoison: 0
   MeleePoisonDamaged: 0
   MeleePoisonFrequency: 0
@@ -187,14 +211,11 @@ MonoBehaviour:
   MeleeFreezChance: 100
   MeleeAttackCanPush: 0
   MeleePushDistance: 0
-  BowAttackCooldownTime: 3
-  CastAttackCooldownTime: 3
-  RangedCriticalDamage: 0
-  RangedAttackMinDamage: 1
-  RangedAttackMaxDamage: 1
-  RangedCriticalDamageMultiply: 1
-  RangedCriticalDamageChance: 0
-  GunBarrel: {fileID: 6073554510267883467}
+  MeleeAttackCanPushUp: 0
+  MeleePushUpDistance: 0
+  MeleeAttackCanStun: 0
+  MeleeStunDuration: 0
+  MeleeStunChance: 100
   RangedAttackCanPoison: 0
   RangedPoisonDamaged: 0
   RangedPoisonFrequency: 0
@@ -210,6 +231,11 @@ MonoBehaviour:
   RangedFreezChance: 100
   RangedAttackCanPush: 0
   RangedPushDistance: 0
+  RangedAttackCanPushUp: 0
+  RangedPushUpDistance: 0
+  RangedAttackCanStun: 0
+  RangedStunDuration: 0
+  RangedStunChance: 100
   EnemyHP: {fileID: 6886868313733489362, guid: 6affc755d48261040900328762443f74, type: 3}
   metka: {fileID: 4619071349243463617}
   AttackType: 1
@@ -217,6 +243,7 @@ MonoBehaviour:
   DetectionZone: {fileID: 5018651899252688809}
   VisibilityZone: {fileID: 5018651898545290582}
   PatrolTimer: 0
+  distanceDetecting: 50
 --- !u!114 &1750944860740154494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +284,9 @@ MonoBehaviour:
   OnPushedEvent:
     m_PersistentCalls:
       m_Calls: []
+  OnPushedUpEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnBurnedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -271,6 +301,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnStunedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnFreezedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -349,6 +382,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnStunedEndEvent:
+    m_PersistentCalls:
+      m_Calls: []
   OnPoisonedEndEvent:
     m_PersistentCalls:
       m_Calls:
@@ -540,7 +576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203835e6c4242dd40bba52236d357086, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack1: {fileID: 5018651897940891323}
+  attack: []
   colliders: []
   owner: {fileID: 1750944860740154494}
 --- !u!114 &1863681160849627996
@@ -783,8 +819,9 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0.0030900955, y: 0.11901321}
-      - {x: 0.0043217847, y: 0.040117852}
-      - {x: 3.3399897, y: 0.02600359}
+      - {x: 0.0043217847, y: -0.15746965}
+      - {x: 3.3324206, y: -0.17449975}
+      - {x: 3.335891, y: -0.19531927}
       - {x: 3.3417664, y: 0.11313171}
 --- !u!1 &5018651898926437370
 GameObject:

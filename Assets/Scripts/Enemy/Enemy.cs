@@ -412,10 +412,23 @@ public class Enemy : Actor
     void Start()
     {
         fsm.ChangeState(States.Normal);
+
+        //Movement Variables
+        walkSpeed = WalkSpeed;
+
+        //HB Bar UI
         MyGUI = GameObject.Find("Canvas");
         SetHPBar();
-        walkSpeed = WalkSpeed;
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        //Visibility Zone
+        EnemyVisibility = VisibilityZone.GetComponentInChildren<EnemyVisibility>();
+        InVisibilityZone = EnemyVisibility.InVisibilityZone;
+        //Detection Zone
+        EnemyDetection = DetectionZone.GetComponentInChildren<EnemyDetection>();
+        InDetectionZone = EnemyDetection.InDetectionZone;
+
+        //Player find to follow
+        Player = GameManager.instance.player.transform;
 
         if (BehaivourType == Behaivour.Flying)
             GetComponent<AIDestinationSetter>().target = Player;
@@ -726,20 +739,37 @@ public class Enemy : Actor
                 Speed.y = Calc.Approach(Speed.y, target, Gravity * Time.deltaTime);
             }
         }
-        // особенности монстров
-        if (TypeEnemy == Type.Golem && InDetectionZone)
+
+        // Special
+        if (hasFirstSpecial && hasSecondSpecial && hasThirdSpecial && InDetectionZone)
+        {
+            int rnd = Random.Range(0, 2);
+            Debug.Log("random special attack:" + rnd);
+            OnSpecial = false;
+            if (rnd == 0)
+                StartCoroutine("FirstSpecialCoroutine");
+            if (rnd == 1)
+                StartCoroutine("SecondSpecialCoroutine");
+            if (rnd == 2)
+                StartCoroutine("ThirdSpecialCoroutine");
+        }
+
+        if (hasFirstSpecial && hasSecondSpecial && InDetectionZone)
         {
             int rnd = Random.Range(0, 1);
             Debug.Log("random special attack:" + rnd);
             OnSpecial = false;
             if (rnd == 0)
                 StartCoroutine("FirstSpecialCoroutine");
-            if (rnd == 0)
+            if (rnd == 1)
                 StartCoroutine("SecondSpecialCoroutine");
-            if (rnd == 0)
-                StartCoroutine("ThirdSpecialCoroutine");
         }
 
+        if (hasFirstSpecial && InDetectionZone)
+        {
+            OnSpecial = false;
+            StartCoroutine("FirstSpecialCoroutine");
+        }
     }
 
     IEnumerator PatrolingCor()

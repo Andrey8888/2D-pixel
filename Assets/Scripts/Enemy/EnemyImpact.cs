@@ -41,10 +41,10 @@ public class EnemyImpact : MonoBehaviour
             if (playercomponent != null)
             {
                 //collision.transform.position = new Vector2(collision.transform.position.x - 5, 0);
-            if (!playercomponent.sticking && !playercomponent.CheckColAtPlace(Vector2.right * -(int)enemy.Facing, playercomponent.solid_layer))
-            {
-                var MoveH = playercomponent.MoveHPlatform(-400 * -(int)playercomponent.Facing * Time.deltaTime);
-            }
+                if ((int)enemy.Facing == 1)
+                    playercomponent.MoveHPlatform(-400 * (int)playercomponent.Facing  * Time.deltaTime);
+                else
+                    playercomponent.MoveHPlatform(400 * (int)playercomponent.Facing * Time.deltaTime);
                 //StartCoroutine(OnPlayerSlow(playercomponent));
             }
         }
@@ -57,7 +57,7 @@ public class EnemyImpact : MonoBehaviour
             col = collision;
             InImpactZone = true;
         }
-		
+
         if (collision.CompareTag("Player") && !gameObject.GetComponentInParent<Health>().dead && ImpactZoneActionType == ImpactZoneAction.Damage)
         {
             var playercomponent = collision.GetComponent<Player>();
@@ -74,13 +74,14 @@ public class EnemyImpact : MonoBehaviour
             if (playercomponent != null)
             {
                 //collision.transform.position = new Vector2(collision.transform.position.x - 5, 0);
-				
+
                 //StartCoroutine(OnPlayerSlow(playercomponent));
 
-                if (!playercomponent.sticking && !playercomponent.CheckColAtPlace(Vector2.right * -(int)enemy.Facing, playercomponent.solid_layer))
-                {
-                    var MoveH = playercomponent.MoveHPlatform(-400 * -(int)playercomponent.Facing * Time.deltaTime);
-                }
+                if ((int)enemy.Facing == 1)
+                    playercomponent.MoveHPlatform(-400 * (int)playercomponent.Facing * Time.deltaTime);
+                else
+                    playercomponent.MoveHPlatform(400 * (int)playercomponent.Facing  * Time.deltaTime);
+
             }
         }
     }
